@@ -1,0 +1,10 @@
+{
+    "NETWORK_SETTINGS": {
+        "IP_ADDRESS":   "127.0.0.1",
+        "PORT_NUMBER":  5000,
+        "AUTO_CONNECT": true
+    },
+    "MODE_SETTINGS": {
+        "ENABLE_DEBUG": true
+    }
+}
