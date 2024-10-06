@@ -41,7 +41,7 @@ Le tecnologie e gli strumenti utilizzati per lo sviluppo del progetto includono:
 ### 👉 Start in MacOS
 - Passo 1
 
-    ```bash
+    ```zsh
     ```
 
 <br />
@@ -51,41 +51,43 @@ Le tecnologie e gli strumenti utilizzati per lo sviluppo del progetto includono:
 Questo progetto è stato programmato utilizzando `blueprints` e una struttura intuitiva presentata qua sotto: 
 
 ```bash
-<gestione-info/project/...>
+<gestione-info/project/>
     │
     ├─── app/
     │    │
-    │    ├─── home/                          
-    │    │    └─── routes.py                  
-    │    │
-    │    ├─── authentication/                
-    │    │    ├─── routes.py                  
-    │    │    ├─── models.py                  
-    │    │    └─── forms.py                   
+    │    ├─── extensions/
+    │    │    ├─── preprocessing.py
+    │    │    ├─── thesaurus.py
+    |    |    ├─── ...
+    |    |    └─── __init__.py
+    |    |
+    │    ├─── views/
+    │    │    ├─── home.py
+    |    |    ├─── ...
+    |    |    └─── __init__.py
     │    │
     │    ├─── static/
-    │    │    └─── <css, JS, images>          
+    │    │    └─── <css, JS, images>
     │    │
-    │    ├─── templates/                       
-    │    │    ├─── includes/                   
-    │    │    │    ├─── navigation.html        
-    │    │    │    ├─── sidebar.html           
-    │    │    │    ├─── footer.html            
-    │    │    │    └─── scripts.html           
+    │    ├─── templates/
+    |    |    |
+    │    │    ├─── includes/
+    │    │    │    ├─── navigation.html
+    │    │    │    ├─── sidebar.html
+    │    │    │    ├─── footer.html
+    |    |    |    ├─── scripts.html
+    │    │    │    └─── ...
     │    │    │
-    │    │    ├─── layouts/                    
-    │    │    │    ├─── base-fullscreen.html   
-    │    │    │    └─── base.html              
+    │    │    ├─── layouts/
+    │    │    │    └─── base.html
     │    │    │
-    │    │    └─── home/                       
-    │    │         ├─── index.html             
-    │    │         ├─── 404-page.html          
-    │    │         └─── *.html                 
+    │    │    ├─── index.html
+    │    │    ├─── 404-page.html
+    │    │    └─── ...
     │    │    
-    │    ├─── config.py                              
-    │    └─── __init__.py                            
+    │    ├─── config.py
+    │    └─── __init__.py
     │
-    ├─── requirements.txt                      
-    ├─── .env                                  
-    └─── run.py                                
+    ├─── requirements.txt
+    └─── run.py
 ```
