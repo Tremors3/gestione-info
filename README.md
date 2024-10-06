@@ -58,24 +58,24 @@ Questo progetto è stato programmato utilizzando `blueprints` e una struttura in
     │    ├─── extensions/
     │    │    ├─── preprocessing.py
     │    │    ├─── thesaurus.py
-    |    |    ├─── ...
-    |    |    └─── __init__.py
-    |    |
+    │    │    ├─── ...
+    │    │    └─── __init__.py
+    │    │
     │    ├─── views/
     │    │    ├─── home.py
-    |    |    ├─── ...
-    |    |    └─── __init__.py
+    │    │    ├─── ...
+    │    │    └─── __init__.py
     │    │
     │    ├─── static/
     │    │    └─── <css, JS, images>
     │    │
     │    ├─── templates/
-    |    |    |
+    │    │    │
     │    │    ├─── includes/
     │    │    │    ├─── navigation.html
     │    │    │    ├─── sidebar.html
     │    │    │    ├─── footer.html
-    |    |    |    ├─── scripts.html
+    │    │    │    ├─── scripts.html
     │    │    │    └─── ...
     │    │    │
     │    │    ├─── layouts/
