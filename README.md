@@ -8,7 +8,7 @@ Questo progetto si propone di sviluppare un sistema di gestione dell'informazion
 
 - Funzionalità 1
   
-- Funzionalità 1
+- Funzionalità 2
 
 - Funzionalità 3
 
@@ -17,10 +17,9 @@ Questo progetto si propone di sviluppare un sistema di gestione dell'informazion
 ## ✅ Tecnologie Utilizzate
 Le tecnologie e gli strumenti utilizzati per lo sviluppo del progetto includono:
 
-- *[Flask](https://en.wikipedia.org/wiki/Flask_(web_framework))*,
-  *[Flask-Blueprints](https://flask.palletsprojects.com/en/3.0.x/blueprints/)*
-  
-- *[Nltk](https://www.nltk.org/)*, ...
+- *[Whoosh](https://www.google.com/)*,
+  *[PyLucene](https://www.google.com/)*,
+  *[Postgresql](https://www.google.com/)*, ...
 
 <br />
 
@@ -35,7 +34,7 @@ Le tecnologie e gli strumenti utilizzati per lo sviluppo del progetto includono:
 ### 👉 Start in Unix/Linux
 - Passo 1
 
-    ```bash
+    ```zsh
     ```
 
 ### 👉 Start in MacOS
@@ -48,46 +47,24 @@ Le tecnologie e gli strumenti utilizzati per lo sviluppo del progetto includono:
 
 ## ✅ Codebase <!-- https://symbl.cc/en/unicode/blocks/box-drawing/ -->
 
-Questo progetto è stato programmato utilizzando `blueprints` e una struttura intuitiva presentata qua sotto: 
+Questo progetto è stato programmato utilizzando `<python>` e una struttura intuitiva presentata qua sotto: 
 
 ```bash
 <gestione-info/project/>
     │
-    ├─── app/
+    ├─── folder1/
     │    │
-    │    ├─── extensions/
+    │    ├─── folder2/
     │    │    ├─── preprocessing.py
     │    │    ├─── thesaurus.py
     │    │    ├─── ...
     │    │    └─── __init__.py
     │    │
-    │    ├─── views/
-    │    │    ├─── home.py
-    │    │    ├─── ...
-    │    │    └─── __init__.py
-    │    │
-    │    ├─── static/
-    │    │    └─── <css, JS, images>
-    │    │
-    │    ├─── templates/
-    │    │    │
-    │    │    ├─── includes/
-    │    │    │    ├─── navigation.html
-    │    │    │    ├─── sidebar.html
-    │    │    │    ├─── footer.html
-    │    │    │    ├─── scripts.html
-    │    │    │    └─── ...
-    │    │    │
-    │    │    ├─── layouts/
-    │    │    │    └─── base.html
-    │    │    │
-    │    │    ├─── index.html
-    │    │    ├─── 404-page.html
-    │    │    └─── ...
-    │    │    
-    │    ├─── config.py
-    │    └─── __init__.py
+    │    └─── folder3/
+    │         ├─── pylucene.py
+    │         ├─── ...
+    │         └─── __init__.py
     │
-    ├─── requirements.txt
-    └─── run.py
+    ├─── file1.txt
+    └─── file2.exe
 ```
