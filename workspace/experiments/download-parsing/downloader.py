@@ -23,6 +23,7 @@ class Downloader:
         index_begin: int, index_end: int,
         workers: int
     ) -> Generator[str, None, None]:
+        
         with requests.Session() as session:  # Usa la sessione per ottimizzare le richieste
             with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
                 
@@ -72,28 +73,3 @@ if __name__ == "__main__":
     for page in Downloader.download_section("https://www.rfc-editor.org/rfc/rfc"): pass
     end = time.time()
     print("Tempo esecuzione: ", end - start, " secondi")
-
-
-
-
-"""
-dati da prendere dall'html
-
-head
-    meta: citation_author <-- IMPORTANTE, non in tutti gli rfc ci sono gli autori nel resto del documento
-    meta: citation_publication_date
-    meta: citation_title
-    meta: citation_doi
-    meta: citation_issn
-    
-
-body
-    span: author
-    bare: RESTO DELL'RFC
-"""
-                    
-
-# Ci sono dei dati che se mancano scartiamo l'intera pagina, se invece sono dai meno importanti li rimpiazziamo con dei placeholder generici o valori nulli.
-
-                    
-                    
