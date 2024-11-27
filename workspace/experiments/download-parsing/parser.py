@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup as soup
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 class Parser:
-    
+
     TOTAL_RFC_NUMBER = 9688  # Numero totale di documenti disponibili
 
     @staticmethod
@@ -28,15 +28,15 @@ class Parser:
         """Effettua il parsing del contenuto HTML in un dizionario."""
         # Sostituire con una logica di parsing reale
         try:
-            parsed_data = {}
-            
-            metas = soup.find_all('meta')
-            
-            parsed_data['author'] = metas.find('')
-            
+
+            #metas = soup.find_all('meta')
+            #parsed_data['author'] = metas.find('')
             #for meta in soup.find_all('meta'):
             #    parsed_data[meta.get('name')] = meta['content']
-            #parsed_data = {"content": html_content[:200], "length": len(html_content)}  # Esempio
+
+            parsed_data = {}
+            parsed_data = {"content": html_content[:200], "length": len(html_content)}  # Esempio
+
             return parsed_data
         except Exception as e:
             logging.warning(f"Errore durante il parsing del contenuto HTML: {e}")
@@ -54,7 +54,7 @@ class Parser:
     def _download_and_parse(urls: List[str], workers: int = 10) -> Generator[Dict, None, None]:
         """Scarica e parsifica più pagine in parallelo."""
         with requests.Session() as session, concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-            
+
             futures = {
                 executor.submit(Parser._task, session, url): url for url in urls
             }
@@ -75,10 +75,10 @@ class Parser:
         workers: int = 10
     ) -> None:
         """Genera un corpus scaricando e parsificando le pagine specificate."""
-        
+
         # Creazione degli URL
         urls = [f"{url_prefix}{index}.{url_postfix}" for index in range(index_begin, index_end + 1)]
-        
+
         # Scarica e parsifica le pagine
         page_list = []
         for page in Parser._download_and_parse(urls, workers):
@@ -116,7 +116,7 @@ head
     meta: citation_title
     meta: citation_doi
     meta: citation_issn
-    
+
 
 body
     span: author
