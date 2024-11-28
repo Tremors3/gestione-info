@@ -3,7 +3,7 @@ import logging
 import requests
 import concurrent.futures
 from typing import Optional, Generator, List, Dict
-from bs4 import BeautifulSoup as soup
+from bs4 import BeautifulSoup
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -29,15 +29,19 @@ class Parser:
         # Sostituire con una logica di parsing reale
         try:
 
-            #metas = soup.find_all('meta')
-            #parsed_data['author'] = metas.find('')
-            #for meta in soup.find_all('meta'):
-            #    parsed_data[meta.get('name')] = meta['content']
-
             parsed_data = {}
-            parsed_data = {"content": html_content[:200], "length": len(html_content)}  # Esempio
+            soup = BeautifulSoup(html_content, 'html.parser')
 
+            # Metadata Grawling
+            metas = soup.find_all("meta")
+            for meta in metas:
+                parsed_data[meta.get('name')] = meta['content']
+
+            parsed_data['content'] =  soup.get_text()
+
+            #parsed_data = {"content": html_content[:10], "length": len(html_content), }  # Esempi
             return parsed_data
+
         except Exception as e:
             logging.warning(f"Errore durante il parsing del contenuto HTML: {e}")
             return None
@@ -93,7 +97,7 @@ class Parser:
 if __name__ == "__main__":
     import time
     start = time.time()
-    Parser.generate_corpus(index_end=100)
+    Parser.generate_corpus(index_end=9000)
     end = time.time()
     print("Tempo esecuzione: ", end - start, " secondi")
 
