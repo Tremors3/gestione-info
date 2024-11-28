@@ -1,7 +1,9 @@
 # Domande da fare alla prof
 
-- [ ] Chiarimenti sul preprocessing
+- [ ] Domanda 1
 
-    E' meglio che facciamo il nostro preprocessing con nltk, oppure utilizziamo il preprocessing offerto da pylucene, whoosh e postresql?
+    Testo
 
-- [ ] ...
+- [ ] Domanda 2
+
+    Testo
