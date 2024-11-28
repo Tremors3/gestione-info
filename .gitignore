@@ -163,3 +163,5 @@ cython_debug/
 
 # Custom
 ignore
+corpus.json
+exp-venv
