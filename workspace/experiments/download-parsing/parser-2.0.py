@@ -1,15 +1,27 @@
-import re
-import json
-import requests
-import concurrent.futures
+# Altro
 from typing import Optional, Generator, List, Dict
+
+# Per scrivere file json
+import json
+
+# Per Rejex
+import re
+
+# Per scaricamento pagine
+import requests
+
+# Per Parsing delle pagine web
 from bs4 import BeautifulSoup
 
+# Per ThreadPool
+import concurrent.futures
+
+# Import del logger personalizzato (colori)
 from myLogger import logger as logging
 
 class Parser:
 
-    # %%%%%% VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     TOTAL_RFC_NUMBER = 9688  # Numero totale di documenti disponibili
     DEFAULT_OUTPUT_FILE: str = "corpus.json"
@@ -38,11 +50,10 @@ class Parser:
         Effettua il parsing del contenuto HTML in un dizionario.
         """
         try:
-            # Analizza il contenuto HTML
+            # Analizzatore del contenuto del documento
             soup = BeautifulSoup(html_content, 'html.parser')
 
-            # TODO: Rimozione header del documento.
-            # (Tramite rejex?)
+            # TODO: Rimozione header del documento. (Tramite rejex?)
 
             # Formatta il testo su una singola linea
             text = soup.get_text().strip().replace('\n', ' ')
@@ -50,6 +61,7 @@ class Parser:
             text = re.sub(r'(\. \.)(?=\s)', '', text)
             # Sostituisci spazi ripetuti con uno spazio singolo
             text = re.sub(r' +', ' ', text)
+            
             # Restituzione del contenuto delstuale riformattato
             return text
         except Exception as e:
@@ -61,11 +73,18 @@ class Parser:
         """
         Scarica e parsifica una pagina specificata.
         """
+        # Costruzione dello URI della pagina
         url = Parser.URL_PREFIX + meta['Number'] + Parser.URL_POSTFIX
+        
+        # Scaricamento del contenuto della pagina
         html_content = Parser._download_page(session, url)
         if html_content is None:
             return None
+        
+        # Estendiamo i metadati della pagina con il corpo parsato del documento
         meta["Content"] = Parser._parse_page(html_content)
+        
+        # Restituiamo i metadati (con tanto di corpo del documento)
         return meta
 
     @staticmethod
@@ -73,12 +92,15 @@ class Parser:
         """
         Scarica e parsifica più pagine in parallelo.
         """
+        # Apertura di una sessione http e di una ThreadPool
         with requests.Session() as session, concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
 
+            # Creazione delle task per la Threadpool
             futures = {
                 executor.submit(Parser._task, session, meta): meta for meta in metadata
             }
 
+            # Restituzione dei metadati che adesso contengono il corpo completo del documento
             for future in concurrent.futures.as_completed(futures):
                 try:
                     page = future.result()
@@ -118,7 +140,7 @@ class Parser:
                 logging.error(f"Errore durante il download dei metadati: {e}")
                 return None
 
-            # Analizza l'HTML della pagina
+            # Analizzatore del contenuto del documento
             soup = BeautifulSoup(response.text, 'html.parser')
             
             # Ricava la tabella contenente i metadati
@@ -170,7 +192,7 @@ class Parser:
             element = group[0].find_all("td")
             
             current = {
-                "Number": element[0].get_text().split('\u00a0')[1].strip(),
+                "Number": element[0].get_text().split('\u00a0')[1].split(' ')[0].strip(),
                 "Files": [tf.strip() for tf in element[1].get_text().replace('\u00a0', ' ').split(',')],
                 "Title": element[2].get_text().replace('\u00a0', ' ').strip(),
                 "Authors": [au.strip() for au in element[3].get_text().replace('\u00a0', ' ').split(',')],
@@ -239,7 +261,9 @@ if __name__ == "__main__":
     import time
     
     start = time.time()
-    Parser.generate_corpus(index_begin=50, index_end=100)
+    Parser.generate_corpus(index_begin=1, index_end=100)
     end = time.time()
     
-    print("Tempo esecuzione: ", end - start, " secondi")
+    tot = str(end-start).split(".")
+    
+    print("Tempo esecuzione:", tot[0] +"."+ tot[1][:4], "secondi")
