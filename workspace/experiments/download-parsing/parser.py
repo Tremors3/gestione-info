@@ -109,20 +109,6 @@ class Parser:
                 except Exception as e:
                     logging.warning(f"Errore durante l'elaborazione di un task: {e}")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     # %%%%%% METADATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     @staticmethod
