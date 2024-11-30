@@ -45,12 +45,12 @@
                 </div>
                 <div class="control" style="display:flex; margin-top:2%;">
                   <div class="checkbox" style="margin-right: 3%;">
-                    <input id="temp_1" name="temp_1" type="checkbox" value="y">
-                    <label for="temp_1">Spelling correction</label>
+                    <input id="spelling_correction" name="spelling_correction" type="checkbox" value="True">
+                    <label for="spelling_correction">Spelling correction</label>
                   </div>
                   <div class="checkbox">
-                    <input id="temp_2" name="temp_2" type="checkbox" value="y">
-                    <label for="temp_2">Synonims</label>
+                    <input id="synonims" name="synonims" type="checkbox" value="True">
+                    <label for="synonims">Synonims</label>
                   </div>
                 </div>
               </fieldset>
@@ -72,10 +72,10 @@
                   <div class="control">
                     <label for="terms-0-field" class="hidden-label">Field to search</label>
                     <span class="select">
-                      <select default="title" id="terms-0-field" name="terms-0-field">
-                        <option value="title">Title</option>
-                        <option value="keyword">Keyword</option>
-                        <option value="author">Author</option>
+                      <select default="TITLE" id="terms-0-field" name="terms-0-field">
+                        <option value="TITLE">Title</option>
+                        <option value="KEYWORD">Keyword</option>
+                        <option value="AUTHOR">Author</option>
                       </select>
                     </span>
                   </div>
@@ -145,10 +145,10 @@
                       controlField.innerHTML = `
                         <label class="hidden-label">Field to search</label>
                         <span class="select">
-                          <select name="terms-${uniqueId}-field">
-                            <option value="title">Title</option>
-                            <option value="keyword">Keyword</option>
-                            <option value="author">Author</option>
+                          <select default="TITLE" name="terms-${uniqueId}-field">
+                            <option value="TITLE">Title</option>
+                            <option value="KEYWORD">Keyword</option>
+                            <option value="AUTHOR">Author</option>
                           </select>
                         </span>
                       `;
@@ -204,17 +204,17 @@
                     <div class="field is-horizontal is-grouped">
                       <div class="control">
                         <div class="checkbox">
-                          <input id="standard" name="standard" type="checkbox" value="y">
+                          <input id="standard" name="standard" type="checkbox" value="True">
                           <label for="standard">Standard track</label>
                         </div>
                       </div>
                       <div class="control">
                         <div class="select is-small" id="ddInCheck">
-                          <label for="standard_track" class="hidden-label">Subtopic within physics</label>
-                          <select id="standard_track" name="standard_track">
-                            <option value="proposed_standard">Proposed standard</option>
-                            <option value="draft_standard">Draft standard</option>
-                            <option value="internet_standard">Internet standard</option>
+                          <label for="standard_track" class="hidden-label"></label>
+                          <select default="PROPOSED_STANDARD" id="standard_track" name="standard_track">
+                            <option value="PROPOSED_STANDARD">Proposed standard</option>
+                            <option value="DRAFT_STANDARD">Draft standard</option>
+                            <option value="INTERNET_STANDARD">Internet standard</option>
                           </select>
                         </div>
                       </div>
@@ -268,23 +268,23 @@
                     <div class="field is-grouped">
                       <div class="control">
                         <div class="radio"> 
-                          <input checked="" id="date-filter_by-0" name="date-filter_by" type="radio" value="all_dates">
+                          <input checked="" id="date-filter_by-0" name="date-filter_by" type="radio" value="ALL_DATES">
                           <label for="date-filter_by-0">All dates</label>
                         </div>
                       </div>
                     </div>
-                    <div class="field is-grouped">
+                    <!-- <div class="field is-grouped">
                       <div class="control">
                         <div class="radio"> 
-                          <input id="date-filter_by-1" name="date-filter_by" type="radio" value="past_12">
+                          <input id="date-filter_by-1" name="date-filter_by" type="radio" value="LAST_YEAR">
                           <label for="date-filter_by-1">Past 12 months</label>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="field is-grouped">
                       <div class="control">
                         <div class="radio"> 
-                          <input id="date-filter_by-2" name="date-filter_by" type="radio" value="specific_year">
+                          <input id="date-filter_by-2" name="date-filter_by" type="radio" value="SPECIFIC_YERA">
                           <label for="date-filter_by-2">Specific year</label>
                         </div>
                       </div>
@@ -302,7 +302,7 @@
                     <div class="field is-grouped">
                       <div class="control">
                         <div class="radio"> 
-                          <input id="date-filter_by-3" name="date-filter_by" type="radio" value="date_range">
+                          <input id="date-filter_by-3" name="date-filter_by" type="radio" value="DATE_RANGE">
                           <label for="date-filter_by-3">Date range</label>
                         </div>
                       </div>
@@ -352,10 +352,10 @@
               <div class="field">
                 <div class="control">
                   <label class="radio">
-                    <input checked="" id="abstracts-0" name="abstracts" type="radio" value="show"> Show abstracts
+                    <input checked="" id="abstracts-0" name="abstracts" type="radio" value="True"> Show abstracts
                   </label>
                   <label class="radio">
-                    <input id="abstracts-1" name="abstracts" type="radio" value="hide"> Hide abstracts
+                    <input id="abstracts-1" name="abstracts" type="radio" value="False"> Hide abstracts
                   </label>
                 </div>
               </div>
@@ -373,16 +373,16 @@
                       </div>
                     </div>
                   </div>
-                  <div class="level-item" style="margin-top: -2%;">
+                  <!-- <div class="level-item" style="margin-top: -2%;">
                     <div class="field is-horizontal is-grouped">
                       <div class="control">
                         <div class="checkbox">
-                          <input id="include_older_versions" name="include_older_versions" type="checkbox" value="y">
+                          <input id="include_older_versions" name="include_older_versions" type="checkbox" value="True">
                           <label for="include_older_versions">Include older versions of papers</label>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <!-- <button class="button is-link is-medium">Search</button> -->
