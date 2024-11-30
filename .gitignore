@@ -164,4 +164,5 @@ cython_debug/
 # Custom
 ignore
 corpus.json
+query.json
 exp-venv

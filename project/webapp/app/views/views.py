@@ -14,7 +14,7 @@ def search():
     if request.method == 'POST':
         # Format query and save to file
         query = format_query(request.form)
-        save_query_to_file(query, "temp.json")
+        save_query_to_file(query, "query.json")
         return redirect('/')
     return render_template('index.html')
 

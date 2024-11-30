@@ -3,7 +3,8 @@
 <!-- HEAD -->
 
 <head>
-  <link rel="stylesheet" href="">
+  <link rel="stylesheet" href="../static/css/style.css">
+
 </head>
 
 <!-- BODY -->
@@ -34,299 +35,359 @@
       <div class="sinistra">
 
         <div class="box">
-          <section>
-            <fieldset class="fieldset" style="margin-top:0;">
-              <legend class="legend">Search</legend>
-              <div class="control" style="display:flex;">
-                <input class="input" id="ricerca_principale" name="ricerca_principale" placeholder="Ricerca" type="text" style="border-radius: 0;"></input>
-                <button class="button is-link is-medium" style="margin-left: 0%; border-radius:0;">Search</button>
-              </div>
-              <div class="control" style="display:flex; margin-top:2%;">
-                <div class="checkbox" style="margin-right: 3%;">
-                  <input id="temp_1" name="temp_1" type="checkbox" value="y">
-                  <label for="temp_1">Spelling correction</label>
+          <form method="POST" action="/search">
+            <section>
+              <fieldset class="fieldset" style="margin-top:0;">
+                <legend class="legend">Search</legend>
+                <div class="control" style="display:flex;">
+                  <input class="input" id="ricerca_principale" name="ricerca_principale" placeholder="Ricerca" type="text" style="border-radius: 0;"></input>
+                  <button class="button is-link is-medium" style="margin-left: 0%; border-radius:0;">Search</button>
                 </div>
-                <div class="checkbox">
-                  <input id="temp_2" name="temp_2" type="checkbox" value="y">
-                  <label for="temp_2">Synonims</label>
+                <div class="control" style="display:flex; margin-top:2%;">
+                  <div class="checkbox" style="margin-right: 3%;">
+                    <input id="spelling_correction" name="spelling_correction" type="checkbox" value="True">
+                    <label for="spelling_correction">Spelling correction</label>
+                  </div>
+                  <div class="checkbox">
+                    <input id="synonims" name="synonims" type="checkbox" value="True">
+                    <label for="synonims">Synonims</label>
+                  </div>
                 </div>
-              </div>
-            </fieldset>
-            <fieldset class="fieldset">
-              <legend class="legend">Search terms</legend>
+              </fieldset>
+              <fieldset class="fieldset">
+                <legend class="legend">Search terms</legend>
 
-              <!-- Campo iniziale search terms -->
-              <div class="field has-addons-tablet" data-toggle="fieldset-entry">
-                <div class="control fieldset-hidden-on-first-row">
-                  <span class="select">
-                    <label for="terms-0-operator" class="hidden-label">Boolean operator</label>
-                    <select default="AND" id="terms-0-operator" name="terms-0-operator"><option selected="" value="AND">AND</option><option value="OR">OR</option><option value="NOT">NOT</option></select>
-                  </span>
+                <!-- Campo iniziale search terms -->
+                <div class="field has-addons-tablet" data-toggle="fieldset-entry">
+                  <div class="control fieldset-hidden-on-first-row">
+                    <span class="select">
+                      <label for="terms-0-operator" class="hidden-label">Boolean operator</label>
+                      <select default="AND" id="terms-0-operator" name="terms-0-operator"><option selected="" value="AND">AND</option><option value="OR">OR</option><option value="NOT">NOT</option></select>
+                    </span>
+                  </div>
+                  <div class="control is-expanded">
+                    <label for="terms-0-term" class="hidden-label">Search terms</label>
+                      <input class="input" id="terms-0-term" name="terms-0-term" placeholder="Search terms" type="text" value="">
+                  </div>
+                  <div class="control">
+                    <label for="terms-0-field" class="hidden-label">Field to search</label>
+                    <span class="select">
+                      <select default="TITLE" id="terms-0-field" name="terms-0-field">
+                        <option value="TITLE">Title</option>
+                        <option value="KEYWORD">Keyword</option>
+                        <option value="AUTHOR">Author</option>
+                      </select>
+                    </span>
+                  </div>
+                </div> <!-- Campo iniziale search term -->
+
+                <div id="aggiuntivi"> <!-- qui vengono aggiunti i campi per i search term --> 
+                  
                 </div>
-                <div class="control is-expanded">
-                  <label for="terms-0-term" class="hidden-label">Search terms</label>
-                    <input class="input" id="terms-0-term" name="terms-0-term" placeholder="Search terms" type="text" value="">
+                
+                <div class="field is-clearfix" id="bottoni">  <!-- Pulsante per aggiungere search terms -->
+                  <div class="control is-pulled-right">
+                    
+                    <!-- hihi non mi vedi -->
+                    <input class="input" id="numero_terms" name="numero_terms" type="text" placeholder="0" value="0" style="width: 0px; height: 0px; visibility: hidden; margin: 0px; padding: 0px;"></input>
+                    <!-- hihihihihihihihihi non mi vedi -->
+
+
+                    <button id="aggiungi" type="button" class="button is-medium" data-toggle="fieldset-add-row" data-target="#terms-fieldset"><span>Add term</span>
+                    </button>
+                    <!-- <button class="button is-link is-medium">Search</button> -->
+                  </div>
+                </div>  
+
+                <!-- Script per aggiungere e cancellare search terms -->
+                <script>
+                  const maxTerms = 5; // Limite massimo di campi aggiuntivi
+                  let uniqueId = 0; // Contatore per ID univoci
+
+                  // Aggiungi un nuovo campo
+                  document.getElementById("aggiungi").addEventListener("click", function () {
+                    const aggiuntivi = document.getElementById("aggiuntivi");
+                    const currentCount = aggiuntivi.childElementCount;
+
+                    if (currentCount < maxTerms) {
+                      uniqueId++; // Incrementa l'ID univoco
+                      var strUniqueId = '' + uniqueId
+                      document.getElementById("numero_terms").value = strUniqueId;
+                      const fieldSet = document.createElement("div");
+                      fieldSet.className = "field has-addons-tablet";
+                      fieldSet.setAttribute("data-id", uniqueId); // Assegna un ID univoco al campo
+
+                      // Boolean operator dropdown
+                      const controlOperator = document.createElement("div");
+                      controlOperator.className = "control";
+                      controlOperator.innerHTML = `
+                        <span class="select">
+                          <label class="hidden-label">Boolean operator</label>
+                          <select name="terms-${uniqueId}-operator" style="margin-left:0px;">
+                            <option value="AND" selected>AND</option>
+                            <option value="OR">OR</option>
+                            <option value="NOT">NOT</option>
+                          </select>
+                        </span>
+                      `;
+
+                      // Input field for search term
+                      const controlInput = document.createElement("div");
+                      controlInput.className = "control is-expanded";
+                      controlInput.innerHTML = `
+                        <label class="hidden-label">Search term</label>
+                        <input class="input" name="terms-${uniqueId}-term" placeholder="Search terms" type="text">
+                      `;
+
+                      // Dropdown for field selection
+                      const controlField = document.createElement("div");
+                      controlField.className = "control";
+                      controlField.innerHTML = `
+                        <label class="hidden-label">Field to search</label>
+                        <span class="select">
+                          <select default="TITLE" name="terms-${uniqueId}-field">
+                            <option value="TITLE">Title</option>
+                            <option value="KEYWORD">Keyword</option>
+                            <option value="AUTHOR">Author</option>
+                          </select>
+                        </span>
+                      `;
+
+                      // Remove button
+                      const controlRemove = document.createElement("div");
+                      controlRemove.className = "control";
+                      const removeButton = document.createElement("button");
+                      removeButton.type = "button";
+                      removeButton.className = "button";
+                      removeButton.setAttribute("aria-label", "Remove this search term");
+                      removeButton.textContent = "–";
+                      removeButton.addEventListener("click", function () {
+                        fieldSet.remove();
+                      });
+                      controlRemove.appendChild(removeButton);
+
+                      // Append all elements to the container
+                      fieldSet.appendChild(controlOperator);
+                      fieldSet.appendChild(controlInput);
+                      fieldSet.appendChild(controlField);
+                      fieldSet.appendChild(controlRemove);
+
+                      // Append the container to the parent
+                      aggiuntivi.appendChild(fieldSet);
+                    }
+                  });
+
+                  // Recupera i valori di tutti i campi attualmente presenti
+                  function getValues() {
+                    const aggiuntivi = document.getElementById("aggiuntivi");
+                    const fields = aggiuntivi.querySelectorAll("[data-id]");
+
+                    const values = Array.from(fields).map((field) => {
+                      const id = field.getAttribute("data-id");
+                      const operator = field.querySelector(`[name="terms-${id}-operator"]`).value;
+                      const term = field.querySelector(`[name="terms-${id}-term"]`).value;
+                      const searchField = field.querySelector(`[name="terms-${id}-field"]`).value;
+
+                      return { id, operator, term, field: searchField };
+                    });
+
+                    console.log(values); // Per debug
+                    return values;
+                  }
+                </script>
+              </fieldset>
+
+              <fieldset class="fieldset">
+                <legend class="legend">Stato</legend>
+                <div class="columns is-baseline">
+                  <div class="column">
+                    <div class="field is-horizontal is-grouped">
+                      <div class="control">
+                        <div class="checkbox">
+                          <input id="standard" name="standard" type="checkbox" value="True">
+                          <label for="standard">Standard track</label>
+                        </div>
+                      </div>
+                      <div class="control">
+                        <div class="select is-small" id="ddInCheck">
+                          <label for="standard_track" class="hidden-label"></label>
+                          <select default="PROPOSED_STANDARD" id="standard_track" name="standard_track">
+                            <option value="PROPOSED_STANDARD">Proposed standard</option>
+                            <option value="DRAFT_STANDARD">Draft standard</option>
+                            <option value="INTERNET_STANDARD">Internet standard</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <script>
+                      $('select#standard_track').change(function() {
+                        $('input#standard').attr('checked', true);
+                      });
+                    </script>
+                    <div class="field is-horizontal">
+                      <div class="control">
+                        <div class="checkbox">
+                          <input id="best_current_practice" name="best_current_practice" type="checkbox" value="True">
+                          <label for="best_current_practice">Best current practice</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field is-horizontal">
+                      <div class="control">
+                        <div class="checkbox">
+                          <input id="informational" name="informational" type="checkbox" value="True">
+                          <label for="informational">Informational</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field is-horizontal">
+                      <div class="control">
+                        <div class="checkbox">
+                          <input id="experimental" name="experimental" type="checkbox" value="True">
+                          <label for="experimental">Experimental</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field is-horizontal">
+                      <div class="control">
+                        <div class="checkbox">
+                          <input id="historic" name="historic" type="checkbox" value="True">
+                          <label for="historic">Historic</label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="column">
+                    
+                  </div>
                 </div>
+              </fieldset>
+              <fieldset class="fieldset ">
+                <legend class="legend">Date</legend>
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <div class="radio"> 
+                          <input checked="" id="date-filter_by-0" name="date-filter_by" type="radio" value="ALL_DATES">
+                          <label for="date-filter_by-0">All dates</label>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="field is-grouped">
+                      <div class="control">
+                        <div class="radio"> 
+                          <input id="date-filter_by-1" name="date-filter_by" type="radio" value="LAST_YEAR">
+                          <label for="date-filter_by-1">Past 12 months</label>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <div class="radio"> 
+                          <input id="date-filter_by-2" name="date-filter_by" type="radio" value="SPECIFIC_YERA">
+                          <label for="date-filter_by-2">Specific year</label>
+                        </div>
+                      </div>
+                      <div class="control is-datefield">
+                        <label for="date-year" class="hidden-label">Enter four digit year</label>
+                          <input class="input is-small" id="date-year" name="date-year" placeholder="YYYY" type="text" value="">
+                        <script>
+                          $('#date-year').focus(function() {
+                            $('input[name="date-filter_by"]').attr('checked', false);
+                            $('input[value="specific_year"]').attr('checked', true);
+                          });
+                        </script>
+                      </div>
+                    </div>
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <div class="radio"> 
+                          <input id="date-filter_by-3" name="date-filter_by" type="radio" value="DATE_RANGE">
+                          <label for="date-filter_by-3">Date range</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <div class="control"><label for="date-from_date">From</label></div>
+                        <div class="control is-datefield">
+                          <input class="input is-small" id="date-from_date" name="date-from_date" placeholder="YYYY[-MM]" type="text" value="">
+                        </div>
+                      </div>
+                      <div class="control" id="date_to">
+                        <div class="control"><label for="date-to_date">to</label></div>
+                        <div class="control is-datefield">
+                          <input class="input is-small" id="date-to_date" name="date-to_date" placeholder="YYYY[-MM]" type="text" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <script>
+                      $('#date-to_date').focus(function() {
+                        $('input[name="date-filter_by"]').attr('checked', false);
+                        $('input[value="date_range"]').attr('checked', true);
+                      });
+                      $('#date-from_date').focus(function() {
+                        $('input[name="date-filter_by"]').attr('checked', false);
+                        $('input[value="date_range"]').attr('checked', true);
+                      });
+                    </script>
+                    <!-- <hr>
+                    <div class="field">
+                      <div class="control">
+                        <label class="radio">
+                          <input checked="" id="date-date_type-0" name="date-date_type" type="radio" value="submitted_date"> Submission date (most recent)
+                        </label>
+                        <label class="radio">
+                          <input id="date-date_type-1" name="date-date_type" type="radio" value="submitted_date_first"> Submission date (original)
+                        </label>
+                        <label class="radio">
+                          <input id="date-date_type-2" name="date-date_type" type="radio" value="announced_date_first"> Announcement date
+                        </label>
+                        <p class="help has-text-grey">You may filter on either submission date or announcement date. Note that announcement date supports only year and month granularity.</p>
+                      </div>
+                    </div> -->
+              </fieldset>
+            </section>
+            <section>
+              <div class="field">
                 <div class="control">
-                  <label for="terms-0-field" class="hidden-label">Field to search</label>
-                  <span class="select">
-                    <select default="title" id="terms-0-field" name="terms-0-field">
-                      <option value="title">Title</option>
-                      <option value="keyword">Keyword</option>
-                      <option value="author">Author</option>
-                    </select>
-                  </span>
+                  <label class="radio">
+                    <input checked="" id="abstracts-0" name="abstracts" type="radio" value="True"> Show abstracts
+                  </label>
+                  <label class="radio">
+                    <input id="abstracts-1" name="abstracts" type="radio" value="False"> Hide abstracts
+                  </label>
                 </div>
-              </div> <!-- Campo iniziale search term -->
-
-              <div id="aggiuntivi"> <!-- qui vengono aggiunti i campi per i search term --> 
               </div>
-              
-              <div class="field is-clearfix" id="bottoni">  <!-- Pulsante per aggiungere search terms -->
-                <div class="control is-pulled-right">
-                  <button id="aggiungi" type="button" class="button is-medium" data-toggle="fieldset-add-row" data-target="#terms-fieldset"><span>Add term</span>
-                  </button>
-                  <!-- <button class="button is-link is-medium">Search</button> -->
-                </div>
-              </div>  
-
-              <!-- Script per aggiungere search terms -->
-              <script>
-                document.getElementById("aggiungi").addEventListener("click", function(e) {
-                  var num = document.getElementById("aggiuntivi").childElementCount;
-                  if(num < 3){
-                    num += 1;
-                    document.getElementById("aggiuntivi").
-                    innerHTML += `<div class="field has-addons-tablet" id="questo" data-toggle="fieldset-entry"> 
-                      <div class="control"> 
-                        <span class="select"> 
-                          <label for="terms-${num}-operator" class="hidden-label">Boolean operator</label>
-                          <select default="AND" id="terms-${num}-operator" name="terms-${num}-operator" style="padding-left: 0;margin-left: 0;padding-right: 0%;padding-left: 5%;"><option selected="" value="AND">AND</option><option value="OR">OR</option><option value="NOT">NOT</option></select>
+              <div class="level">
+                <div class="level-left">
+                  <div class="level-item">
+                    <div class="field is-horizontal is-grouped">
+                      <div class="control">
+                        <span class="select is-small">
+                          <select id="size" name="size"><option value="25">25</option><option selected="" value="50">50</option><option value="100">100</option><option value="200">200</option></select>
                         </span>
                       </div>
-                      <div class="control is-expanded">
-                        <label for="terms-${num}-term" class="hidden-label">Search term</label>
-                        <input class="input" id="terms-${num}-term" name="terms-${num}-term" placeholder="Search terms" type="text" value="">
-                      </div>
-                              <div class="control">
-                                <label for="terms-${num}-field" class="hidden-label">Field to search</label>
-                                <span class="select">
-                                  <select default="title" id="terms-${num}-field" name="terms-${num}-field">
-                                    <option value="title">Title</option>
-                                    <option value="keyword">Keyword</option>
-                                    <option value="author">Author</option>
-                                  </select>
-                                </span>
-                              </div>
-                              <div class="control">
-                                <button onclick="DeleteParent(this)" type="button" data-toggle="fieldset-remove-row" id="term-${num}-remove" class="button" aria-label="Remove this search term" style="visibility:visible;">–
-                                </button>
-                              </div>
-                            </div>`
-                  };
-                });
-              </script> <!-- Script per aggiungere search terms -->
-
-
-              <!-- Script per cancellare search terms -->
-              <script>
-                function DeleteParent(button){
-                  button.parentElement.parentElement.remove();
-                };
-              </script> <!-- Script per cancellare search terms -->
-              
-              
-            </fieldset>
-            <fieldset class="fieldset">
-              <legend class="legend">Stato</legend>
-              <div class="columns is-baseline">
-                <div class="column">
-                  <div class="field is-horizontal is-grouped">
-                    <div class="control">
-                      <div class="checkbox">
-                        <input id="standard" name="standard" type="checkbox" value="y">
-                        <label for="standard">Standard track</label>
-                      </div>
-                    </div>
-                    <div class="control">
-                      <div class="select is-small" id="ddInCheck">
-                        <label for="standard_track" class="hidden-label">Subtopic within physics</label>
-                        <select id="standard_track" name="standard_track">
-                          <option value="proposed_standard">Proposed standard</option>
-                          <option value="draft_standard">Draft standard</option>
-                          <option value="internet_standard">Internet standard</option>
-                        </select>
+                      <div class="control" id="results" style="margin-top: 2%;">
+                      <label for="size">results per page</label>
                       </div>
                     </div>
                   </div>
-                  <script>
-                    $('select#standard_track').change(function() {
-                      $('input#standard').attr('checked', true);
-                    });
-                  </script>
-                  <div class="field is-horizontal">
-                    <div class="control">
-                      <div class="checkbox">
-                        <input id="classification-computer_science" name="classification-computer_science" type="checkbox" value="y">
-                        <label for="classification-computer_science">Best current practice</label>
+                  <!-- <div class="level-item" style="margin-top: -2%;">
+                    <div class="field is-horizontal is-grouped">
+                      <div class="control">
+                        <div class="checkbox">
+                          <input id="include_older_versions" name="include_older_versions" type="checkbox" value="True">
+                          <label for="include_older_versions">Include older versions of papers</label>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="field is-horizontal">
-                    <div class="control">
-                      <div class="checkbox">
-                        <input id="classification-economics" name="classification-economics" type="checkbox" value="y">
-                        <label for="classification-economics">Informational</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field is-horizontal">
-                    <div class="control">
-                      <div class="checkbox">
-                        <input id="classification-eess" name="classification-eess" type="checkbox" value="y">
-                        <label for="classification-eess">Experimental</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field is-horizontal">
-                    <div class="control">
-                      <div class="checkbox">
-                        <input id="classification-mathematics" name="classification-mathematics" type="checkbox" value="y">
-                        <label for="classification-mathematics">Historic</label>
-                      </div>
-                    </div>
-                  </div>
-                  
-                </div>
-                <div class="column">
-                  
-                </div>
-              </div>
-            </fieldset>
-            <fieldset class="fieldset ">
-              <legend class="legend">Date</legend>
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <div class="radio"> 
-                        <input checked="" id="date-filter_by-0" name="date-filter_by" type="radio" value="all_dates">
-                        <label for="date-filter_by-0">All dates</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <div class="radio"> 
-                        <input id="date-filter_by-1" name="date-filter_by" type="radio" value="past_12">
-                        <label for="date-filter_by-1">Past 12 months</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <div class="radio"> 
-                        <input id="date-filter_by-2" name="date-filter_by" type="radio" value="specific_year">
-                        <label for="date-filter_by-2">Specific year</label>
-                      </div>
-                    </div>
-                    <div class="control is-datefield">
-                      <label for="date-year" class="hidden-label">Enter four digit year</label>
-                        <input class="input is-small" id="date-year" name="date-year" placeholder="YYYY" type="text" value="">
-                      <script>
-                        $('#date-year').focus(function() {
-                          $('input[name="date-filter_by"]').attr('checked', false);
-                          $('input[value="specific_year"]').attr('checked', true);
-                        });
-                      </script>
-                    </div>
-                  </div>
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <div class="radio"> 
-                        <input id="date-filter_by-3" name="date-filter_by" type="radio" value="date_range">
-                        <label for="date-filter_by-3">Date range</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <div class="control"><label for="date-from_date">From</label></div>
-                      <div class="control is-datefield">
-                        <input class="input is-small" id="date-from_date" name="date-from_date" placeholder="YYYY[-MM]" type="text" value="">
-                      </div>
-                    </div>
-                    <div class="control" id="date_to">
-                      <div class="control"><label for="date-to_date">to</label></div>
-                      <div class="control is-datefield">
-                        <input class="input is-small" id="date-to_date" name="date-to_date" placeholder="YYYY[-MM]" type="text" value="">
-                      </div>
-                    </div>
-                  </div>
-                  <script>
-                    $('#date-to_date').focus(function() {
-                      $('input[name="date-filter_by"]').attr('checked', false);
-                      $('input[value="date_range"]').attr('checked', true);
-                    });
-                    $('#date-from_date').focus(function() {
-                      $('input[name="date-filter_by"]').attr('checked', false);
-                      $('input[value="date_range"]').attr('checked', true);
-                    });
-                  </script>
-                  <!-- <hr>
-                  <div class="field">
-                    <div class="control">
-                      <label class="radio">
-                        <input checked="" id="date-date_type-0" name="date-date_type" type="radio" value="submitted_date"> Submission date (most recent)
-                      </label>
-                      <label class="radio">
-                        <input id="date-date_type-1" name="date-date_type" type="radio" value="submitted_date_first"> Submission date (original)
-                      </label>
-                      <label class="radio">
-                        <input id="date-date_type-2" name="date-date_type" type="radio" value="announced_date_first"> Announcement date
-                      </label>
-                      <p class="help has-text-grey">You may filter on either submission date or announcement date. Note that announcement date supports only year and month granularity.</p>
                     </div>
                   </div> -->
-            </fieldset>
-          </section>
-          <section>
-            <div class="field">
-              <div class="control">
-                <label class="radio">
-                  <input checked="" id="abstracts-0" name="abstracts" type="radio" value="show"> Show abstracts
-                </label>
-                <label class="radio">
-                  <input id="abstracts-1" name="abstracts" type="radio" value="hide"> Hide abstracts
-                </label>
-              </div>
-            </div>
-            <div class="level">
-              <div class="level-left">
-                <div class="level-item">
-                  <div class="field is-horizontal is-grouped">
-                    <div class="control">
-                      <span class="select is-small">
-                        <select id="size" name="size"><option value="25">25</option><option selected="" value="50">50</option><option value="100">100</option><option value="200">200</option></select>
-                      </span>
-                    </div>
-                    <div class="control" id="results" style="margin-top: 2%;">
-                     <label for="size">results per page</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="level-item" style="margin-top: -2%;">
-                  <div class="field is-horizontal is-grouped">
-                    <div class="control">
-                      <div class="checkbox">
-                        <input id="include_older_versions" name="include_older_versions" type="checkbox" value="y">
-                        <label for="include_older_versions">Include older versions of papers</label>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
-            </div>
-            <!-- <button class="button is-link is-medium">Search</button> -->
-          </section>
+              <!-- <button class="button is-link is-medium">Search</button> -->
+            </section>
+          </form>
         </div>
         
       </div> <!-- END sinistra -->
