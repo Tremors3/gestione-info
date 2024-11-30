@@ -35,22 +35,23 @@ class Parser:
         "Informational",
         "Experimental",
         "Historic",
-        "Unknown"
+        "Unknown",
+        "Not Issued"
     )
     
     MONTHS = {
-        "January":"01",
-        "February":"02",
-        "March":"03",
-        "April":"04",
-        "May":"05",
-        "June":"06",
-        "July":"07",
-        "August":"08",
-        "September":"09",
-        "October":"10",
-        "November":"11",
-        "December":"12",
+        "January"  : "01",
+        "February" : "02",
+        "March"    : "03",
+        "April"    : "04",
+        "May"      : "05",
+        "June"     : "06",
+        "July"     : "07",
+        "August"   : "08",
+        "September": "09",
+        "October"  : "10",
+        "November" : "11",
+        "December" : "12",
     }
 
     # %%%%%% PAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -205,10 +206,14 @@ class Parser:
             text = element[6].get_text().replace('\u00a0', ' ').strip()
             status = next((s for s in Parser.STATUSES if s in text), "")
             
+            # Non consideriamo gli rfc non pubblicati
+            if status == "Not Issued": return None
+            
             # Formattazione della data
-            date = element[4].get_text().split(' ')
-            date[0] = Parser.MONTHS[date[0]]
-            date = "-".join(date[::-1])
+            date = element[4].get_text().replace('\u00a0', ' ').split(' ')
+            if len(date) > 2: date = date[1::] # Non consideriamo il giorno
+            date[0] = Parser.MONTHS[date[0]] # Tradiciamo il mese in numero
+            date = "-".join(date[::-1]) # Ricostruiamo la data: YYYY-MM
             
             # Costruzione dei metadati
             current = {
@@ -241,8 +246,10 @@ class Parser:
             row = group[index].find_all("td")
             if len(row) > 1:
                 if (to_list):
+                    # Keywords Parser
                     return [item.strip() for item in row[1].get_text().split(',') if len(item) > 1]
                 else:
+                    # Abstract Parser
                     return row[1].get_text().replace('\n',' ').replace('\r', '').strip()
         return ""
 
@@ -284,7 +291,7 @@ if __name__ == "__main__":
     import time
     
     start = time.time()
-    Parser.generate_corpus(index_begin=1918, index_end=1918)
+    Parser.generate_corpus(index_begin=1, index_end=2005)
     end = time.time()
     
     tot = str(end-start).split(".")

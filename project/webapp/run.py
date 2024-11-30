@@ -8,7 +8,7 @@ if __name__ == '__main__':
     app = create_app()
     
     # Apertura automatica della pagina
-    webbrowser.open(f"http://{app.config['NETWORK_SETTINGS']['IP_ADDRESS']}:{app.config['NETWORK_SETTINGS']['PORT_NUMBER']}")
+    # webbrowser.open(f"http://{app.config['NETWORK_SETTINGS']['IP_ADDRESS']}:{app.config['NETWORK_SETTINGS']['PORT_NUMBER']}")
     
     # Avvio del servizio
     app.run(
