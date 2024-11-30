@@ -29,6 +29,30 @@ class Parser:
     URL_PREFIX: str="https://www.rfc-editor.org/rfc/rfc"
     URL_POSTFIX: str=".html"
 
+    STATUSES = (
+        "Proposed Standard", "Draft Standard", "Internet Standard",     # Standard Track
+        "Best Current Practice",
+        "Informational",
+        "Experimental",
+        "Historic",
+        "Unknown"
+    )
+    
+    MONTHS = {
+        "January":"01",
+        "February":"02",
+        "March":"03",
+        "April":"04",
+        "May":"05",
+        "June":"06",
+        "July":"07",
+        "August":"08",
+        "September":"09",
+        "October":"10",
+        "November":"11",
+        "December":"12",
+    }
+
     # %%%%%% PAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     @staticmethod
@@ -177,14 +201,24 @@ class Parser:
             # Metadati
             element = group[0].find_all("td")
             
+            # Ottenimento dello stato
+            text = element[6].get_text().replace('\u00a0', ' ').strip()
+            status = next((s for s in Parser.STATUSES if s in text), "")
+            
+            # Formattazione della data
+            date = element[4].get_text().split(' ')
+            date[0] = Parser.MONTHS[date[0]]
+            date = "-".join(date[::-1])
+            
+            # Costruzione dei metadati
             current = {
                 "Number": element[0].get_text().split('\u00a0')[1].split(' ')[0].strip(),
                 "Files": [tf.strip() for tf in element[1].get_text().replace('\u00a0', ' ').split(',')],
                 "Title": element[2].get_text().replace('\u00a0', ' ').strip(),
                 "Authors": [au.strip() for au in element[3].get_text().replace('\u00a0', ' ').split(',')],
-                "Date": element[4].get_text().replace('\u00a0', ' ').strip(),
+                "Date": date,
                 "More Info": element[5].get_text().replace('\u00a0', ' ').strip(),
-                "Status": element[6].get_text().replace('\u00a0', ' ').strip()
+                "Status": status
             }
 
             # Abstract
@@ -250,7 +284,7 @@ if __name__ == "__main__":
     import time
     
     start = time.time()
-    Parser.generate_corpus(index_begin=1, index_end=100)
+    Parser.generate_corpus(index_begin=1918, index_end=1918)
     end = time.time()
     
     tot = str(end-start).split(".")
