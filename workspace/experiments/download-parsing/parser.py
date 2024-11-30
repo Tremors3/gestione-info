@@ -209,7 +209,7 @@ class Parser:
                 if (to_list):
                     return [item.strip() for item in row[1].get_text().split(',') if len(item) > 1]
                 else:
-                    return row[1].get_text().strip()
+                    return row[1].get_text().replace('\n',' ').replace('\r', '').strip()
         return ""
 
     # %%%%%% GENERATE CORPUS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -229,17 +229,20 @@ class Parser:
         output_file = output_file if output_file is not None else Parser.DEFAULT_OUTPUT_FILE
         
         # Scaricamento e parsing dei metadati
+        logging.debug(f"Download e Parsing dei Metadati...")
         metadata = Parser._download_and_parse_metadata(index_begin, index_end)
         
         # Scaricamento e parsing del corpo dei documenti
+        logging.debug(f"Download e Parsing dei Documenti...")
         page_list = []
         for page in Parser._download_and_parse_pages(metadata, workers):
             page_list.append(page)
 
         # Salvataggio del corpus nel file
+        logging.debug(f"Scrivendo su file...")
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(page_list, f, ensure_ascii=False, indent=4)
-        logging.info(f"Corpus salvato in {output_file}.")
+        logging.info(f"Corpus salvato in \"{output_file}\".")
 
 # UNIT TESTING
 if __name__ == "__main__":
