@@ -15,8 +15,13 @@ def search():
         # Format query and save to file
         query = format_query(request.form)
         save_query_to_file(query, "query.json")
-        return redirect('/')
+        return redirect(url_for('views.results'))
     return render_template('index.html')
+
+@blueprint.route('/results', methods=['GET'])
+def results():
+    if request.method == 'GET':
+        return render_template('results.html')
 
 # Funzione per formattare la query
 def format_query(form) -> dict:
