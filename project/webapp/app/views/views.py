@@ -29,6 +29,9 @@ def format_query(form) -> dict:
         "spelling_correction": bool(form.get('spelling_correction')),
         "synonims": bool(form.get('synonims')),
         
+        # Search engine
+        "search_engine": form.get('search_engine', 'woosh'),
+
         # Stato (checkbox)
         "standard_track": bool(form.get('standard')),
         "best_current_practice": bool(form.get('best_current_practice')),

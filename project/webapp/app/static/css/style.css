@@ -436,8 +436,13 @@ header h1{
     margin-top: 2%;
 }
 
+.search_engine{
+  margin-top: 1%;
+}
 
-
+#search_engine-0, #search_engine-1, #search_engine-2 {
+  margin-top: .5rem;
+}
 
 
 
