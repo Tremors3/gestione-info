@@ -1,11 +1,9 @@
+from project.searchengine.myLogger.myLogger import logger as logging, bcolors
+
 import os
 import sys
 import subprocess
 from sys import platform
-
-sys.dont_write_bytecode = True
-
-from project.searchengine.myLogger.myLogger import logger as logging, bcolors
 
 def install_dependencies():
     
@@ -34,8 +32,8 @@ def check_or_create_venv():
 
         # Creazione del virtual environment
         logging.debug("Creazione virtual environment ...")
-        execute_subprocess([sys.executable,"-m","venv","venv"])
-            
+        execute_subprocess(["python","-m","venv","venv"])
+    
         # Controllo di esistenza del venv
         if not os.path.isfile(PathList.PYTHON_EXECUTABLE):
             logging.error("Non è stato possibile creare il virtual environment.")
@@ -62,31 +60,83 @@ def execute_subprocess(command: list):
     except KeyboardInterrupt:
         logging.warning("Interruzione da tastiera.")
 
-def process_starter(execute: list[str]):
+def process_starter(directory: str, script_path: str):
+    
+    # Controllo di esistenza della cartella
+    if not os.path.isdir(directory):
+        logging.error(f"La directory specificata \'{directory}\' non esiste. Verifica il percorso.")
+        return
+
+    # Controllo di esistenza del file 
+    if not os.path.isfile(script_path):
+        logging.error(f"Il file specificato \'{script_path}\' non esiste nella directory \'{directory}\'.")
+        return
     
     # Cerchiamo ed eventualmente creiamo il venv
     check_or_create_venv()
     
-    # Esecuzione degli scripts
-    execute_subprocess([PathList.PYTHON_EXECUTABLE, *execute])
+    # Controllo di esistenza del venv
+    if not os.path.isfile(PathList.PYTHON_EXECUTABLE):
+        logging.error(f"L'eseguibile Python non è stato trovato nel virtual environment: \'{PathList.PYTHON_EXECUTABLE}\'")
+        return
     
-def start(args: str):
-    """Avvio dell'applicazione con l'opzione"""
-    script_path = os.path.join("starter.py")  # Run Path
-    process_starter(["-B", script_path, args])  # Start Process
+    # Esecuzione degli scripts
+    execute_subprocess([PathList.PYTHON_EXECUTABLE, script_path])
+    
+def webserver():
+    """Avvio del webserver con la flag -w"""
+    print(bcolors.GREEN + "Starting web server ..." + bcolors.RESET)
+    directory   = os.path.join(PathList.WEB_APP_PATH)  # Webserver path
+    script_path = os.path.join(directory, "run.py")  # Run Path
+    process_starter(directory, script_path)  # Start Process
+
+def parser():
+    """Avvio del parser con la flag -p"""
+    print(bcolors.GREEN + "Starting parser ..." + bcolors.RESET)
+    directory   = os.path.join(PathList.SEARCH_ENGINE_PATH, "myParser")  # Parser path
+    script_path = os.path.join(directory, "myParser.py")  # Run Path
+    process_starter(directory, script_path)  # Start Process
+
+def help():
+    """Messaggio per la visualizzazione della pagina di help"""
+    msg = f"""
+┌──────────────╢ Help Page ╟──────────────┐
+│                                         │
+│  SYNOPSIS                               │
+│       python graboid.py -[w,p,h] [-s]   │
+│                                         │
+│  OPTIONS                                │
+│   -h  Show Help                         │
+│   -w  Start web server                  │
+│   -p  Start parser                      │
+│   -s  Sync dependencies                 │
+│                                         │
+└─────────────────╢ 1/1 ╟─────────────────┘"""
+    print(msg)
+    
+def error(flag) -> callable:
+    """Messaggio di errore nel caso venga inserita una flag sbagliata"""
+    logging.error(f"La flag \'{flag}\' non è supportata.")
+    logging.info("Consulta la guida tramite il comando: \'python graboid.py -h\'.")
+    help()
 
 class PathList:
     # Main Paths
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+    PROJECT_PATH = os.path.join(BASE_PATH, "project")
+    PROJECT_DIR = os.path.join("project")
+    WEB_APP_PATH = os.path.join(PROJECT_DIR, "webapp")
+    SEARCH_ENGINE_PATH = os.path.join(PROJECT_DIR, "searchengine")
 
     # VENV PATHS
+    VENV_DIR     = BASE_PATH
     VENV_SUB_DIR = "Scripts" if platform == "win32" else "bin"
     PYTHON_EXTENSION  = ".exe" if platform == "win32" else ""
     PYTHON_EXECUTABLE = os.path.join("venv", VENV_SUB_DIR, f"python{PYTHON_EXTENSION}")
 
     # Other Paths
-    EXPECTED_DIR = "gestione-info"
     CURRENT_DIR  = os.path.basename(os.path.abspath(os.getcwd()))
+    EXPECTED_DIR = "gestione-info"
 
     # Requirements
     REQUIREMENTS_FILE = "requirements.txt"
@@ -94,24 +144,14 @@ class PathList:
 class Options:
     SYNC_DEPS = False
 
-def help():
-    """Messaggio per la visualizzazione della pagina di help"""
-    msg = f"""
-┌──────────────╢ Help Page ╟──────────────┐
-│                                         │╲
-│  SYNOPSIS                               │╲│
-│       python graboid.py -[w,p,h] [-s]   │╲│
-│                                         │╲│
-│  OPTIONS                                │╲│
-│   -h  Show help                         │╲│
-│   -w  Start web server                  │╲│
-│   -p  Start parser                      │╲│
-│   -s  Sync dependencies                 │╲│
-│                                         │╲│
-└─────────────────╢ 1/1 ╟─────────────────┘╲│ 
- ╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲╲│
-  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾"""
-    print(msg)
+    # Dizionario delle flag
+    FUNCS = {
+        "-w" : webserver,
+        "-p" : parser,
+        "-h" : help
+    }
+
+print(PathList.PROJECT_PATH)
 
 if __name__ == '__main__':
 
@@ -124,12 +164,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         
         if "-s" in sys.argv: 
-            sys.argv.remove("-s")
             Options.SYNC_DEPS = True
+            sys.argv.remove("-s")
         
-        if "-h" in sys.argv: 
-            sys.argv.remove("-h")
-            help()
-            sys.exit(0)
-
-        start(' '.join(sys.argv[1:]))
+        flag = sys.argv[1]
+        Options.FUNCS.get(flag, lambda: error(flag))()

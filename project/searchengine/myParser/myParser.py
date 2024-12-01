@@ -16,6 +16,8 @@ from bs4 import BeautifulSoup
 # Per ThreadPool
 import concurrent.futures
 
+import os
+
 # Import del logger personalizzato (colori)
 from project.searchengine.myLogger.myLogger import logger as logging
 
@@ -161,7 +163,7 @@ class MyParser:
                 return None
 
             # Estrae una lista contenente tutte le righe della tabella
-            rows = table.find_all("tr")[(index_begin * 3) - 2:(index_end * 3)]
+            rows = table.find_all("tr")[(index_begin * 3) - 2:(index_end * 3)+1]
             
             # Parsa le righe della tabella in un json
             return MyParser._parse_rows(rows)
@@ -285,15 +287,9 @@ class MyParser:
             json.dump(page_list, f, ensure_ascii=False, indent=4)
         logging.info(f"Corpus salvato in \"{output_file}\".")
 
+def start():
+    MyParser.generate_corpus(index_begin=9000, index_end=9001)
+    
 # UNIT TESTING
 if __name__ == "__main__":
-    
-    import time
-    
-    start = time.time()
-    MyParser.generate_corpus(index_begin=1, index_end=1)
-    end = time.time()
-    
-    tot = str(end-start).split(".")
-    
-    print("Tempo esecuzione:", tot[0] +"."+ tot[1][:4], "secondi")
+    start()
