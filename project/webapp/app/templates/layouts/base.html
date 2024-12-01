@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Default Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- Default Website Icon -->
+    <link rel="shortcut icon" href="../static/images/"/>
+    
+    <!-- Title -->
+    <title>GraboidRFC</title>
+
+    {% block head %}{% endblock %}
+
+  </head>
+  <body>
+
+    <!-- Navbar import -->
+    {% include 'navigation.html' %}
+
+    <!-- Block Body -->
+    {% block body %}{% endblock %}
+
+    <!-- Default JavaScript -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}" /></script>
+
+    <!-- Blocck JavaScript-->
+    {% block javaScript %}{% endblock %}
+  
+</body>
+</html>
+
+
+

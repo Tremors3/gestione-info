@@ -291,7 +291,7 @@ if __name__ == "__main__":
     import time
     
     start = time.time()
-    Parser.generate_corpus(index_begin=1, index_end=2005)
+    Parser.generate_corpus(index_begin=1, index_end=1)
     end = time.time()
     
     tot = str(end-start).split(".")
