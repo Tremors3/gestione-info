@@ -30,7 +30,7 @@ def format_query(form) -> dict:
         "synonims": bool(form.get('synonims')),
         
         # Search engine
-        "search_engine": form.get('search_engine', 'woosh'),
+        "search_engine": form.get('search_engine', 'WHOOSH'),
 
         # Stato (checkbox)
         "standard_track": bool(form.get('standard')),
