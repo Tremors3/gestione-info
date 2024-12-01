@@ -1,59 +1,55 @@
-from project.searchengine.myLogger import logger as logging, bcolors
+from project.searchengine.myLogger.myLogger import logger as logging, bcolors
 from sys import platform
 
 import os
 import sys
 import subprocess
 
-# -------------------------------------- DA INTEGRARE --------------------------------------
-def requirements():
-    """Funzione per controllare l'esistenza del 
-    file dei requirements e del loro eventuale download"""
+def install_dependencies():
     
-    file = "requirements.txt"
-    cartella = "project"
-    if file in os.listdir(cartella):
-        download_requirements = input(bcolors.WARNING+f"Scarico i requirements presenti in {file}? (Y/n)"+bcolors.RESET) or "Y"
-        if download_requirements.lower() == "y":
-            try:
-                subprocess.run("")
-                logging.info("Requirements scaricati con successo.")
-                return True
-            except Exception as e:
-                logging.error(f"Errore durante il download dei requirements: {e}")
-                return False
-        else:
-            return False
-    else:
-        logging.critical(f"Non ho trovato il file {file} per scaricare i requirements.\nControlla che sia nella cartella {cartella} e che abbia il nome giusto.")
+    # Installazione delle dipendenze
+    logging.debug(f"Scarico i requirements dal file {PathList.REQUIREMENTS_FILE}...")
+    execute_subprocess([PathList.PYTHON_EXECUTABLE, "-m", "pip", "install", "--upgrade", "pip"])        
+    execute_subprocess([PathList.PYTHON_EXECUTABLE, "-m", "pip", "install", "-r", PathList.REQUIREMENTS_FILE])
+    
+    logging.debug("Requirements scaricati con successo.")
 
-def check_for_venv():
-    """Funzione per controllare l'esistenza del 
-       virtual environment e della sua eventuale 
-       creazione"""
+def check_or_create_venv():
+    """Funzione per controllare sia l'esistenza del virtual environment che del file requirements
+       e della loro eventuale creazione/installazione dipendenze"""
+
+    # Controllo di esistenza del venv
+    if os.path.isfile(PathList.PYTHON_EXECUTABLE) and Options.SYNC_DEPS == False:
+        logging.debug("Virtual environment rilevato.")
+        return
     
-    venv = "venv"
-    cartella = "project"
-    # Cerco il virtual enviroment nella cartella del progetto
-    if venv in os.listdir(cartella): 
-        return True
-    else:
-        # Prompt per l'user
-        create_venv = input(bcolors.WARNING+f"Non è stato rilevato nessun virtual environment ({venv}). Vuoi crearne uno adesso? (Y/n)"+bcolors.RESET) or "Y"
+    try:
         
-        if create_venv.lower() == "y":
-            try:
-                # Creazione del virtual environment
-                subprocess.run(f"cd {cartella} & python -m venv {venv}")
-                logging.info("Virtual environment creato con successo")
-                return True
+        # Controllo sull'esistenza del file requirements
+        if not os.path.isfile(PathList.REQUIREMENTS_FILE):
+            logging.error(f"Il file \'{PathList.REQUIREMENTS_FILE}' non esiste. Non è possibile installare le dipendenze.")
+            sys.exit(1)
+        
+        if not os.path.isfile(PathList.PYTHON_EXECUTABLE):
             
-            except Exception as e:
-                logging.error(f"Errore durante la creazione del virtual environment: {e}")
-                return False
+            # Creazione del virtual environment
+            logging.debug("Creazione virtual environment ...")
+            execute_subprocess(["python","-m","venv","venv"])
+        
+            # Controllo di esistenza del venv
+            if not os.path.isfile(PathList.PYTHON_EXECUTABLE):
+                logging.error("Non è stato possibile creare il virtual environment.")
+                sys.exit(1)
             
-        else:
-            return False
+            logging.debug("Virtual environment creato con successo.")
+        
+        # Installazione delle dipendenze
+        install_dependencies()
+
+    except Exception as e:
+        logging.error(f"Errore durante la creazione del virtual environment: {e}")
+        sys.exit(1)
+
 # -------------------------------------- DA INTEGRARE --------------------------------------
 
 def execute_subprocess(command: list):
@@ -78,30 +74,29 @@ def process_starter(directory: str, script_path: str):
         logging.error(f"Il file specificato \'{script_path}\' non esiste nella directory \'{directory}\'.")
         return
     
-    # Deduzione della sottodirectory del venv data la piattaforma
-    venv_path = "Scripts" if platform == "win32" else "bin"
-    python_executable = os.path.join(directory, "venv", venv_path, "python")
+    # Cerchiamo ed eventualmente creiamo il venv
+    check_or_create_venv()
     
     # Controllo di esistenza del venv
-    if not os.path.isfile(python_executable):
-        logging.error(f"L'eseguibile Python non è stato trovato nel virtual environment: \'{python_executable}\'")
+    if not os.path.isfile(PathList.PYTHON_EXECUTABLE):
+        logging.error(f"L'eseguibile Python non è stato trovato nel virtual environment: \'{PathList.PYTHON_EXECUTABLE}\'")
         return
     
     # Esecuzione degli scripts
-    execute_subprocess([python_executable, script_path])
+    execute_subprocess([PathList.PYTHON_EXECUTABLE, script_path])
     
 def webserver():
     """Avvio del webserver con la flag -w"""
     print(bcolors.GREEN + "Starting web server ..." + bcolors.RESET)
-    directory = os.path.join("project", "webapp")  # Webserver path
+    directory   = os.path.join(PathList.WEB_APP_PATH)  # Webserver path
     script_path = os.path.join(directory, "run.py")  # Run Path
     process_starter(directory, script_path)  # Start Process
 
 def parser():
     """Avvio del parser con la flag -p"""
     print(bcolors.GREEN + "Starting parser ..." + bcolors.RESET)
-    directory = os.path.join("workspace", "experiments")  # Parser path
-    script_path = os.path.join(directory, "download-parsing", "parser.py")  # Run Path
+    directory   = os.path.join(PathList.SEARCH_ENGINE_PATH, "myParser")  # Parser path
+    script_path = os.path.join(directory, "myParser.py")  # Run Path
     process_starter(directory, script_path)  # Start Process
 
 def help():
@@ -112,33 +107,59 @@ def help():
 |  -h Show Help                        |
 |  -w Start web server                 |
 |  -p Start parser                     |
+|  -s Sync dependencies                |
 +--------------- [1/1] ----------------+"""
     print(msg)
-        
+    
 def error(flag) -> callable:
     """Messaggio di errore nel caso venga inserita una flag sbagliata"""
     logging.error(f"La flag \'{flag}\' non è supportata.")
     logging.info("Consulta la guida tramite il comando: \'python graboid.py -h\'.")
     help()
 
-EXPECTED_DIR = 'gestione-info'
-CURRENT_DIR = os.path.basename(os.path.abspath(os.getcwd()))
+class PathList:
+    # Main Paths
+    BASE_PATH    = "gestione-info"
+    PROJECT_PATH = os.path.join("project")
+    WEB_APP_PATH = os.path.join(PROJECT_PATH, "webapp")
+    SEARCH_ENGINE_PATH = os.path.join(PROJECT_PATH, "searchengine")
 
-# Dizionario delle flag
-STARTER = {
-    "-w" : webserver,
-    "-p" : parser,
-    "-h" : help
-}
+    # VENV PATHS
+    VENV_DIR     = BASE_PATH
+    VENV_SUB_DIR = "Scripts" if platform == "win32" else "bin"
+    PYTHON_EXTENSION  = ".exe" if platform == "win32" else ""
+    PYTHON_EXECUTABLE = os.path.join("venv", VENV_SUB_DIR, f"python{PYTHON_EXTENSION}")
+
+    # Other Paths
+    CURRENT_DIR  = os.path.basename(os.path.abspath(os.getcwd()))
+    EXPECTED_DIR = BASE_PATH
+
+    # Requirements
+    REQUIREMENTS_FILE = "requirements.txt"
+
+class Options:
+    SYNC_DEPS = False
+
+    # Dizionario delle flag
+    FUNCS = {
+        "-w" : webserver,
+        "-p" : parser,
+        "-h" : help
+    }
 
 if __name__ == '__main__':
 
     # Controlliamo di aver eseguito lo script nella cartella giusta    
-    if CURRENT_DIR != EXPECTED_DIR:
-        logging.critical(f'Esegui lo script stando nella directory indicata: \'{EXPECTED_DIR}\'.')
+    if PathList.CURRENT_DIR != PathList.EXPECTED_DIR:
+        logging.critical(f'Esegui lo script stando nella directory indicata: \'{PathList.EXPECTED_DIR}\'.')
         sys.exit(1)
     
     # Controllo ed esecuzione delle flag
     if len(sys.argv) > 1:
+        
+        if "-s" in sys.argv: 
+            Options.SYNC_DEPS = True
+            sys.argv.remove("-s")
+        
         flag = sys.argv[1]
-        STARTER.get(flag, lambda: error(flag))()
+        Options.FUNCS.get(flag, lambda: error(flag))()

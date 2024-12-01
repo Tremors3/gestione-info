@@ -17,9 +17,9 @@ from bs4 import BeautifulSoup
 import concurrent.futures
 
 # Import del logger personalizzato (colori)
-from myLogger import logger as logging
+from project.searchengine.myLogger.myLogger import logger as logging
 
-class Parser:
+class MyParser:
 
     # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -99,15 +99,15 @@ class Parser:
         Scarica e parsifica una pagina specificata.
         """
         # Costruzione dello URI della pagina
-        url = Parser.URL_PREFIX + meta['Number'] + Parser.URL_POSTFIX
+        url = MyParser.URL_PREFIX + meta['Number'] + MyParser.URL_POSTFIX
         
         # Scaricamento del contenuto della pagina
-        html_content = Parser._download_page(session, url)
+        html_content = MyParser._download_page(session, url)
         if html_content is None:
             return None
         
         # Estendiamo i metadati della pagina con il corpo parsato del documento
-        meta["Content"] = Parser._parse_page(html_content)
+        meta["Content"] = MyParser._parse_page(html_content)
         
         # Restituiamo i metadati (con tanto di corpo del documento)
         return meta
@@ -122,7 +122,7 @@ class Parser:
 
             # Creazione delle task per la Threadpool
             futures = {
-                executor.submit(Parser._task, session, meta): meta for meta in metadata
+                executor.submit(MyParser._task, session, meta): meta for meta in metadata
             }
 
             # Restituzione dei metadati che adesso contengono il corpo completo del documento
@@ -145,7 +145,7 @@ class Parser:
         with requests.Session() as session:
             try:
                 # Effettuazione la richiesta alla pagina
-                response = session.get(Parser.URL_METADATA)
+                response = session.get(MyParser.URL_METADATA)
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 logging.error(f"Errore durante il download dei metadati: {e}")
@@ -164,7 +164,7 @@ class Parser:
             rows = table.find_all("tr")[(index_begin * 3) - 2:(index_end * 3)]
             
             # Parsa le righe della tabella in un json
-            return Parser._parse_rows(rows)
+            return MyParser._parse_rows(rows)
 
     @staticmethod
     def _parse_rows(rows: list[any]) -> Optional[dict]:
@@ -181,7 +181,7 @@ class Parser:
             group = rows[i:i + 3]
             
             # Parsa il gruppo di righe in un json
-            parsed = Parser._parse_group(group)
+            parsed = MyParser._parse_group(group)
             if parsed:
                 parsed_data.append(parsed)
 
@@ -204,7 +204,7 @@ class Parser:
             
             # Ottenimento dello stato
             text = element[6].get_text().replace('\u00a0', ' ').strip()
-            status = next((s for s in Parser.STATUSES if s in text), "")
+            status = next((s for s in MyParser.STATUSES if s in text), "")
             
             # Non consideriamo gli rfc non pubblicati
             if status == "Not Issued": return None
@@ -212,7 +212,7 @@ class Parser:
             # Formattazione della data
             date = element[4].get_text().replace('\u00a0', ' ').split(' ')
             if len(date) > 2: date = date[1::] # Non consideriamo il giorno
-            date[0] = Parser.MONTHS[date[0]] # Tradiciamo il mese in numero
+            date[0] = MyParser.MONTHS[date[0]] # Tradiciamo il mese in numero
             date = "-".join(date[::-1]) # Ricostruiamo la data: YYYY-MM
             
             # Costruzione dei metadati
@@ -227,10 +227,10 @@ class Parser:
             }
 
             # Abstract
-            current["Abstract"] = Parser._parse_optional_row(group, 1, False)
+            current["Abstract"] = MyParser._parse_optional_row(group, 1, False)
 
             # Keywords
-            current["Keywords"] = Parser._parse_optional_row(group, 2, True)
+            current["Keywords"] = MyParser._parse_optional_row(group, 2, True)
 
             return current
         except (IndexError, AttributeError) as e:
@@ -246,10 +246,10 @@ class Parser:
             row = group[index].find_all("td")
             if len(row) > 1:
                 if (to_list):
-                    # Keywords Parser
+                    # Keywords MyParser
                     return [item.strip() for item in row[1].get_text().split(',') if len(item) > 1]
                 else:
-                    # Abstract Parser
+                    # Abstract MyParser
                     return row[1].get_text().replace('\n',' ').replace('\r', '').strip()
         return ""
 
@@ -266,17 +266,17 @@ class Parser:
         """
         
         # Impostazione dei valori di default
-        index_end = index_end if index_end is not None else Parser.TOTAL_RFC_NUMBER
-        output_file = output_file if output_file is not None else Parser.DEFAULT_OUTPUT_FILE
+        index_end = index_end if index_end is not None else MyParser.TOTAL_RFC_NUMBER
+        output_file = output_file if output_file is not None else MyParser.DEFAULT_OUTPUT_FILE
         
         # Scaricamento e parsing dei metadati
         logging.debug(f"Download e Parsing dei Metadati...")
-        metadata = Parser._download_and_parse_metadata(index_begin, index_end)
+        metadata = MyParser._download_and_parse_metadata(index_begin, index_end)
         
         # Scaricamento e parsing del corpo dei documenti
         logging.debug(f"Download e Parsing dei Documenti...")
         page_list = []
-        for page in Parser._download_and_parse_pages(metadata, workers):
+        for page in MyParser._download_and_parse_pages(metadata, workers):
             page_list.append(page)
 
         # Salvataggio del corpus nel file
@@ -291,7 +291,7 @@ if __name__ == "__main__":
     import time
     
     start = time.time()
-    Parser.generate_corpus(index_begin=1, index_end=1)
+    MyParser.generate_corpus(index_begin=1, index_end=1)
     end = time.time()
     
     tot = str(end-start).split(".")

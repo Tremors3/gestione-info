@@ -15,15 +15,15 @@ class CustomFormatter(logging.Formatter):
     def __init__(self):
         super().__init__()
         self.FORMATS = {
-            logging.DEBUG: bcolors.DEBUG + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
-            logging.INFO: bcolors.INFO + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
-            logging.WARNING: bcolors.WARNING + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
-            logging.ERROR: bcolors.ERROR + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
+            logging.DEBUG   : bcolors.DEBUG    + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
+            logging.INFO    : bcolors.INFO     + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
+            logging.WARNING : bcolors.WARNING  + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
+            logging.ERROR   : bcolors.ERROR    + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
             logging.CRITICAL: bcolors.CRITICAL + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
         }
 
     def format(self, record):
-        log_fmt = self.FORMATS.get(record.levelno, self.FORMATS[logging.INFO])
+        log_fmt   = self.FORMATS.get(record.levelno, self.FORMATS[logging.INFO])
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
