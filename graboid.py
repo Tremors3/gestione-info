@@ -31,7 +31,7 @@ def process_starter(directory: str, script_path: str):
     venv_path = "Scripts" if platform == "win32" else "bin"
     python_executable = os.path.join(directory, "venv", venv_path, "python")
     
-    # Controllo di esistenza del file 
+    # Controllo di esistenza del venv
     if not os.path.isfile(python_executable):
         logging.error(f"L'eseguibile Python non è stato trovato nel virtual environment: \'{python_executable}\'")
         return
@@ -41,18 +41,14 @@ def process_starter(directory: str, script_path: str):
     
 def webserver():
     print(bcolors.GREEN + "Starting web server ..." + bcolors.RESET)
-    
     directory = os.path.join("project", "webapp")  # Webserver path
     script_path = os.path.join(directory, "run.py")  # Run Path
-    
     process_starter(directory, script_path)  # Start Process
 
 def parser():
     print(bcolors.GREEN + "Starting parser ..." + bcolors.RESET)
-    
     directory = os.path.join("workspace", "experiments")  # Parser path
     script_path = os.path.join(directory, "download-parsing", "parser.py")  # Run Path
-    
     process_starter(directory, script_path)  # Start Process
 
 def help():
