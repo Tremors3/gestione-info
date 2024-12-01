@@ -11,7 +11,6 @@ def install_dependencies():
     logging.debug(f"Scarico i requirements dal file {PathList.REQUIREMENTS_FILE}...")
     execute_subprocess([PathList.PYTHON_EXECUTABLE, "-m", "pip", "install", "--upgrade", "pip"])        
     execute_subprocess([PathList.PYTHON_EXECUTABLE, "-m", "pip", "install", "-r", PathList.REQUIREMENTS_FILE])
-    
     logging.debug("Requirements scaricati con successo.")
 
 def check_or_create_venv():
@@ -19,8 +18,9 @@ def check_or_create_venv():
        e della loro eventuale creazione/installazione dipendenze"""
 
     # Controllo di esistenza del venv
-    if os.path.isfile(PathList.PYTHON_EXECUTABLE) and Options.SYNC_DEPS == False:
+    if os.path.isfile(PathList.PYTHON_EXECUTABLE):
         logging.debug("Virtual environment rilevato.")
+        if Options.SYNC_DEPS: install_dependencies()
         return
     
     try:
@@ -29,19 +29,17 @@ def check_or_create_venv():
         if not os.path.isfile(PathList.REQUIREMENTS_FILE):
             logging.error(f"Il file \'{PathList.REQUIREMENTS_FILE}' non esiste. Non è possibile installare le dipendenze.")
             sys.exit(1)
-        
+
+        # Creazione del virtual environment
+        logging.debug("Creazione virtual environment ...")
+        execute_subprocess(["python","-m","venv","venv"])
+    
+        # Controllo di esistenza del venv
         if not os.path.isfile(PathList.PYTHON_EXECUTABLE):
-            
-            # Creazione del virtual environment
-            logging.debug("Creazione virtual environment ...")
-            execute_subprocess(["python","-m","venv","venv"])
+            logging.error("Non è stato possibile creare il virtual environment.")
+            sys.exit(1)
         
-            # Controllo di esistenza del venv
-            if not os.path.isfile(PathList.PYTHON_EXECUTABLE):
-                logging.error("Non è stato possibile creare il virtual environment.")
-                sys.exit(1)
-            
-            logging.debug("Virtual environment creato con successo.")
+        logging.debug("Virtual environment creato con successo.")
         
         # Installazione delle dipendenze
         install_dependencies()
@@ -102,14 +100,14 @@ def parser():
 def help():
     """Messaggio per la visualizzazione della pagina di help"""
     msg = """
-+--------------- Help Page --------------------+
-|  syntax:   python graboid.py -[h,w,p] [-s]  |
-|
-|  -h Show Help                             |
-|  -w Start web server                      |
-|  -p Start parser                          |
-|  -s Sync dependencies                     |
-+--------------- [1/1] ---------------------+"""
++--------------- Help Page ------------------+
+|  syntax:   python graboid.py -h,-w,-p [-s] |
+|                                            |
+|  -h Show Help                              |
+|  -w Start web server                       |
+|  -p Start parser                           |
+|  -s Sync dependencies                      |
++--------------- [1/1] ----------------------+"""
     print(msg)
     
 def error(flag) -> callable:
