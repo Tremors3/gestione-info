@@ -99,15 +99,19 @@ def parser():
 
 def help():
     """Messaggio per la visualizzazione della pagina di help"""
-    msg = """
-+--------------- Help Page ------------------+
-|  syntax:   python graboid.py -h,-w,-p [-s] |
-|                                            |
-|  -h Show Help                              |
-|  -w Start web server                       |
-|  -p Start parser                           |
-|  -s Sync dependencies                      |
-+--------------- [1/1] ----------------------+"""
+    msg = f"""
+┌──────────────╢ Help Page ╟──────────────┐
+│                                         │
+│  SYNOPSIS                               │
+│       python graboid.py -[w,p,h] [-s]   │
+│                                         │
+│  OPTIONS                                │
+│   -h  Show Help                         │
+│   -w  Start web server                  │
+│   -p  Start parser                      │
+│   -s  Sync dependencies                 │
+│                                         │
+└─────────────────╢ 1/1 ╟─────────────────┘"""
     print(msg)
     
 def error(flag) -> callable:
