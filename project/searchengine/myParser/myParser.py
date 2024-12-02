@@ -21,6 +21,8 @@ import os
 # Import del logger personalizzato (colori)
 from project.searchengine.myLogger.myLogger import logger as logging
 
+from tqdm import tqdm, trange
+
 class MyParser:
 
     # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -126,15 +128,17 @@ class MyParser:
             futures = {
                 executor.submit(MyParser._task, session, meta): meta for meta in metadata
             }
-
+            pbar = tqdm(total=len(futures))
             # Restituzione dei metadati che adesso contengono il corpo completo del documento
             for future in concurrent.futures.as_completed(futures):
+                pbar.update(1)
                 try:
                     page = future.result()
                     if page is not None:
                         yield page
                 except Exception as e:
                     logging.warning(f"Errore durante l'elaborazione di un task: {e}")
+                
 
     # %%%%%% METADATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -179,7 +183,7 @@ class MyParser:
         # group[0] --> Metadati dell'RFC
         # group[1] --> Estratto dell'RFC
         # group[2] --> Keywords dell'RFC
-        for i in range(0, len(rows), 3):
+        for i in trange(0, len(rows), 3):
             group = rows[i:i + 3]
             
             # Parsa il gruppo di righe in un json
@@ -288,7 +292,7 @@ class MyParser:
         logging.info(f"Corpus salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_corpus(index_begin=9000, index_end=9001)
+    MyParser.generate_corpus(index_begin=9000, index_end=9100)
     
 # UNIT TESTING
 if __name__ == "__main__":
