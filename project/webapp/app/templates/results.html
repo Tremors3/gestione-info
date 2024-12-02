@@ -1,23 +1,12 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 
 <!-- HEAD -->
-
-<head>
-  <link rel="stylesheet" href="../static/css/style.css">
-</head>
+{% block head %}{% endblock %}
 
 <!-- BODY -->
+{% block body %}
 
-<body>
-
-  <!-- HEADER -->
-
-  <header class="header">
-    <h1 style="text-align:left;">GRAB<sub style="font-size: 20px;">oid</sub>RFC</h1>
-  </header>
-  
   <!-- MAIN -->
-
   <div class="main-div">
 
     <!-- TITLE -->
@@ -27,6 +16,7 @@
     </div>
 
     <div class="separatore"></div>
+    
     <div class="colonne is-desktop">
       
       <!-- CONTAINER DI SINISTRA -->
@@ -42,6 +32,7 @@
       </div> <!-- END destra -->
     
     </div> <!-- END colonne is-desktop -->
+
   </div> <!-- END main-div -->
   
-</body>
+{% endblock %}

@@ -88,6 +88,11 @@ header h1{
     margin: 1em 0;
 }
 
+.fieldset ul{
+  list-style: none;
+  padding: 0;
+}
+
 .legend {
     font-weight: 600;
     background-color: inherit;
@@ -436,8 +441,13 @@ header h1{
     margin-top: 2%;
 }
 
-.search_engine{
+/* .search_engine{
   margin-top: 1%;
+} */
+
+#search_engine{
+  margin-top: 5%;
+  margin-bottom: 0;
 }
 
 #search_engine-0, #search_engine-1, #search_engine-2 {

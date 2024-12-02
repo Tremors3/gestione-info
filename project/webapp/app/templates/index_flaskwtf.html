@@ -1,33 +1,16 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 
 <!-- HEAD -->
-
-<head>
-  <link rel="stylesheet" href="../static/css/style.css">
-
-</head>
+{% block head %}{% endblock %}
 
 <!-- BODY -->
+{% block body %}
 
-<body>
-
-  <!-- HEADER -->
-
-  <header class="header">
-    <h1 style="text-align:left;">GRAB<sub style="font-size: 20px;">oid</sub>RFC</h1>
-  </header>
-  
   <!-- MAIN -->
-
   <div class="main-div">
 
-    <!-- TITLE -->
-
-    <!-- <div class="titolo">
-      <h2>Ricerca</h2>
-    </div> -->
-
     <div class="separatore"></div>
+    
     <div class="colonne is-desktop">
       
       <!-- CONTAINER DI SINISTRA -->
@@ -36,42 +19,51 @@
 
         <div class="box">
           <form method="POST" action="/search">
+            {{ context["form"].csrf_token }}
             <section>
               <fieldset class="fieldset" style="margin-top:0;">
                 <legend class="legend">Search</legend>
                 <div class="control" style="display:flex;">
-                  <input class="input" id="ricerca_principale" name="ricerca_principale" placeholder="Ricerca" type="text" style="border-radius: 0;"></input>
-                  <button class="button is-link is-medium" style="margin-left: 0%; border-radius:0;">Search</button>
+                  {{ context["form"].ricerca_principale }}
+                  {{ context["form"].submit }}
+                  <!-- <input class="input" id="ricerca_principale" name="ricerca_principale" placeholder="Ricerca" type="text" style="border-radius: 0;"></input> -->
+                  <!-- <button class="button is-link is-medium" style="margin-left: 0%; border-radius:0;">Search</button> -->
                 </div>
                 <div class="control" style="display:flex; margin-top:2%;">
                   <div class="checkbox" style="margin-right: 3%;">
-                    <input id="spelling_correction" name="spelling_correction" type="checkbox" value="True">
+                    {{ context["form"].spelling_correction }}
+                    <!-- <input id="spelling_correction" name="spelling_correction" type="checkbox" value="True"> -->
                     <label for="spelling_correction">Spelling correction</label>
                   </div>
                   <div class="checkbox">
-                    <input id="synonims" name="synonims" type="checkbox" value="True">
+                    
+                    {{ context["form"].synonims }}
+                    <!-- <!-- <input id="synonims" name="synonims" type="checkbox" value="True"> -->
                     <label for="synonims">Synonims</label>
                   </div>
                 </div>
                 <div class="search_engine">
                   <div class="control">
                     <div class="radio"> 
-                      <input checked="" id="search_engine-0" name="search_engine" type="radio" value="WHOOSH">
-                      <label for="search_engine-0">Whoosh</label>
+                      {{ context["form"].search_engine}}
+                      <!-- <!-- <input checked="" id="search_engine-0" name="search_engine" type="radio" value="WHOOSH"> -->
+                      <!-- <label for="search_engine-0">Whoosh</label>  -->
+                    </div>
+                  </div>
+                  <!-- <div class="control">
+                    <div class="radio"> 
+                      {{ context["form"].search_engine["PYLUCENE"]}}
+                      <!-- <!-- <input id="search_engine-1" name="search_engine" type="radio" value="PYLUCENE"> -->
+                      <!-- <label for="search_engine-1">PyLucene</label> 
                     </div>
                   </div>
                   <div class="control">
                     <div class="radio"> 
-                      <input id="search_engine-1" name="search_engine" type="radio" value="PYLUCENE">
-                      <label for="search_engine-1">PyLucene</label>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="radio"> 
+                      {{ context["form"].search_engine["POSTGRESQL"]}}
                       <input id="search_engine-2" name="search_engine" type="radio" value="POSTGRESQL">
-                      <label for="search_engine-2">PostgreSQL</label>
+                      <label for="search_engine-2">PostgreSQL</label> 
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </fieldset>
               <fieldset class="fieldset">
@@ -81,22 +73,27 @@
                 <div class="field has-addons-tablet" data-toggle="fieldset-entry">
                   <div class="control fieldset-hidden-on-first-row">
                     <span class="select">
-                      <label for="terms-0-operator" class="hidden-label">Boolean operator</label>
-                      <select default="AND" id="terms-0-operator" name="terms-0-operator"><option selected="" value="AND">AND</option><option value="OR">OR</option><option value="NOT">NOT</option></select>
+                      {{ context["form"].operator }}
+                      <!-- <label for="terms-0-operator" class="hidden-label">Boolean operator</label>
+                      <select default="AND" id="terms-0-operator" name="terms-0-operator"><option selected="" value="AND">AND</option><option value="OR">OR</option><option value="NOT">NOT</option></select> -->
                     </span>
                   </div>
                   <div class="control is-expanded">
-                    <label for="terms-0-term" class="hidden-label">Search terms</label>
-                      <input class="input" id="terms-0-term" name="terms-0-term" placeholder="Search terms" type="text" value="">
+
+                    {{ context["form"].term }}
+                    <!-- <label for="terms-0-term" class="hidden-label">Search terms</label>
+                    <input class="input" id="terms-0-term" name="terms-0-term" placeholder="Search terms" type="text" value=""> -->
                   </div>
                   <div class="control">
+                    
+                    {{ context["form"].field }}
                     <label for="terms-0-field" class="hidden-label">Field to search</label>
-                    <span class="select">
+                    <!-- <span class="select">
                       <select default="TITLE" id="terms-0-field" name="terms-0-field">
                         <option value="TITLE">Title</option>
                         <option value="KEYWORD">Keyword</option>
                         <option value="AUTHOR">Author</option>
-                      </select>
+                      </select> -->
                     </span>
                   </div>
                 </div> <!-- Campo iniziale search term -->
@@ -109,7 +106,8 @@
                   <div class="control is-pulled-right">
                     
                     <!-- hihi non mi vedi -->
-                    <input class="input" id="numero_terms" name="numero_terms" type="text" placeholder="0" value="0" style="width: 0px; height: 0px; visibility: hidden; margin: 0px; padding: 0px;"></input>
+                     {{ context["form"].numero_terms }}
+                    <!-- <input class="input" id="numero_terms" name="numero_terms" type="text" placeholder="0" value="0" style="width: 0px; height: 0px; visibility: hidden; margin: 0px; padding: 0px;"></input> -->
                     <!-- hihihihihihihihihi non mi vedi -->
 
 
@@ -224,17 +222,19 @@
                     <div class="field is-horizontal is-grouped">
                       <div class="control">
                         <div class="checkbox">
-                          <input id="standard" name="standard" type="checkbox" value="True">
+                          {{ context["form"].standard_track }}
+                          <!-- <input id="standard" name="standard" type="checkbox" value="True"> -->
                           <label for="standard">Standard track</label>
                         </div>
                       </div>
                       <div class="control">
                         <div class="select is-small" id="ddInCheck">
-                          <label for="standard_track" class="hidden-label"></label>
-                          <select default="PROPOSED_STANDARD" id="standard_track" name="standard_track">
+                          {{ context["form"].standard_track_value }}
+                          <!-- <label for="standard_track_value" class="hidden-label"></label>   -->
+                          <!-- <select default="PROPOSED_STANDARD" id="standard_track" name="standard_track"> 
                             <option value="PROPOSED_STANDARD">Proposed standard</option>
                             <option value="DRAFT_STANDARD">Draft standard</option>
-                            <option value="INTERNET_STANDARD">Internet standard</option>
+                            <option value="INTERNET_STANDARD">Internet standard</option> -->
                           </select>
                         </div>
                       </div>
@@ -247,7 +247,8 @@
                     <div class="field is-horizontal">
                       <div class="control">
                         <div class="checkbox">
-                          <input id="best_current_practice" name="best_current_practice" type="checkbox" value="True">
+                          {{ context["form"].best_current_practice }}
+                          <!-- <input id="best_current_practice" name="best_current_practice" type="checkbox" value="True"> -->
                           <label for="best_current_practice">Best current practice</label>
                         </div>
                       </div>
@@ -255,7 +256,8 @@
                     <div class="field is-horizontal">
                       <div class="control">
                         <div class="checkbox">
-                          <input id="informational" name="informational" type="checkbox" value="True">
+                          {{ context["form"].informational }}
+                          <!-- <input id="informational" name="informational" type="checkbox" value="True"> -->
                           <label for="informational">Informational</label>
                         </div>
                       </div>
@@ -263,7 +265,8 @@
                     <div class="field is-horizontal">
                       <div class="control">
                         <div class="checkbox">
-                          <input id="experimental" name="experimental" type="checkbox" value="True">
+                          {{ context["form"].experimental }}
+                          <!-- <input id="experimental" name="experimental" type="checkbox" value="True"> -->
                           <label for="experimental">Experimental</label>
                         </div>
                       </div>
@@ -271,7 +274,8 @@
                     <div class="field is-horizontal">
                       <div class="control">
                         <div class="checkbox">
-                          <input id="historic" name="historic" type="checkbox" value="True">
+                          {{ context["form"].historic }}
+                          <!-- <input id="historic" name="historic" type="checkbox" value="True"> -->
                           <label for="historic">Historic</label>
                         </div>
                       </div>
@@ -288,8 +292,9 @@
                     <div class="field is-grouped">
                       <div class="control">
                         <div class="radio"> 
-                          <input checked="" id="date-filter_by-0" name="date-filter_by" type="radio" value="ALL_DATES">
-                          <label for="date-filter_by-0">All dates</label>
+                          {{ context["form"].dates }}
+                          <!-- <input checked="" id="date-filter_by-0" name="date-filter_by" type="radio" value="ALL_DATES">-->
+                          <!-- <label for="date-filter_by-0">All dates</label>  -->
                         </div>
                       </div>
                     </div>
@@ -304,13 +309,15 @@
                     <div class="field is-grouped">
                       <div class="control">
                         <div class="radio"> 
-                          <input id="date-filter_by-2" name="date-filter_by" type="radio" value="SPECIFIC_YEAR">
-                          <label for="date-filter_by-2">Specific year</label>
+                          {{ context["form"].dates["SPECIFIC_YEAR"] }}
+                          <!-- <input id="date-filter_by-2" name="date-filter_by" type="radio" value="SPECIFIC_YEAR">-->
+                          <label for="date-filter_by-2">Specific year</label> 
                         </div>
                       </div>
                       <div class="control is-datefield">
+                        {{ context["form"].date_year }}
+                        <!-- <input class="input is-small" id="date-year" name="date-year" placeholder="YYYY" type="text" value=""> -->
                         <label for="date-year" class="hidden-label">Enter four digit year</label>
-                          <input class="input is-small" id="date-year" name="date-year" placeholder="YYYY" type="text" value="">
                         <script>
                           $('#date-year').focus(function() {
                             $('input[name="date-filter_by"]').attr('checked', false);
@@ -322,22 +329,25 @@
                     <div class="field is-grouped">
                       <div class="control">
                         <div class="radio"> 
-                          <input id="date-filter_by-3" name="date-filter_by" type="radio" value="DATE_RANGE">
-                          <label for="date-filter_by-3">Date range</label>
+                          {{ context["form"].dates["DATE_RANGE"] }}
+                          <!-- <input id="date-filter_by-3" name="date-filter_by" type="radio" value="DATE_RANGE">-->
+                          <label for="date-filter_by-3">Date range</label> 
                         </div>
                       </div>
                     </div>
                     <div class="field is-grouped">
                       <div class="control">
-                        <div class="control"><label for="date-from_date">From</label></div>
+                        <div class="control"><label for="date_from_date">From</label></div>
                         <div class="control is-datefield">
-                          <input class="input is-small" id="date-from_date" name="date-from_date" placeholder="YYYY[-MM]" type="text" value="">
+                          {{ context["form"].date_from_date }}
+                          <!-- <input class="input is-small" id="date-from_date" name="date-from_date" placeholder="YYYY[-MM]" type="text" value=""> -->
                         </div>
                       </div>
                       <div class="control" id="date_to">
-                        <div class="control"><label for="date-to_date">to</label></div>
+                        <div class="control"><label for="date_to_date">to</label></div>
                         <div class="control is-datefield">
-                          <input class="input is-small" id="date-to_date" name="date-to_date" placeholder="YYYY[-MM]" type="text" value="">
+                          {{ context["form"].date_to_date }}
+                          <!-- <input class="input is-small" id="date-to_date" name="date-to_date" placeholder="YYYY[-MM]" type="text" value=""> -->
                         </div>
                       </div>
                     </div>
@@ -372,11 +382,13 @@
               <div class="field">
                 <div class="control">
                   <label class="radio">
-                    <input checked="" id="abstracts-0" name="abstracts" type="radio" value="True"> Show abstracts
+                    {{ context["form"].abstracts}}
+                    <!-- <input checked="" id="abstracts-0" name="abstracts" type="radio" value="True"> Show abstracts -->
                   </label>
-                  <label class="radio">
+                  <!-- <label class="radio">
+                    {{ context["form"].abstracts["HIDE_ABSTRACTS"] }}
                     <input id="abstracts-1" name="abstracts" type="radio" value="False"> Hide abstracts
-                  </label>
+                  </label> -->
                 </div>
               </div>
               <div class="level">
@@ -385,7 +397,8 @@
                     <div class="field is-horizontal is-grouped">
                       <div class="control">
                         <span class="select is-small">
-                          <select id="size" name="size"><option value="25">25</option><option selected="" value="50">50</option><option value="100">100</option><option value="200">200</option></select>
+                          {{ context["form"].size }}
+                          <!-- <select id="size" name="size"><option value="25">25</option><option selected="" value="50">50</option><option value="100">100</option><option value="200">200</option></select> -->
                         </span>
                       </div>
                       <div class="control" id="results" style="margin-top: 2%;">
@@ -433,4 +446,4 @@
     </div> <!-- END colonne is-desktop -->
   </div> <!-- END main-div -->
   
-</body>
+{% endblock %}
