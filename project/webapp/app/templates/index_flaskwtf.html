@@ -138,7 +138,7 @@
                             </select>
                           </span>
                         </div>
-                        <button type="button" class="remove-term-button" onclick="DeleteParent(this, ${uniqueId})" data-id="${uniqueId}">Rimuovi</button>
+                        <button type="button" class="button is-medium remove-term-button" onclick="DeleteParent(this, ${uniqueId})" data-id="${uniqueId}">Rimuovi</button>
                       </div>
                     `;
 
@@ -169,75 +169,77 @@
                   <div class="field is-horizontal is-grouped">
                     <div class="control">
                       <div class="checkbox">
+
                         {{ context["form"].standard_track }}
-                        <!-- <input id="standard" name="standard" type="checkbox" value="True"> -->
                         <label for="standard">Standard track</label>
+                        
                       </div>
                     </div>
                     <div class="control">
                       <div class="select is-small" id="ddInCheck">
+                        
                         {{ context["form"].standard_track_value }}
-                        <!-- <label for="standard_track_value" class="hidden-label"></label>   -->
-                        <!-- <select default="PROPOSED_STANDARD" id="standard_track" name="standard_track"> 
-                            <option value="PROPOSED_STANDARD">Proposed standard</option>
-                            <option value="DRAFT_STANDARD">Draft standard</option>
-                            <option value="INTERNET_STANDARD">Internet standard</option> -->
-                        </select>
+                        
                       </div>
                     </div>
                   </div>
+
                   <script>
                     $('select#standard_track').change(function () {
                       $('input#standard').attr('checked', true);
                     });
                   </script>
+
                   <div class="field is-horizontal">
                     <div class="control">
                       <div class="checkbox">
+
                         {{ context["form"].best_current_practice }}
-                        <!-- <input id="best_current_practice" name="best_current_practice" type="checkbox" value="True"> -->
                         <label for="best_current_practice">Best current practice</label>
+
                       </div>
                     </div>
                   </div>
                   <div class="field is-horizontal">
                     <div class="control">
                       <div class="checkbox">
+
                         {{ context["form"].informational }}
-                        <!-- <input id="informational" name="informational" type="checkbox" value="True"> -->
                         <label for="informational">Informational</label>
+
                       </div>
                     </div>
                   </div>
                   <div class="field is-horizontal">
                     <div class="control">
                       <div class="checkbox">
+
                         {{ context["form"].experimental }}
-                        <!-- <input id="experimental" name="experimental" type="checkbox" value="True"> -->
                         <label for="experimental">Experimental</label>
+
                       </div>
                     </div>
                   </div>
                   <div class="field is-horizontal">
                     <div class="control">
                       <div class="checkbox">
+
                         {{ context["form"].historic }}
-                        <!-- <input id="historic" name="historic" type="checkbox" value="True"> -->
                         <label for="historic">Historic</label>
+
                       </div>
                     </div>
                   </div>
 
                 </div>
-                <div class="column">
 
-                </div>
               </div>
             </fieldset>
             <!-- FIELDSET STATO -->
 
             <!-- FIELDSET DATE -->
             <fieldset class="fieldset ">
+
               <legend class="legend">Date</legend>
 
               {% for i in context["form"].dates %}
@@ -246,44 +248,41 @@
               <div class="field is-grouped">
                 <div class="control">
                   <div class="radio">
+
                     {{ i }}
-                    <!-- <input checked="" id="date-filter_by-0" name="date-filter_by" type="radio" value="ALL_DATES">-->
                     <label for="date-filter_by-0">All dates</label>
+
                   </div>
                 </div>
               </div>
               {% endif %}
-              <!-- <div class="field is-grouped">
-                      <div class="control">
-                        <div class="radio"> 
-                          <input id="date-filter_by-1" name="date-filter_by" type="radio" value="LAST_YEAR">
-                          <label for="date-filter_by-1">Past 12 months</label>
-                        </div>
-                      </div>
-                    </div> -->
+
               {% if i.id.endswith('1') %}
               <div class="field is-grouped">
                 <div class="control">
                   <div class="radio">
-                    <!-- {{ context["form"].dates["SPECIFIC_YEAR"] }} -->
-                    <!-- <input id="date-filter_by-2" name="date-filter_by" type="radio" value="SPECIFIC_YEAR">-->
+
                     {{ i }}
                     <label for="date-filter_by-2">Specific year</label>
+
                   </div>
                 </div>
                 <div class="control is-datefield">
+
                   {{ context["form"].date_year }}
-                  <!-- <input class="input is-small" id="date-year" name="date-year" placeholder="YYYY" type="text" value=""> -->
                   <label for="date-year" class="hidden-label">Enter four digit year</label>
+                  
                   <script>
                     $('#date-year').focus(function () {
                       $('input[name="date-filter_by"]').attr('checked', false);
                       $('input[value="specific_year"]').attr('checked', true);
                     });
                   </script>
+
                 </div>
               </div>
               {% endif %}
+
               {% if i.id.endswith('2') %}
               <div class="field is-grouped">
                 <div class="control">
@@ -297,6 +296,7 @@
                 </div>
               </div>
               {% endif %}
+
               {% if i.id.endswith('2') %}
               <div class="field is-grouped">
                 <div class="control">
@@ -308,6 +308,7 @@
                   </div>
                 </div>
                 {% endif %}
+
                 {% if i.id.endswith('2') %}
                 <div class="control" id="date_to">
                   <div class="control"><label for="date_to_date">to</label></div>
@@ -319,7 +320,9 @@
                 </div>
               </div>
               {% endif %}
+
               {% endfor %}
+
               <script>
                 $('#date-to_date').focus(function () {
                   $('input[name="date-filter_by"]').attr('checked', false);
@@ -330,21 +333,7 @@
                   $('input[value="date_range"]').attr('checked', true);
                 });
               </script>
-              <!-- <hr>
-                    <div class="field">
-                      <div class="control">
-                        <label class="radio">
-                          <input checked="" id="date-date_type-0" name="date-date_type" type="radio" value="submitted_date"> Submission date (most recent)
-                        </label>
-                        <label class="radio">
-                          <input id="date-date_type-1" name="date-date_type" type="radio" value="submitted_date_first"> Submission date (original)
-                        </label>
-                        <label class="radio">
-                          <input id="date-date_type-2" name="date-date_type" type="radio" value="announced_date_first"> Announcement date
-                        </label>
-                        <p class="help has-text-grey">You may filter on either submission date or announcement date. Note that announcement date supports only year and month granularity.</p>
-                      </div>
-                    </div> -->
+
             </fieldset>
             <!-- FIELDSET DATE -->
 
@@ -354,13 +343,10 @@
             <div class="field_abs">
               <div class="control">
                 <label class="radio">
+
                   {{ context["form"].abstracts }}
-                  <!-- <input checked="" id="abstracts-0" name="abstracts" type="radio" value="True"> Show abstracts -->
+
                 </label>
-                <!-- <label class="radio">
-                    {{ context["form"].abstracts["HIDE_ABSTRACTS"] }}
-                    <input id="abstracts-1" name="abstracts" type="radio" value="False"> Hide abstracts
-                  </label> -->
               </div>
             </div>
             <div class="level">
@@ -369,25 +355,18 @@
                   <div class="field is-horizontal is-grouped">
                     <div class="control">
                       <span class="select is-small">
+                        
                         {{ context["form"].size }}
-                        <!-- <select id="size" name="size"><option value="25">25</option><option selected="" value="50">50</option><option value="100">100</option><option value="200">200</option></select> -->
+
                       </span>
                     </div>
+
                     <div class="control" id="results" style="margin-top: 2%;">
                       <label for="size">results per page</label>
                     </div>
+
                   </div>
                 </div>
-                <!-- <div class="level-item" style="margin-top: -2%;">
-                    <div class="field is-horizontal is-grouped">
-                      <div class="control">
-                        <div class="checkbox">
-                          <input id="include_older_versions" name="include_older_versions" type="checkbox" value="True">
-                          <label for="include_older_versions">Include older versions of papers</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div> -->
               </div>
             </div>
             <!-- <button class="button is-link is-medium">Search</button> -->
@@ -408,8 +387,8 @@
         <div class="message-body">
           <ul>
             <li>Testo <strong>testo strong</strong> </li>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim eaque at odio ipsum accusantium
-              consequuntur libero facilis iusto, eveniet itaque quod minima, ratione cum cumque. Assumenda, tenetur?
+            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim eaque at odio ipsum accusantium 
+              consequuntur libero facilis iusto, eveniet itaque quod minima, ratione cum cumque. Assumenda, tenetur? 
               Officia, exercitationem explicabo.</li>
           </ul>
         </div>
