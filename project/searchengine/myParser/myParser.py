@@ -25,7 +25,10 @@ import concurrent.futures
 from project.searchengine.myLogger.myLogger import logger as logging
 
 # Per barre di caricamento
-from tqdm import tqdm, trange
+from alive_progress import alive_bar
+from alive_progress.animations import bar_factory
+
+_bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
 class MyParser:
 
@@ -138,22 +141,23 @@ class MyParser:
             }
             
             # Imposta il totale per la percentuale
-            pbar = tqdm(total=len(futures), ascii="•Cc=")
+            # pbar = tqdm(total=len(futures), ascii="•Cc=")
+            with alive_bar(len(futures), title=f"Parsing dei documenti", spinner="waves", bar=_bar) as b:
             
-            # Restituzione dei metadati che adesso contengono il corpo completo del documento
-            for future in concurrent.futures.as_completed(futures):
-                
-                # Incrementa di uno i documenti scaricati
-                pbar.update(1)
-                
-                # Restituzione del contenuto parsato
-                # della pagina e i relativi metadati
-                try:
-                    page = future.result()
-                    if page is not None:
-                        yield page
-                except Exception as e:
-                    logging.warning(f"Errore durante l'elaborazione di un task: {e}")
+                # Restituzione dei metadati che adesso contengono il corpo completo del documento
+                for future in concurrent.futures.as_completed(futures):
+                    
+                    # Incrementa di uno i documenti scaricati
+                    b()
+                    
+                    # Restituzione del contenuto parsato
+                    # della pagina e i relativi metadati
+                    try:
+                        page = future.result()
+                        if page is not None:
+                            yield page
+                    except Exception as e:
+                        logging.warning(f"Errore durante l'elaborazione di un task: {e}")
                 
 
     # %%%%%% METADATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,14 +203,15 @@ class MyParser:
         # group[0] --> Metadati dell'RFC
         # group[1] --> Estratto dell'RFC
         # group[2] --> Keywords dell'RFC
-        for i in trange(0, len(rows), 3):
-            group = rows[i:i + 3]
-            
-            # Parsa il gruppo di righe in un json
-            parsed = MyParser._parse_group(group)
-            if parsed:
-                parsed_data.append(parsed)
+        with alive_bar(len(rows), title=f"Parsing dei metadati", spinner="waves", bar=_bar) as b:
+            for i in range(0, len(rows), 3):
+                group = rows[i:i + 3]
 
+                # Parsa il gruppo di righe in un json
+                parsed = MyParser._parse_group(group)
+                if parsed:
+                    parsed_data.append(parsed)
+                b(3)
         # Restituisce l'elenco di gruppi parsati
         return parsed_data
 
@@ -309,7 +314,7 @@ class MyParser:
         logging.info(f"Corpus salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_corpus(index_begin=9000, index_end=9020)
+    MyParser.generate_corpus(index_begin=8800, index_end=9000)
     
 # UNIT TESTING
 if __name__ == "__main__":

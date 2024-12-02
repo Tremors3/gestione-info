@@ -21,7 +21,7 @@ class SearchForm(FlaskForm):
     ricerca_principale    = StringField('Ricerca principale', validators=[DataRequired()], render_kw={"class":"input","placeholder":"Ricerca","border-radius":"0"})
     # Opzioni Ricerca Principale
     spelling_correction   = BooleanField(label='Spelling Correction', validators=[], render_kw={"id":"spelling_correction",})
-    synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"id":"synonims"})
+    synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"iԁ ":"synonims"})
     # Selettore del search engine
     search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL")])
     # Stato dell'RFC
@@ -38,7 +38,6 @@ class SearchForm(FlaskForm):
     date_to_date          = DateField(format='%Y-%m', render_kw={"id":"date_to_date",   "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
     dates                 = RadioField(default="ALL_DATES", coerce=str, choices=[("ALL_DATES", "All Dates"),("SPECIFIC_YEAR", "Specific year"),("DATE_RANGE","Date Range")])
     # Ternimi dinamici
-    # numero_terms          = IntegerField(default=0, render_kw={"id":"numero_terms","class":"input", "width": "0px", "height": "0px", "visibility": "hidden", "margin": "0px", "padding": "0px"})
     terms                 = FieldList(FormField(TermForm), min_entries=0)
     # Vogno o meno l'estratto
     abstracts             = RadioField(default="SHOW_ABSTRACTS", coerce=str, choices=[("SHOW_ABSTRACTS", "Show Abstracts"),("HIDE_ABSTRACTS", "Hide Abstracts")])
@@ -46,7 +45,7 @@ class SearchForm(FlaskForm):
     size                  = SelectField(default=25, coerce=int, choices=[(200, '200'), (100, '100'), (50, '50'), (25, '25')])
     submit                = SubmitField(render_kw={"class":"button is-link is-medium", "style":"margin-left: 0%; border-radius:0;"})
 
-# Blueprint per le viste
+# Blueprint per le viste  
 blueprint = Blueprint('views', __name__,
                       template_folder = '../templates',
                       static_folder   = '../static')
@@ -60,37 +59,19 @@ def search():
         
         form = SearchForm()
         
-        if form.is_submitted(): # form.validate_on_submit() and
-        
-            # Elenco dei termini di ricerca
-            terms = []
-            for term_form in form.terms.entries:
-                if not term_form.term.data is None and not term_form.term.data == '':
-                    terms.append({
-                        'operator': term_form.operator.data,
-                        'term'    : term_form.term.data,
-                        'field'   : term_form.field.data
-                    })
+        if form.is_submitted():
             
-            query = {}
-            #query = field2dict(form)
-            query['terms'] = terms  # Aggiungi i termini dinamici alla query
-        
-            from pprint import pprint
+            # Parsa la form in json
+            query = form_to_json(form, donot=['csrf', 'submit'])
             
-            pprint(query)
-            pprint(form.dates.data)
-            pprint(form.date_year.data)
-            pprint(form.date_from_date.data)
-            pprint(form.date_to_date.data)
-            
+            # Salva la query su file
             save_query_to_file(query, "query.json")
         
         return redirect(url_for('views.results'))
     
     if request.method == 'GET':
     
-        return render_template('index_flaskwtf.html', context={
+        return render_template('index.html', context={
             "form" : SearchForm()
         })
 
@@ -101,6 +82,41 @@ def results():
         return render_template('results.html')
 
 
+# Funzione per formattare la query
+def form_to_json(form, donot):
+    
+    form_data = {}
+    
+    for field_name, field in form._fields.items():
+        
+        for donot_term in donot:
+            if donot_term in field_name:
+                continue
+        
+        # Se il campo è un FieldList, estrai i dati dai suoi subfield
+        if isinstance(field, FieldList):
+            
+            subfields = []
+            for subfield in field.entries:
+                
+                subfield_dict = {}
+                for subfield_name, subfield in subfield._fields.items():
+                    if not 'csrf' in subfield_name:
+                        subfield_dict[subfield_name] = subfield.data
+
+                # Appendiamo solamente se il subfield non è vuoto
+                if len(subfield_dict['term']):
+                    subfields.append(subfield_dict)
+            
+        # Altrimenti, aggiungi direttamente il valore
+        else:
+            form_data[field_name] = field.data
+    
+    # Aggiungiamo i termini aggiuntivi
+    form_data[field_name] = subfields
+    
+    return form_data
+
 # Funzione per salvare la query in un file JSON
 def save_query_to_file(query: dict, filename: str):
     """Salva la query in un file JSON."""
@@ -109,21 +125,3 @@ def save_query_to_file(query: dict, filename: str):
             json.dump(query, f, ensure_ascii=False, indent=4)
     except IOError as e:
         print(f"Errore nel salvataggio del file {filename}: {e}")
-
-
-def field2dict(field):
-    dict = {}
-    for column in field.__table__.columns:
-        #dict[column.name] = str(getattr(row, column.name))
-        dict[column.name] = getattr(field, column.name)
-    return dict
-
-def rows2dict(rows):
-    list = []
-    for row in rows:
-        dict = {}
-        for column in row.__table__.columns:
-            #dict[column.name] = str(getattr(row, column.name))
-            dict[column.name] = getattr(row, column.name)
-        list.append(dict)
-    return list
