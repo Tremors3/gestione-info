@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 
     <!-- Default Website Icon -->
-    <link rel="shortcut icon" href="../static/images/"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/hqdefault.webp') }}"/>
     
     <!-- Title -->
     <title>GraboidRFC</title>
 
+    <!-- Head Block -->
     {% block head %}{% endblock %}
 
   </head>
@@ -21,17 +22,17 @@
     <!-- Navbar import -->
     {% include 'navigation.html' %}
 
-    <!-- Block Body -->
+    <!-- Body Block -->
     {% block body %}{% endblock %}
+
+    <!-- Footer Block -->
+    {% block footer %}{% endblock %}
 
     <!-- Default JavaScript -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}" /></script>
 
-    <!-- Blocck JavaScript-->
+    <!-- JavaScript Block -->
     {% block javaScript %}{% endblock %}
   
-</body>
+  </body>
 </html>
-
-
-
