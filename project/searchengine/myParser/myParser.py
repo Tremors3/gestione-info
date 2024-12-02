@@ -21,6 +21,7 @@ import os
 # Import del logger personalizzato (colori)
 from project.searchengine.myLogger.myLogger import logger as logging
 
+# Per barre di caricamento
 from tqdm import tqdm, trange
 
 class MyParser:
@@ -128,10 +129,18 @@ class MyParser:
             futures = {
                 executor.submit(MyParser._task, session, meta): meta for meta in metadata
             }
+            
+            # Imposta il totale per la percentuale
             pbar = tqdm(total=len(futures))
+            
             # Restituzione dei metadati che adesso contengono il corpo completo del documento
             for future in concurrent.futures.as_completed(futures):
+                
+                # Incrementa di uno i documenti scaricati
                 pbar.update(1)
+                
+                # Restituzione del contenuto parsato
+                # della pagina e i relativi metadati
                 try:
                     page = future.result()
                     if page is not None:
@@ -292,7 +301,7 @@ class MyParser:
         logging.info(f"Corpus salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_corpus(index_begin=9000, index_end=9100)
+    MyParser.generate_corpus(index_begin=9000, index_end=9000)
     
 # UNIT TESTING
 if __name__ == "__main__":
