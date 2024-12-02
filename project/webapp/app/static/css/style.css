@@ -154,7 +154,7 @@ header h1{
   textarea:focus, input:focus{
     outline: none;
   }
-  .pagination-previous, .pagination-next, .pagination-link, .pagination-ellipsis, .file-cta, .file-name, .select select, .input, .textarea, .button {
+  .pagination-previous, .pagination-next, .pagination-link, .pagination-ellipsis, .file-cta, .file-name, .select select, #terms-field, .input, .textarea, .button {
     /* -moz-appearance: none;
     -webkit-appearance: none; */
     align-items: center;
@@ -182,10 +182,10 @@ header h1{
     width: 100%;
   }
 
-  .select:not(.is-multiple) {
+  .select:not(.is-multiple), #terms-field {
     height: 2.25em;
   }
-  .select {
+  .select, #terms-field {
     display: inline-block;
     max-width: 100%;
     position: relative;
@@ -200,7 +200,7 @@ header h1{
     padding-right: 2.5em;
     margin-left: 5px;
   }
-  .select select {
+  .select select, #terms-field {
     background-color: white;
     border-color: #cccccc;
     color: #2d2d2d;

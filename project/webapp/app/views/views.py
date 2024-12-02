@@ -12,9 +12,9 @@ from wtforms import BooleanField, DecimalField, DateField, IntegerField, StringF
 from wtforms.validators import DataRequired, InputRequired, Length, ValidationError
 
 class TermForm(FlaskForm):
-    operator = SelectField('Operator', choices=[('AND', 'AND'), ('OR', 'OR')], default='AND')
-    term     = StringField('Term', validators=[DataRequired()], render_kw={"class":"input", "placeholder":"Search terms"})
-    field    = SelectField(default='TITLE', choices=[('TITLE', 'Title'), ('DESCRIPTION', 'Description')])
+    operator = SelectField('Operator', default='AND', choices=[('AND', 'AND'), ('OR', 'OR'), ('NOT', 'NOT')], render_kw={"id":"terms-operator"})
+    term     = StringField('Term', validators=[], render_kw={"class":"input", "placeholder":"Search terms"})
+    field    = SelectField(default='KEYWORDS', choices=[('TITLE', 'Title'), ('DESCRIPTION', 'Description'), ('KEYWORDS', 'Keywords')], render_kw={"id":"terms-field","class":"select"})
 
 class SearchForm(FlaskForm):
     # Ricerca Principale
@@ -39,28 +39,12 @@ class SearchForm(FlaskForm):
     dates                 = RadioField(default="ALL_DATES", coerce=str, choices=[("ALL_DATES", "All Dates"),("SPECIFIC_YEAR", "Specific year"),("DATE_RANGE","Date Range")])
     # Ternimi dinamici
     # numero_terms          = IntegerField(default=0, render_kw={"id":"numero_terms","class":"input", "width": "0px", "height": "0px", "visibility": "hidden", "margin": "0px", "padding": "0px"})
-    terms                 = FieldList(FormField(TermForm), min_entries=1)
+    terms                 = FieldList(FormField(TermForm), min_entries=0)
     # Vogno o meno l'estratto
     abstracts             = RadioField(default="SHOW_ABSTRACTS", coerce=str, choices=[("SHOW_ABSTRACTS", "Show Abstracts"),("HIDE_ABSTRACTS", "Hide Abstracts")])
     # Dimensione della richiesta
     size                  = SelectField(default=25, coerce=int, choices=[(200, '200'), (100, '100'), (50, '50'), (25, '25')])
     submit                = SubmitField(render_kw={"class":"button is-link is-medium", "style":"margin-left: 0%; border-radius:0;"})
-
-#class FilterForm(FlaskForm):
-#    nome            = StringField(validators  = [Length(min=4, max=64)],  render_kw={"placeholder":"Ricerca per nome", "class":"form-control mr-1"})
-#    min_price       = IntegerField(validators = [InputRequired()], render_kw={"placeholder":"min_price", "type": "number", "class":"input-min form-control", "value": "25"})
-#    max_price       = IntegerField(validators = [InputRequired()], render_kw={"placeholder":"max_price", "type": "number", "class":"input-max form-control", "value":"750"})
-#    min_price_range = IntegerField(validators = [InputRequired()], render_kw={"placeholder":"min_price", "type": "range", "class":"range-min", "min":"0", "max": "1000", "value": "200", "step":"10"})
-#    max_price_range = IntegerField(validators = [InputRequired()], render_kw={"placeholder":"max_price", "type": "range", "class":"range-max", "min":"0", "max": "1000", "value": "750", "step":"10"})
-#    camere          = IntegerField(validators = [], render_kw={"placeholder":"N° camere", "class":"form-control"})
-#    bagni           = IntegerField(validators = [], render_kw={"placeholder":"N° bagni", "class":"form-control"})
-#    persone         = IntegerField(validators = [], render_kw={"placeholder":"N° persone", "class":"form-control"})
-#    sauna           = BooleanField(label="Sauna", render_kw={"id": "_checkbox1", "class":"form-control w-50"})
-#    animali         = BooleanField(label="Sono amessi gli animali?", render_kw={"id": "_checkbox2", "class":"form-control w-50"})
-#    check_in        = DateField('Data Inizio', format='%Y-%m-%d', default=date.today(), validators=[DataRequired()], render_kw={"id":"check-in", "class": "data-input"})
-#    check_out       = DateField('Data Fine', format='%Y-%m-%d', default=date.today() + timedelta(days = 7), validators=[DataRequired()], render_kw={"id":"check-out", "class": "data-input ml-2"})
-#    radio_stars     = RadioField('Filtro Stelle', coerce=int, choices=[(5, 'Five Stars'), (4,'Four Stars'), (3,'Three Stars'), (2,'Two Stars'), (1,'One Star')])
-#    submit          = SubmitField("Cerca",  render_kw={"id": "search-button", "class":"btn btn-primary btn-block ml-2", "style":"background-color: #007bff; color: #fff;"})
 
 # Blueprint per le viste
 blueprint = Blueprint('views', __name__,

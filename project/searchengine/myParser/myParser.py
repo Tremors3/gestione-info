@@ -138,7 +138,7 @@ class MyParser:
             }
             
             # Imposta il totale per la percentuale
-            pbar = tqdm(total=len(futures))
+            pbar = tqdm(total=len(futures), ascii="•Cc=")
             
             # Restituzione dei metadati che adesso contengono il corpo completo del documento
             for future in concurrent.futures.as_completed(futures):
@@ -309,7 +309,7 @@ class MyParser:
         logging.info(f"Corpus salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_corpus(index_begin=9000, index_end=9050)
+    MyParser.generate_corpus(index_begin=9000, index_end=9020)
     
 # UNIT TESTING
 if __name__ == "__main__":

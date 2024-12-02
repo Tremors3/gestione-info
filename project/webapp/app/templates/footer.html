@@ -1,0 +1,36 @@
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <p>
+        {{ form.ricerca_principale.label }}<br>
+        {{ form.ricerca_principale() }}
+    </p>
+
+    <p>
+        {{ form.numero_terms.label }}<br>
+        {{ form.numero_terms() }}
+    </p>
+
+    <div id="terms-list">
+        {% for term_form in form.terms.entries %}
+            <div class="term-entry">
+                <p>
+                    {{ term_form.operator.label }}<br>
+                    {{ term_form.operator() }}
+                </p>
+                <p>
+                    {{ term_form.term.label }}<br>
+                    {{ term_form.term() }}
+                </p>
+                <p>
+                    {{ term_form.field.label }}<br>
+                    {{ term_form.field() }}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <p>
+        <button type="submit">Submit</button>
+    </p>
+</form>
