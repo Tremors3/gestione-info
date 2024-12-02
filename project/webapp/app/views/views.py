@@ -114,7 +114,7 @@ def form_to_json(form, donot):
         else:
             form_data[field_name] = field.data
     
-    # Aggiungiamo i termini aggiuntivi
+    # Aggiungiamo i termini aggiuntivi (per ultimi)
     form_data[field_name] = subfields
     
     return form_data
