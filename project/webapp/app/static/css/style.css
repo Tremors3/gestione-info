@@ -93,6 +93,17 @@ header h1{
   padding: 0;
 }
 
+.field_abs ul{
+  display: flex;
+  
+  list-style: none;
+  padding: 0;
+}
+
+#ricerca_principale{
+  border-radius: 0;
+}
+
 .legend {
     font-weight: 600;
     background-color: inherit;
@@ -359,7 +370,7 @@ header h1{
     margin-right: 0.75rem;
   }
 
-#date-year{
+#date_year{
     height:auto;
 }
 
@@ -367,7 +378,7 @@ header h1{
     margin-left: 0.50rem;
 }
 
-#date-from_date, #date-to_date{
+#date_from_date, #date_to_date{
     height: auto;
     margin-top: 5%;
     padding: 1%;

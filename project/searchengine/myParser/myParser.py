@@ -1,6 +1,11 @@
 # Altro
 from typing import Optional, Generator, List, Dict
 
+import os
+
+# For timeout between requests
+from time import sleep
+
 # Per scrivere file json
 import json
 
@@ -16,8 +21,6 @@ from bs4 import BeautifulSoup
 # Per ThreadPool
 import concurrent.futures
 
-import os
-
 # Import del logger personalizzato (colori)
 from project.searchengine.myLogger.myLogger import logger as logging
 
@@ -29,10 +32,13 @@ class MyParser:
     # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     TOTAL_RFC_NUMBER = 9688  # Numero totale di documenti disponibili
-    DEFAULT_OUTPUT_FILE: str = "corpus.json"
-    URL_METADATA: str="https://www.rfc-editor.org/search/rfc_search_detail.php?page=All&pubstatus[]=Any&pub_date_type=any&abstract=abson&keywords=keyson&sortkey=Number&sorting=ASC"
-    URL_PREFIX: str="https://www.rfc-editor.org/rfc/rfc"
-    URL_POSTFIX: str=".html"
+
+    PATHS = {
+        "DEFAULT_OUTPUT_FILE" : "corpus.json",
+        "URL_METADATA" : "https://www.rfc-editor.org/search/rfc_search_detail.php?page=All&pubstatus[]=Any&pub_date_type=any&abstract=abson&keywords=keyson&sortkey=Number&sorting=ASC",
+        "URL_PREFIX"  : "https://www.rfc-editor.org/rfc/rfc",
+        "URL_POSTFIX" : ".html"
+    }
 
     STATUSES = (
         "Proposed Standard", "Draft Standard", "Internet Standard",     # Standard Track
@@ -62,11 +68,12 @@ class MyParser:
     # %%%%%% PAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     @staticmethod
-    def _download_page(session: requests.Session, url: str, timeout: int = 10) -> Optional[str]:
+    def _download_page(url: str, session: requests.Session, timeout: int, delay_ms: int) -> Optional[str]:
         """
         Scarica una singola pagina da un URL specificato.
         """
         try:
+            sleep(delay_ms / 1000.0) # Delay
             response = session.get(url, timeout=timeout)
             response.raise_for_status()
             return response.text
@@ -99,15 +106,15 @@ class MyParser:
             return None
 
     @staticmethod
-    def _task(session: requests.Session, meta: dict) -> Optional[Dict]:
+    def _task(meta: dict, session: requests.Session, timeout: int, delay_ms: int) -> Optional[Dict]:
         """
         Scarica e parsifica una pagina specificata.
         """
         # Costruzione dello URI della pagina
-        url = MyParser.URL_PREFIX + meta['Number'] + MyParser.URL_POSTFIX
+        url = MyParser.PATHS["URL_PREFIX"] + meta['Number'] + MyParser.PATHS["URL_POSTFIX"]
         
         # Scaricamento del contenuto della pagina
-        html_content = MyParser._download_page(session, url)
+        html_content = MyParser._download_page(url, session, timeout, delay_ms)
         if html_content is None:
             return None
         
@@ -118,7 +125,7 @@ class MyParser:
         return meta
 
     @staticmethod
-    def _download_and_parse_pages(metadata: List[dict], workers: int = 10) -> Generator[Dict, None, None]:
+    def _download_and_parse_pages(metadata: List[dict], workers: int = 10, timeout: int = 10, delay_ms: int = 50) -> Generator[Dict, None, None]:
         """
         Scarica e parsifica più pagine in parallelo.
         """
@@ -127,7 +134,7 @@ class MyParser:
 
             # Creazione delle task per la Threadpool
             futures = {
-                executor.submit(MyParser._task, session, meta): meta for meta in metadata
+                executor.submit(MyParser._task, meta, session, timeout, delay_ms): meta for meta in metadata
             }
             
             # Imposta il totale per la percentuale
@@ -160,7 +167,7 @@ class MyParser:
         with requests.Session() as session:
             try:
                 # Effettuazione la richiesta alla pagina
-                response = session.get(MyParser.URL_METADATA)
+                response = session.get(MyParser.PATHS["URL_METADATA"])
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 logging.error(f"Errore durante il download dei metadati: {e}")
@@ -272,9 +279,10 @@ class MyParser:
 
     @staticmethod
     def generate_corpus(
-        index_begin: int=1, index_end: int=None,
+        index_begin: int=1,
+        index_end: int = None,
         output_file: str = None,
-        workers: int = 10
+        workers: int = 10, timeout: int = 10, delay_ms: int = 50
     ) -> None:
         """
         Genera un corpus scaricando e parsificando le pagine specificate.
@@ -282,7 +290,7 @@ class MyParser:
         
         # Impostazione dei valori di default
         index_end = index_end if index_end is not None else MyParser.TOTAL_RFC_NUMBER
-        output_file = output_file if output_file is not None else MyParser.DEFAULT_OUTPUT_FILE
+        output_file = output_file if output_file is not None else MyParser.PATHS["DEFAULT_OUTPUT_FILE"]
         
         # Scaricamento e parsing dei metadati
         logging.debug(f"Download e Parsing dei Metadati...")
@@ -291,7 +299,7 @@ class MyParser:
         # Scaricamento e parsing del corpo dei documenti
         logging.debug(f"Download e Parsing dei Documenti...")
         page_list = []
-        for page in MyParser._download_and_parse_pages(metadata, workers):
+        for page in MyParser._download_and_parse_pages(metadata, workers, timeout, delay_ms):
             page_list.append(page)
 
         # Salvataggio del corpus nel file
@@ -301,7 +309,7 @@ class MyParser:
         logging.info(f"Corpus salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_corpus(index_begin=9000, index_end=9000)
+    MyParser.generate_corpus(index_begin=9000, index_end=9050)
     
 # UNIT TESTING
 if __name__ == "__main__":
