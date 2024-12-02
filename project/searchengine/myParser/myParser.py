@@ -27,7 +27,6 @@ from project.searchengine.myLogger.myLogger import logger as logging
 # Per barre di caricamento
 from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
-
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
 class MyParser:
@@ -203,7 +202,7 @@ class MyParser:
         # group[0] --> Metadati dell'RFC
         # group[1] --> Estratto dell'RFC
         # group[2] --> Keywords dell'RFC
-        with alive_bar(len(rows), title=f"Parsing dei metadati", spinner="waves", bar=_bar) as b:
+        with alive_bar(len(rows) // 3, title=f"Parsing dei metadati", spinner="waves", bar=_bar) as b:
             for i in range(0, len(rows), 3):
                 group = rows[i:i + 3]
 
@@ -211,7 +210,9 @@ class MyParser:
                 parsed = MyParser._parse_group(group)
                 if parsed:
                     parsed_data.append(parsed)
-                b(3)
+                
+                b() # Avanza barra di caricamento
+                    
         # Restituisce l'elenco di gruppi parsati
         return parsed_data
 
@@ -314,8 +315,8 @@ class MyParser:
         logging.info(f"Corpus salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_corpus(index_begin=8800, index_end=9000)
-    
+    MyParser.generate_corpus(index_begin=9000, index_end=9000)
+
 # UNIT TESTING
 if __name__ == "__main__":
     start()

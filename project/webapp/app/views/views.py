@@ -17,37 +17,35 @@ class TermForm(FlaskForm):
     field    = SelectField(default='KEYWORDS', choices=[('TITLE', 'Title'), ('DESCRIPTION', 'Description'), ('KEYWORDS', 'Keywords')], render_kw={"id":"terms-field","class":"select"})
 
 class SearchForm(FlaskForm):
-    ###### Ricerca Principale ##################################################################################################################
+    ############################################################ Ricerca Principale ############################################################
     ricerca_principale    = StringField('Ricerca principale', validators=[DataRequired()], render_kw={"class":"input","placeholder":"Ricerca","border-radius":"0"})
-    ###### Opzioni Ricerca Principale ##########################################################################################################
+    ########################################################## Opzioni Ricerca Principale ######################################################
     spelling_correction   = BooleanField(label='Spelling Correction', validators=[], render_kw={"id":"spelling_correction",})
     synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"id":"synonims"})
-    ###### Selettore del search engine #########################################################################################################
+    ######################################################## Selettore del searchengine ########################################################
     search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL")])
-    ###### Stato dell'RFC ######################################################################################################################
+    ############################################################## Stato dell'RFC ##############################################################
     standard_track        = BooleanField('Standard', render_kw={"id":"standard_track"})
     best_current_practice = BooleanField(label='Best current practice', render_kw={"id":"best_current_practice"})
-    informational         = BooleanFielԁ(label='Informational', render_kw={"id":"informational"})
+    informational         = BooleanField(label='Informational', render_kw={"id":"informational"})
     experimental          = BooleanField(label='Experimental', render_kw={"id":"experimental"})
     historic              = BooleanField(label='Historic', render_kw={"id":"historic"})
-    ###### Valore di "standard track" ##########################################################################################################
+    ######################################################## Valore di "standard track" ########################################################
     standard_track_value  = SelectField(default="PROPOSED_STANDARD", choices=[('PROPOSED_STANDARD', 'Proposed Standard'), ('DRAFT_STANDARD', 'Draft Standard'), ('INTERNET_STANDARD', 'Internet Standard')], render_kw={"id":"standard_track"})
-    ###### Selettore data ######################################################################################################################
+    ############################################################## Selettore data ##############################################################
     date_year             = DateField(format='%Y',    render_kw={"id":"date_year",      "class":"input is-small", "type": "month", "placeholder":"YYYY"})
     date_from_date        = DateField(format='%Y-%m', render_kw={"id":"date_from_date", "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
     date_to_date          = DateField(format='%Y-%m', render_kw={"id":"date_to_date",   "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
     dates                 = RadioField(default="ALL_DATES", coerce=str, choices=[("ALL_DATES", "All Dates"),("SPECIFIC_YEAR", "Specific year"),("DATE_RANGE","Date Range")])
-    ###### Ternimi dinamici ####################################################################################################################
+    ############################################################# Ternimi dinamici #############################################################
     terms                 = FieldList(FormField(TermForm), min_entries=0)
-    ###### Vogno o meno l'estratto #############################################################################################################
+    ########################################################## Vogno o meno l'estratto ##########################################################
     abstracts             = RadioField(default="SHOW_ABSTRACTS", coerce=str, choices=[("SHOW_ABSTRACTS", "Show Abstracts"),("HIDE_ABSTRACTS", "Hide Abstracts")])
-    ###### Dimensione della richiesta ##########################################################################################################
-    # 
-i
+    ######################################################## Dimensione della richiesta ########################################################
     size                  = SelectField(default=25, coerce=int, choices=[(200, '200'), (100, '100'), (50, '50'), (25, '25')])
     ############################################################################################################################################
     submit                = SubmitField(render_kw={"class":"button is-link is-medium", "style":"margin-left: 0%; border-radius:0;"})
-    ##########################################################################################################################################
+    ############################################################################################################################################
 
 # Blueprint per le viste  
 blueprint = Blueprint('views', __name__,
@@ -121,7 +119,7 @@ def form_to_json(form, donot):
     
     return form_data
 
-# Funzione per salvare la query in un file JSON
+# Funzione per salvare la query in un file JSON 
 def save_query_to_file(query: dict, filename: str):
     """Salva la query in un file JSON."""
     try:
