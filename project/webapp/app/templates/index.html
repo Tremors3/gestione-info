@@ -119,7 +119,7 @@
                       <div class="field has-addons-tablet" id="term-${uniqueId}">
                         <div class="control">
                           <span class="select">
-                            <select name="terms-${uniqueId}-operator" id="terms-${uniqueId}-operator">
+                            <select default="AND" name="terms-${uniqueId}-operator" id="terms-${uniqueId}-operator">
                               <option value="AND">AND</option>
                               <option value="OR">OR</option>
                               <option value="NOT">NOT</option>
@@ -131,10 +131,10 @@
                         </div>
                         <div class="control">
                           <span class="select">
-                            <select name="terms-${uniqueId}-field" id="terms-${uniqueId}-field">
+                            <select default="KEYWORDS" name="terms-${uniqueId}-field" id="terms-${uniqueId}-field">
+                              <option value="KEYWORDS">Keywords</option>
                               <option value="TITLE">Title</option>
                               <option value="DESCRIPTION">Description</option>
-                              <option value="KEYWORDS">Keywords</option>
                             </select>
                           </span>
                         </div>
