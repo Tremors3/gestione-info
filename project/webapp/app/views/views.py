@@ -47,7 +47,7 @@ class SearchForm(FlaskForm):
     submit                = SubmitField(render_kw={"class":"button is-link is-medium", "style":"margin-left: 0%; border-radius:0;"})
     ############################################################################################################################################
 
-# Blueprint per le viste  
+# Blueprint per le viste
 blueprint = Blueprint('views', __name__,
                       template_folder = '../templates',
                       static_folder   = '../static')
@@ -56,23 +56,23 @@ blueprint = Blueprint('views', __name__,
 @blueprint.route('/', methods=['POST', 'GET'])
 @blueprint.route('/search', methods=['POST', 'GET'])
 def search():
-    
+
     if request.method == 'POST':
-        
+
         form = SearchForm()
-        
+
         if form.is_submitted():
-            
+
             # Parsa la form in json
-            query = form_to_json(form, donot=['csrf', 'submit'])
-            
+            query = form_to_json(form, donot=('csrf_token', 'submit'))
+
             # Salva la query su file
             save_query_to_file(query, "query.json")
-        
+
         return redirect(url_for('views.results'))
-    
+
     if request.method == 'GET':
-    
+
         return render_template('index.html', context={
             "form" : SearchForm()
         })
@@ -85,22 +85,21 @@ def results():
 
 
 # Funzione per formattare la query
-def form_to_json(form, donot):
-    
+def form_to_json(form: FlaskForm, donot: set[str]):
+
     form_data = {}
-    
+
     for field_name, field in form._fields.items():
-        
-        for donot_term in donot:
-            if donot_term in field_name:
-                continue
-        
+
+        # Alcuni campi non li accettiamo
+        if field_name in donot: continue
+
         # Se il campo è un FieldList, estrai i dati dai suoi subfield
         if isinstance(field, FieldList):
-            
+
             subfields = []
             for subfield in field.entries:
-                
+
                 subfield_dict = {}
                 for subfield_name, subfield in subfield._fields.items():
                     if not 'csrf' in subfield_name:
@@ -109,17 +108,17 @@ def form_to_json(form, donot):
                 # Appendiamo solamente se il subfield non è vuoto
                 if len(subfield_dict['term']):
                     subfields.append(subfield_dict)
-            
+
+            # Aggiungiamo i termini aggiuntivi (per ultimi)
+            form_data[field_name] = subfields
+
         # Altrimenti, aggiungi direttamente il valore
         else:
             form_data[field_name] = field.data
-    
-    # Aggiungiamo i termini aggiuntivi (per ultimi)
-    form_data[field_name] = subfields
-    
+
     return form_data
 
-# Funzione per salvare la query in un file JSON 
+# Funzione per salvare la query in un file JSON
 def save_query_to_file(query: dict, filename: str):
     """Salva la query in un file JSON."""
     try:
