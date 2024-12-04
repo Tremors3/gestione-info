@@ -380,3 +380,138 @@ for doc in documenti:
     )
 
 print("Totale documenti:", len(documenti), "su", MAX)
+
+############################################################################################################
+""" Miglioramenti Potenziali """
+
+# Valutazione Umana:
+#    Fai validare i risultati da revisori umani. Ad esempio, chiedi loro di classificare manualmente i documenti per almeno alcune query.
+#
+# Metriche di Benchmarking:
+#    Valuta il tuo motore di ricerca rispetto al benchmark usando metriche standard come:
+#        Precision@k: Percentuale di documenti rilevanti nei primi kk risultati.
+#        Mean Average Precision (MAP): Media delle precisioni per tutte le query.
+#        Normalized Discounted Cumulative Gain (NDCG): Valuta la qualità del ranking in relazione alla rilevanza.
+
+############################################################################################################
+""" Metriche standard per valutare le prestazioni """
+
+# 1. Precision@k
+#
+#     Definizione: Percentuale di documenti rilevanti nei primi kk risultati.
+#     Formula:
+#     
+#     $$ Precision@k = \frac{ \textit{\# documenti rilevanti nei primi k} } { \textit{k} } $$
+#
+#     Quando usarla:
+#         - Per valutare rapidamente la qualità dei primi risultati.
+#         - È particolarmente utile per motori di ricerca dove solo i primi risultati contano (come nel web search).
+#
+# Implementazione in Python:
+def precision_at_k(relevanza_ottenuta, relevanza_attesa, k):
+    """
+    Calcola Precision@k.
+    :param relevanza_ottenuta: Lista dei documenti restituiti ordinati (es. ['doc1', 'doc2', ...]).
+    :param relevanza_attesa: Dizionario {document_id: rilevanza_attesa} (es. {'doc1': 3, 'doc2': 1}).
+    :param k: Numero di risultati da considerare.
+    :return: Precision@k (float).
+    """
+    risultati_k = relevanza_ottenuta[:k]
+    rilevanti = sum(1 for doc in risultati_k if relevanza_attesa.get(doc, 0) > 0)
+    return rilevanti / k
+# Esempio di utilizzo
+#relevanza_ottenuta = ["rfc9000", "rfc8999", "rfc9312"]
+#relevanza_attesa = {"rfc9000": 3, "rfc9312": 2}  # 'rfc8999' non è rilevante
+#k = 3
+#print(f"Precision@{k}:", precision_at_k(relevanza_ottenuta, relevanza_attesa, k))
+
+
+
+
+
+
+# 2. Mean Average Precision (MAP)
+#
+#     Definizione: Media delle precisioni calcolate a ogni documento rilevante.
+#     Formula:
+#
+#     $$ AP = \frac{1}{R} \sum\limits_{k=1}^N Precision@k \cdot rilevanza(k) $$
+#     $$ MAP = \frac{\sum_{q=1}^{Q}AP_q}{Q}
+#
+#     Dove:
+#         $R$: Numero di documenti rilevanti.
+#         $N$: Numero totale di documenti restituiti.
+#         $Q$: Numero di query.
+#
+# Implementazione in Python:
+def mean_average_precision(relevanza_ottenuta, relevanza_attesa):
+    """
+    Calcola Mean Average Precision (MAP).
+    :param relevanza_ottenuta: Lista di documenti restituiti ordinati (es. ['doc1', 'doc2', ...]).
+    :param relevanza_attesa: Dizionario {document_id: rilevanza_attesa} (es. {'doc1': 3, 'doc2': 1}).
+    :return: MAP (float).
+    """
+    rilevanti = [doc for doc in relevanza_ottenuta if relevanza_attesa.get(doc, 0) > 0]
+    if not rilevanti:
+        return 0.0
+
+    ap = 0.0
+    rilevanti_trovati = 0
+    for i, doc in enumerate(relevanza_ottenuta):
+        if doc in rilevanti:
+            rilevanti_trovati += 1
+            ap += rilevanti_trovati / (i + 1)
+
+    return ap / len(rilevanti)
+# Esempio di utilizzo
+#print("MAP:", mean_average_precision(relevanza_ottenuta, relevanza_attesa))
+
+
+
+
+
+
+# 3. Normalized Discounted Cumulative Gain (NDCG)
+#
+#     Definizione: Valuta la qualità del ranking tenendo conto della posizione dei documenti rilevanti.
+#     Formula:
+#     
+#     $$ DCG=\sum\limits_{i=1}^{N}\frac{2^{\textit{rilevanza}(i)}-1}{\log_2{i+1}} $$
+#     $$ NDCG=\frac{DCG}{IDCG} $$
+#     
+#     Dove:
+#         IDCGIDCG: DCG ideale, ottenuto da un ranking perfetto.
+def ndcg(relevanza_ottenuta, relevanza_attesa, k):
+    """
+    Calcola NDCG@k.
+    :param relevanza_ottenuta: Lista dei documenti restituiti ordinati.
+    :param relevanza_attesa: Dizionario {document_id: rilevanza_attesa}.
+    :param k: Numero di risultati da considerare.
+    :return: NDCG@k (float).
+    """
+    def dcg(relevanze):
+        return sum((2**rel - 1) / np.log2(idx + 2) for idx, rel in enumerate(relevanze))
+    
+    relevanze_ottenute = [relevanza_attesa.get(doc, 0) for doc in relevanza_ottenuta[:k]]
+    dcg_val = dcg(relevanze_ottenute)
+    
+    relevanze_ideali = sorted(relevanza_attesa.values(), reverse=True)[:k]
+    idcg_val = dcg(relevanze_ideali)
+    
+    return dcg_val / idcg_val if idcg_val > 0 else 0.0
+# Esempio di utilizzo
+#k = 3
+#print(f"NDCG@{k}:", ndcg(relevanza_ottenuta, relevanza_attesa, k))
+
+
+
+
+
+
+# Conclusione
+#
+# Puoi scegliere la metrica in base al tuo obiettivo:
+#
+#     Precision@k: Semplice e utile per valutare i primi risultati.
+#     MAP: Ottimo per valutare la qualità complessiva dei risultati.
+#     NDCG: Ideale per analizzare l'importanza delle posizioni e dei documenti rilevanti
