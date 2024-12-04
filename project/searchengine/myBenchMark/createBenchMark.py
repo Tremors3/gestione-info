@@ -7,35 +7,104 @@ def get_duckduckgo_results(query: str, max_results: int = 25, auto: bool = False
         
         # Esegui una ricerca su DuckDuckGo
         from duckduckgo_search import DDGS
-        results = DDGS().text("QUIC protocol site:rfc-editor.org", max_results=max_results)
+        ddg = DDGS().text("QUIC protocol site:rfc-editor.org", max_results=max_results)
+        results = [link for link in ddg if "rfc-editor.org" in link]
         print(results)
         return results
     
     return [
-        "https://www.rfc-editor.org/rfc/rfc9000.html",
-        "https://www.rfc-editor.org/rfc/rfc9000.pdf",
-        "https://www.rfc-editor.org/rfc/rfc8999.html",
-        "https://www.rfc-editor.org/rfc/rfc9312.html",
-        "https://www.rfc-editor.org/rfc/rfc9312.pdf",
-        "https://www.rfc-editor.org/info/rfc9000",
-        "https://www.rfc-editor.org/rfc/rfc9308.html",
-        "https://www.rfc-editor.org/rfc/rfc9114.html",
-        "https://www.rfc-editor.org/rfc/rfc9308.pdf",
-        "https://www.rfc-editor.org/info/rfc9312",
-        "https://www.rfc-editor.org/rfc/rfc9001.html",
-        "https://www.rfc-editor.org/rfc/rfc9250.html",
-        "https://www.rfc-editor.org/v3test/draft-ietf-quic-transport-34-bad-pdf-line-break.pdf",
-        "https://www.rfc-editor.org/rfc/rfc9114.pdf",
-        "https://www.rfc-editor.org/rfc/rfc8999.pdf",
-        "https://www.rfc-editor.org/rfc/rfc9297.html",
-        "https://www.rfc-editor.org/rfc/rfc9443.pdf",
-        "https://www.rfc-editor.org/rfc/rfc9369.xml",
-        "https://www.rfc-editor.org/info/rfc9308",
-        "https://www.rfc-editor.org/rfc/rfc9250.pdf",
-        "https://www.rfc-editor.org/rfc/rfc9250",
-        "https://www.rfc-editor.org/rfc/rfc9221.html",
-        "https://www.rfc-editor.org/rfc/rfc9114",
-        "https://www.rfc-editor.org/rfc/rfc9221.pdf"
+        'https://www.rfc-editor.org/rfc/rfc9000.html',
+        'https://www.rfc-editor.org/rfc/rfc9000.pdf',
+        'https://www.rfc-editor.org/rfc/rfc8999.html',
+        'https://www.rfc-editor.org/info/rfc9000',
+        'https://www.rfc-editor.org/rfc/rfc9312.html',
+        'https://www.rfc-editor.org/rfc/rfc9308.html',
+        'https://www.rfc-editor.org/rfc/rfc9114.html',
+        'https://www.rfc-editor.org/rfc/rfc9312.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9001.html',
+        'https://www.rfc-editor.org/rfc/rfc9308.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9250.html',
+        'https://www.rfc-editor.org/rfc/rfc9114.pdf',
+        'https://www.rfc-editor.org/rfc/rfc8999.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9297.html',
+        'https://www.rfc-editor.org/rfc/rfc9443.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9369.xml',
+        'https://www.rfc-editor.org/info/rfc9308',
+        'https://www.rfc-editor.org/rfc/rfc9250.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9250',
+        'https://www.rfc-editor.org/rfc/rfc9221.html',
+        'https://www.rfc-editor.org/rfc/rfc9114',
+        'https://www.rfc-editor.org/rfc/rfc9221.pdf',
+        'https://www.rfc-editor.org/info/rfc9312',
+        'https://www.rfc-editor.org/rfc/rfc9369.html',
+        'https://www.rfc-editor.org/rfc/rfc9297.xml',
+        'https://www.rfc-editor.org/rfc/rfc9001',
+        'https://www.rfc-editor.org/rfc/rfc9443.html',
+        'https://www.rfc-editor.org/rfc/rfc9001.xml',
+        'https://www.rfc-editor.org/rfc/rfc9464.html',
+        'https://www.rfc-editor.org/info/rfc8999',
+        'https://www.rfc-editor.org/rfc/rfc9368.xml',
+        'https://www.rfc-editor.org/rfc/rfc9001.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9298.html',
+        'https://www.rfc-editor.org/rfc/rfc9308.xml',
+        'https://www.rfc-editor.org/rfc/rfc9308',
+        'https://www.rfc-editor.org/rfc/rfc9312.xml',
+        'https://www.rfc-editor.org/rfc/rfc8999',
+        'https://www.rfc-editor.org/rfc/rfc8446',
+        'https://www.rfc-editor.org/rfc/rfc9297',
+        'https://www.rfc-editor.org/rfc/rfc9000.xml',
+        'https://www.rfc-editor.org/info/rfc9114',
+        'https://www.rfc-editor.org/rfc/rfc9438.pdf',
+        'https://www.rfc-editor.org/rfc/rfc4960',
+        'https://www.rfc-editor.org/rfc/rfc7540.html',
+        'https://www.rfc-editor.org/rfc/rfc9443.xml',
+        'https://www.rfc-editor.org/rfc/rfc8323',
+        'https://www.rfc-editor.org/rfc/rfc9330.html',
+        'https://www.rfc-editor.org/rfc/rfc9002.xml',
+        'https://www.rfc-editor.org/rfc/rfc9221',
+        'https://www.rfc-editor.org/rfc/rfc9484.html',
+        'https://www.rfc-editor.org/rfc/rfc9368.pdf',
+        'https://www.rfc-editor.org/info/rfc9221',
+        'https://www.rfc-editor.org/rfc/rfc9331.html',
+        'https://www.rfc-editor.org/rfc/rfc9312',
+        'https://www.rfc-editor.org/rfc/rfc9250.xml',
+        'https://www.rfc-editor.org/info/rfc9002',
+        'https://www.rfc-editor.org/rfc/rfc9221.xml',
+        'https://www.rfc-editor.org/rfc/rfc9411.xml',
+        'https://www.rfc-editor.org/rfc/rfc9147.html',
+        'https://www.rfc-editor.org/rfc/rfc9002.html',
+        'https://www.rfc-editor.org/rfc/rfc9114.xml',
+        'https://www.rfc-editor.org/rfc/rfc9298',
+        'https://www.rfc-editor.org/rfc/rfc9298.xml',
+        'https://www.rfc-editor.org/rfc/rfc9170.html',
+        'https://www.rfc-editor.org/rfc/rfc9204.html',
+        'https://www.rfc-editor.org/rfc/rfc9369.pdf',
+        'https://www.rfc-editor.org/rfc/rfc8546',
+        'https://www.rfc-editor.org/rfc/rfc8899.html',
+        'https://www.rfc-editor.org/rfc/rfc5730',
+        'https://www.rfc-editor.org/info/rfc9297',
+        'https://www.rfc-editor.org/rfc/rfc4960.html',
+        'https://www.rfc-editor.org/rfc/rfc9368.html',
+        'https://www.rfc-editor.org/rfc/rfc8744',
+        'https://www.rfc-editor.org/rfc/rfc791',
+        'https://www.rfc-editor.org/rfc/rfc6241',
+        'https://www.rfc-editor.org/rfc/rfc9614.xml',
+        'https://www.rfc-editor.org/rfc/rfc9220.html',
+        'https://www.rfc-editor.org/rfc/rfc9260.html',
+        'https://www.rfc-editor.org/rfc/rfc9204.xml',
+        'https://www.rfc-editor.org/rfc/rfc9317.html',
+        'https://www.rfc-editor.org/rfc/rfc9002',
+        'https://www.rfc-editor.org/rfc/rfc9463.html',
+        'https://www.rfc-editor.org/rfc/rfc9331.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9643.xml',
+        'https://www.rfc-editor.org/rfc/rfc9113.pdf',
+        'https://www.rfc-editor.org/rfc/rfc9420.html',
+        'https://www.rfc-editor.org/rfc/rfc8922.xml',
+        'https://www.rfc-editor.org/rfc/rfc9413.xml',
+        'https://www.rfc-editor.org/rfc/rfc9113',
+        'https://www.rfc-editor.org/rfc/rfc9298.pdf',
+        'https://www.rfc-editor.org/rfc/rfc8484',
+        'https://www.rfc-editor.org/rfc/rfc9287.xml'
     ][:max_results]
 
 ############################################################################################################
@@ -194,8 +263,10 @@ def get_rfc_params(results: list):
 ############################################################################################################
 """ Creazione una struttura dati che riorganizza i risultati per i vari motori di ricerca. """
 
-duck_results = get_duckduckgo_results("QUIC protocol site:rfc-editor.org", max_results=30, auto=False)
-google_results = get_google_results("QUIC protocol site:rfc-editor.org", max_results=30, auto=False)
+MAX = 30
+
+duck_results = get_duckduckgo_results("QUIC protocol site:rfc-editor.org", max_results=MAX, auto=False)
+google_results = get_google_results("QUIC protocol site:rfc-editor.org", max_results=MAX, auto=False)
 #bing_results = get_bing_results("QUIC protocol site:rfc-editor.org", max_results=25)
 
 risultati_motori = [
@@ -230,7 +301,7 @@ risultati_motori = [
 import numpy as np
 
 def calcola_rilevanza(posizione):
-    return 1 / np.log2(posizione + 1)
+    return 1 / np.log2(posizione + 1)                                                              # FORMULA DI DECADUMENTO LOGARITMICO = SINGOLI PUNTEGGI DI RILEVANZA: R_t1, R_t2, ... R_tn
 
 # Aggregare i dati: sommare i punteggi di rilevanza per ogni documento
 aggregati = {}
@@ -247,7 +318,7 @@ for motore in risultati_motori:
             aggregati[doc_id] = {"document_id": doc_id, "punteggio_totale": 0, "frequenza": 0}
         
         # Sommatoria delle rilevanze
-        aggregati[doc_id]["punteggio_totale"] += rilevanza
+        aggregati[doc_id]["punteggio_totale"] += rilevanza                                         # SOMMA DEI DECADUMENTI LOGARITMICI = PUNTEGGIO DI RILEVANZA TOTALE: Rtot_t = R_t1 + R_t2 + ... + R_tn
         # Incremento della frequenza
         aggregati[doc_id]["frequenza"] += 1
 
@@ -268,7 +339,7 @@ documenti = []
 # Calcolo della rilevanza finale combinando posizione e frequenza
 for doc_id, valori in aggregati.items():
     # La formula combina il punteggio totale e la frequenza con un fattore di peso alpha
-    punteggio_finale = valori["punteggio_totale"] * (1 + alpha * valori["frequenza"])
+    punteggio_finale = valori["punteggio_totale"] * (1 + alpha * valori["frequenza"])              # FORMULA CHE UNISCE IL PUNTEGGIO DI RILEVANZA CON LA FREQUENZA
     # Salviamo il risultato in una lista di documenti
     documenti.append({"document_id": doc_id, "punteggio_rilevanza": punteggio_finale})
 
@@ -285,7 +356,7 @@ def normalizza_punteggio(punteggio, min_p, max_p):
     if max_p == min_p:
         # Evitiamo divisioni per zero nel caso di punteggi identici
         return 2.0
-    return 2 * (punteggio - min_p) / (max_p - min_p)
+    return 2 * (punteggio - min_p) / (max_p - min_p)                                               # NORMALIZZAZIONE DEL PUNTEGGIO
 
 # Assegnazione dei punteggi normalizzati e arrotondati in un range 1-3
 for doc in documenti:
@@ -294,11 +365,18 @@ for doc in documenti:
     # Offset di 1 per mappare il range normalizzato (0.0-2.0) a (1.0-3.0)
     doc["rilevanza_normalizzata"] = rilevanza_normalizzata + 1
     # Arrotondamento per ottenere un valore discreto tra 1 e 3
-    doc["rilevanza_normalizzata_arrotondata"] = round(rilevanza_normalizzata) + 1
+    doc["rilevanza_normalizzata_arrotondata"] = round(rilevanza_normalizzata) + 1                  # POSIZIONAMENTO DEL PUNTEGGIO NEL RANGE DESIDERATO
 
 ############################################################################################################
+""" Risultati Finali """
 
 # Stampa dei risultati finali
 print("Documenti con rilevanza calcolata:")
 for doc in documenti:
-    print(doc)
+    print(f"Rfc: {doc['document_id']},\t",
+        f"Punteggio rilevanza: {doc['punteggio_rilevanza']:.5f},\t\t", 
+        f"Rilevanza normalizzata: {doc['rilevanza_normalizzata']:.5f},\t", 
+        f"Rilevanza normalizzata arrotondata: {doc['rilevanza_normalizzata_arrotondata']}"
+    )
+
+print("Totale documenti:", len(documenti), "su", MAX)
