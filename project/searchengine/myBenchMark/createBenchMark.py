@@ -191,7 +191,7 @@ def get_google_results(query: str, max_results: int = 25, auto: bool = False):
 
 ############################################################################################################
 
-def get_bing_results(query: str, max_results: int = 25, auto: bool = False):
+def get_qwant_results(query: str, max_results: int = 25, auto: bool = False):
     
     if auto:
         pass
@@ -267,12 +267,12 @@ MAX = 30
 
 duck_results = get_duckduckgo_results("QUIC protocol site:rfc-editor.org", max_results=MAX, auto=False)
 google_results = get_google_results("QUIC protocol site:rfc-editor.org", max_results=MAX, auto=False)
-#bing_results = get_bing_results("QUIC protocol site:rfc-editor.org", max_results=25)
+#qwant_results = get_qwant_results("QUIC protocol site:rfc-editor.org", max_results=25)
 
 risultati_motori = [
     {"motore": "duckduckgo", "documenti": get_rfc_params(duck_results)},
     {"motore": "google", "documenti": get_rfc_params(google_results)}
-    #{"motore": "bing", "documenti": get_rfc_params(bing_results)}
+    #{"motore": "qwant", "documenti": get_rfc_params(qwant_results)}
 ]
 
 #from pprint import pprint
@@ -293,7 +293,7 @@ risultati_motori = [
 #     {"motore": "duckduckgo", "documenti": [{"document_id": "1234", "posizione": 2},
 #                                            {"document_id": "2345", "posizione": 3},
 #                                            {"document_id": "4567", "posizione": 10}]},
-#     {"motore": "bing", "documenti": [{"document_id": "1234", "posizione": 1},
+#     {"motore": "qwant", "documenti": [{"document_id": "1234", "posizione": 1},
 #                                      {"document_id": "4567", "posizione": 4},
 #                                      {"document_id": "3456", "posizione": 7}]}
 # ]

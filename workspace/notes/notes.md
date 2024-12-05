@@ -11,43 +11,15 @@ Abbiamo scelto di utilizzare come corpus i documenti RFC (Request for Comments) 
 - Si possono formulare query che cercano informazioni in sezioni specifiche (es. "header TCP" nella sezione specifiche tecniche).
 - I contenuti includono anche numeri, formule tecniche, tabelle, e diagrammi, utili per testare indicizzazioni e ottimizzazioni.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 # INTRODUZIONE AL SEARCH ENGINE
 
 ## 1. A QUALE TIPOLOGIA DI UTENTI E' RIVOLTO IL SEARCH ENGINE?
 
 ## 2. QUALE TIPO QUERY LANGUAGE IMPLEMENTARE? (keyword based) (è un search engine).
 
-
-
-
-
-
-
-
-
-
-
-
-
 # FASE 1: DOWNLOAD DEI DOCUMENTI
-
 Downloader dei documenti.
-
 # FASE 2: PARSING DEI DOCUMENTI
-
 Gli RFC sono disponibili principalmente in formato testo puro o HTML, il che richiede un parser per estrarre i campi strutturati. Potresti dover fare parsing per separare i campi che saranno preprocessati nella fase successiva (es. titolo, abstract, e sezioni specifiche).
 
 Sarà suddivisa in tre sezioni:
@@ -62,17 +34,18 @@ DOBBIAMO AVERE IN MENTE
 
 Ne decidiamo alcuni di base, poi li espanderemo in futuro in base ai bisogni.
 Il parsing lo effettueremo con l'aiuto della libreria python pylucene.
-
 # FASE 3: PREPROCESSING
-
-
-
 # FASE 4: INDICIZZAZIONE
 
 
 
 
 
+
+
+
+PROPOSTA LLVM PER VERIFICARE LA CORRETTEZZA DEI DATI SULLA RILEVANZA (GIA' CALCOLATA) DEI DOCUMENTI DEL BENCHMARK
+Una voltal eseguito lo script di creazione del benchmark otteniamo una lista di documenti con relativa rilevanza ad una data query. Invece di essere noi manualmente a fare un controllo sull'assegnazione della "Rilevanza Normalizzata Arrotondata" lo facciamo fare ad una LLVM addestrata?
 
 
 
