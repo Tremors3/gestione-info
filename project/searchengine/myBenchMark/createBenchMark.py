@@ -177,7 +177,7 @@ def main():
     processor = SearchEngineResultsProcessor(max_results=20, alpha=1)
     
     # Legge le query dal file JSON
-    queries = RFCReader.read_file("urls-test.json")
+    queries = RFCReader.read_file("results.json")
     if not queries:
         print("Nessuna query trovata. Terminazione del programma.")
         return

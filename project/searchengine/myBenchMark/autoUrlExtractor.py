@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-
 import requests
 import logging
 import json
@@ -101,18 +100,22 @@ class AutoUrlExtractor:
                 results[query][engine.name] = links
         return results
 
+def write_results(file_name, results):
+    """Scrive i risultati in un file JSON."""
+    data = [
+        {"query": query, "results": engines}
+        for query, engines in results.items()
+    ]
 
-def main():
-    # Imposta l'API key e il file di configurazione
-    api_key = os.getenv('API_KEY')
-    config_file = "queries.json"
+    try:
+        with open(file_name, 'w') as file:
+            json.dump(data, file, indent=4)
+    except IOError as e:
+        print(f"Errore durante la scrittura dei risultati: {e}")
 
-    # Inizializza l'estrattore
-    extractor = AutoUrlExtractor(api_key, config_file)
 
-    # Esegue le richieste e stampa i risultati
-    results = extractor.execute_requests()
-
+def print_results(results):
+    """Stampa i risultati in un formato leggibile."""
     print("Risultati:")
     for query, engines in results.items():
         print(f"\nQuery: {query}")
@@ -122,6 +125,29 @@ def main():
                 print(f"    - {link}")
 
 
+def main():
+    """Funzione principale per eseguire il programma."""
+    load_dotenv(dotenv_path="secrets.env")
+    api_key = os.getenv('API_KEY')
+
+    if not api_key:
+        raise RuntimeError("Chiave API non trovata. Assicurati che sia configurata in 'secrets.env'.")
+
+    config_file = "queries.json"
+    results_file = "results.json"
+
+    # Inizializza l'estrattore
+    extractor = AutoUrlExtractor(api_key, config_file)
+
+    # Esegue le richieste
+    results = extractor.execute_requests()
+
+    # Salva i risultati su file
+    write_results(results_file, results)
+
+    # Stampa i risultati
+    print_results(results)
+
+
 if __name__ == "__main__":
-    load_dotenv()
     main()
