@@ -9,32 +9,20 @@ ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like 
 ua2 = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.52 Safari/537.36"
 
 with sync_playwright() as p:
+    # Avvia il browser
     browser = p.chromium.launch(headless=True)
-    context = browser.new_context()
+    context = browser.new_context() # user_agent=ua2
     page = context.new_page()
+    
+    #context = browser.new_context(
+    #    viewport={"width": 1920, "height": 1080},
+    #    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+    #    geolocation={"latitude": 48.858844, "longitude": 2.294351},  # Esempio: Parigi
+    #    permissions=["geolocation"]
+    #)
 
     # Applica le tecniche stealth
     stealth_sync(page)
-
-    page.goto(url)
-    # Continua il tuo script
-
-with sync_playwright() as p:
-    # Avvia il browser
-    browser = p.chromium.launch(headless=True)
-    context = browser.new_context(user_agent=ua2)
-    context = browser.new_context(
-        viewport={"width": 1920, "height": 1080},
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
-        geolocation={"latitude": 48.858844, "longitude": 2.294351},  # Esempio: Parigi
-        permissions=["geolocation"]
-    )
-    page = context.new_page()
-    
-    #context = browser
-    print("TEST1")
-    page = context.new_page()
-    print("TEST2")
     
     # Naviga all'URL desiderato
     #url = "https://www.google.com/search?q=QUIC+protocol+site%3Ahttps%3A%2F%2Fwww.rfc-editor.org%2Frfc%2F&num=100"
