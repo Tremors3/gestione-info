@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import random
 
 class RFCReader:
     """Classe per il recupero degli URL risultanti delle query."""
@@ -23,7 +24,7 @@ class RFCExtractor:
         if "rfc-editor.org/rfc/rfc" in url:
             return url.removeprefix("https://www.rfc-editor.org/rfc/rfc").split('.')[0]
         
-        if "www.rfc-editor.org/info/rfc" in url:
+        if "rfc-editor.org/info/rfc" in url:
             return url.removeprefix("https://www.rfc-editor.org/info/rfc").split('.')[0]
         
         return None
@@ -62,6 +63,11 @@ class SearchEngineResultsProcessor:
             "motore": engine_name,
             "documenti": processed_results
         })
+    
+    def clear_search_engine_results(self):
+        """ Pulisce i risultati dei motori di ricerca """
+        
+        self.results_by_engine.clear()
 
     def aggregate_relevance(self):
         """Aggrega i punteggi di rilevanza basati su posizione e frequenza."""
@@ -137,12 +143,17 @@ def process_queries(queries, processor):
         
         # Processa i risultati per ciascun motore di ricerca
         for engine, urls in results.items():
-            processor.add_search_engine_results(engine, urls)
-        
+            random.shuffle(urls) # TODO: Levare Randomizzazione
+            processor.add_search_engine_results(engine, urls) 
+                    
         # Aggrega e calcola i punteggi di rilevanza
         aggregated_data = processor.aggregate_relevance()
         final_scores = processor.calculate_final_scores(aggregated_data)
         
+        # Pulisce i risultati associati alla query corrente
+        processor.clear_search_engine_results()
+        
+        # Appende il risultato finale alla lista del benchmark 
         benchmark.append({"query": query_text, "scores": final_scores})
     
     return benchmark
@@ -152,7 +163,7 @@ def print_results(benchmark):
     print("Query e relativi documenti con rilevanza calcolata:")
     for query in benchmark:
         query_text = query.get("query")
-        print(f"\nQuery corrente: '{query_text}'")
+        print(f"\nTesto della Query: '{query_text}'")
         for score in query.get("scores", []):
             print(f"Rfc: {score['document_id']},\t",
                   f"Punteggio rilevanza: {score['punteggio_rilevanza']:.5f},\t\t",
@@ -166,7 +177,7 @@ def main():
     processor = SearchEngineResultsProcessor(max_results=20, alpha=1)
     
     # Legge le query dal file JSON
-    queries = RFCReader.read_file("urls.json")
+    queries = RFCReader.read_file("urls-test.json")
     if not queries:
         print("Nessuna query trovata. Terminazione del programma.")
         return
