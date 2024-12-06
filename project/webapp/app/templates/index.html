@@ -101,20 +101,22 @@
 
               <script>
                 const maxTerms = 5; // Limite massimo di campi aggiuntivi
-                let termCounter = 0; // Contatore per ID univoci
-                let freedIds = [];   // Lista di ID liberati
+                termCounter = 0; // Contatore per ID univoci
+                
+                function AddTerm(uniqueId) {
+                  container = document.getElementById("aggiuntivi");
+                }
 
                 document.getElementById("aggiungi").addEventListener("click", function () {
-                  const container = document.getElementById("aggiuntivi");
-
+                  container = document.getElementById("aggiuntivi");
                   // Impostiamo un massimo di termini inseribili
                   if (container.children.length >= maxTerms) {
                     return;
                   }
 
-                  // Determina l'ID da usare eventualmente andandoli a prendere da quelli liberati
-                  const uniqueId = freedIds.length > 0 ? freedIds.pop() : termCounter++;
-
+                  // Determina l'ID da usare
+                  const uniqueId = termCounter++;
+                  
                   const newTermHtml = `
                       <div class="field has-addons-tablet" id="term-${uniqueId}">
                         <div class="control">
@@ -141,21 +143,42 @@
                         <button type="button" class="button is-medium remove-term-button" onclick="DeleteParent(this, ${uniqueId})" data-id="${uniqueId}" style="background: #086db1; color: #fff; border-radius:0;">╳</button>
                       </div>
                     `;
-
+                  
                   container.insertAdjacentHTML('beforeend', newTermHtml);
-
                 });
+              
+                function DeleteParent(button, uniqueId) {
+                  // Rimozione del campo
+                  const parent = document.getElementById(`term-${uniqueId}`);
+                  parent.remove();
 
-                function DeleteParent(button, freed) {
+                  // Seleziona tutti i campi rimanenti
+                  const remainingFields = document.querySelectorAll('.field.has-addons-tablet');
 
-                  // Rimuove il campo
-                  button.parentElement.remove();
+                  // Riassegna gli ID ordinati ai campi
+                  remainingFields.forEach((field, index) => {
+                    const newId = index;
+                    field.id = `term-${newId}`;
+                    const operator = field.querySelector('select[name^="terms-"][name$="-operator"]');
+                    const term = field.querySelector('input[name^="terms-"][name$="-term"]');
+                    const fieldType = field.querySelector('select[name^="terms-"][name$="-field"]');
+                    const removeButton = field.querySelector('.remove-term-button');
 
-                  // Aggiungi l'ID liberato alla lista freedIds se non è già presente
-                  if (!freedIds.includes(freed)) {
-                    freedIds.push(freed);
-                  }
-                };
+                    operator.name = `terms-${newId}-operator`;
+                    operator.id = `terms-${newId}-operator`;
+
+                    term.name = `terms-${newId}-term`;
+
+                    fieldType.name = `terms-${newId}-field`;
+                    fieldType.id = `terms-${newId}-field`;
+
+                    removeButton.setAttribute('onclick', `DeleteParent(this, ${newId})`);
+                    removeButton.dataset.id = newId;
+                  });
+
+                  term = document.getElementsByClassName("field has-addons-tablet")
+                  termCounter = term.length
+                }
               </script>
 
             </fieldset>
