@@ -21,15 +21,23 @@
       
       <!-- CONTAINER DI SINISTRA -->
 
-      <div class="sinistra">
-        
+      <div class="results">
+        <ol>
+          {% for i in risultati %}
+            <li class="res_list">
+              <div class="res_container">
+                <a class="res_title" href="{{ i.link }}">{{ i.title }}</a>
+                <p class="res_abstract"><b>Abstract: </b> {{ i.abstract }}</p>
+
+              </div>
+            </li>  
+          
+          {% endfor %}
+        </ol>
       </div> <!-- END sinistra -->
 
       <!-- CONTAINER DI DESTRA -->
 
-      <div class="destra">
-        
-      </div> <!-- END destra -->
     
     </div> <!-- END colonne is-desktop -->
 

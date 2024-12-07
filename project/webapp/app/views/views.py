@@ -81,7 +81,24 @@ def search():
 @blueprint.route('/results', methods=['GET'])
 def results():
     if request.method == 'GET':
-        return render_template('results.html')
+        risultati = [
+            {
+                "link":"https://rfc-editor.org/rfc/rfc9000.html",
+                "title":"RFC 9000 Titolo Titolo",
+                "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc8999.html",
+                "title":"RFC 8999 aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaa a a a a a a  ",
+                "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc9321.html",
+                "title":"RFC 9321 Qualcosa qualcosa",
+                "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
+            }
+        ]
+        return render_template('results.html', risultati=risultati)
 
 
 # Funzione per formattare la query
