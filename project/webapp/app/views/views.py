@@ -84,25 +84,25 @@ def results():
         risultati = [
             {
                 "link":"https://rfc-editor.org/rfc/rfc9000.html",
-                "link_title":"RFC 9000 Titolo Titolo",
-                "title":"RFC 9321 Qualcosa qualcosa",
-                "formats":["pdf","html","esplodo","mi","incazzo"],
+                "link_title":"RFC 9000",
+                "title":"Qualcosa qualcosa 1",
+                "formats":["pdf","html","tex"],
                 "authors": ["vaffanculo","vaffanculo","vaffanculo","vaffanculo"],
                 "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
             },
             {
                 "link":"https://rfc-editor.org/rfc/rfc8999.html",
-                "link_title":"RFC 8999 aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaa a a a a a a  ",
-                "title":"RFC 9321 Qualcosa qualcosa",
-                "formats":["pdf","html","txt","mincazzo"],
+                "link_title":"RFC 8999",
+                "title":"Qualcosa qualcosa 2",
+                "formats":["pdf","html","tex"],
                 "authors": ["vaffanculo","vaffanculo","vaffanculo","vaffanculo"],
                 "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
             },
             {
                 "link":"https://rfc-editor.org/rfc/rfc9321.html",
-                "link_title":"RFC 9321 Qualcosa qualcosa",
-                "title":"RFC 9321 Qualcosa qualcosa",
-                "formats":["pdf","html","txt","mincazzo"],
+                "link_title":"RFC 9321",
+                "title":"Qualcosa qualcosa 3",
+                "formats":["pdf","html","tex"],
                 "authors": ["vaffanculo","vaffanculo","vaffanculo","vaffanculo"],
                 "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
             }
