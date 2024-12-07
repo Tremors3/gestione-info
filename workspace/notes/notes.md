@@ -1,21 +1,43 @@
+# [idea] BENCHMARK
 
-# SCELTA DEL DATASET
-Abbiamo scelto di utilizzare come corpus i documenti RFC (Request for Comments) di Internet.  
-## Perché abbiamo scelto questo corpus
-### Molteplici Campi:
-- Gli RFC sono suddivisi in sezioni standard (es. Introduzione, Motivazione, Specifiche, Conclusione), il che facilita la creazione di campi come titolo, autore, data, testo, e anche campi specifici come formule, tabelle, o header tecnici.
-- Ogni RFC è numerato e ha un’identificazione univoca.
-### Lunghezza e complessità variegate:
-- Alcuni RFC sono brevi (es. RFC 1149, relativo alla trasmissione via piccioni), mentre altri sono molto lunghi e complessi (es. RFC 791, il protocollo IP).
-### Applicabilità per query avanzate:
-- Si possono formulare query che cercano informazioni in sezioni specifiche (es. "header TCP" nella sezione specifiche tecniche).
-- I contenuti includono anche numeri, formule tecniche, tabelle, e diagrammi, utili per testare indicizzazioni e ottimizzazioni.
+PROPOSTA LLM PER VERIFICARE LA CORRETTEZZA DEI DATI SULLA RILEVANZA (GIA' CALCOLATA) DEI DOCUMENTI DEL BENCHMARK
+Una voltal eseguito lo script di creazione del benchmark otteniamo una lista di documenti con relativa rilevanza ad una data query. Invece di essere noi manualmente a fare un controllo sull'assegnazione della "Rilevanza Normalizzata Arrotondata" lo facciamo fare ad una LLVM addestrata?
 
-# INTRODUZIONE AL SEARCH ENGINE
+# [da_fare] NOTA SULL'UTILIZZO DELLA SEARCH BAR
 
-## 1. A QUALE TIPOLOGIA DI UTENTI E' RIVOLTO IL SEARCH ENGINE?
+Nella sezione a destra dell'interfaccia grafica elenchiamo tre sezioni, una per Search Engine (Whoosh, Postgresql, Pylucene).
+All'interno di queste sezione specifichiamo le possibili grammatiche di funzionalità offerte dai vari search engine. Per esempio:
 
-## 2. QUALE TIPO QUERY LANGUAGE IMPLEMENTARE? (keyword based) (è un search engine).
+```
+SEZIONE WHOOSH
+Puoi effettuare una ricerca esatta tramite l'operatore ""<N>. i.e. "information retrieval"<3>
+
+SEZIONE POSTGRESQL
+Puoi effettuare una ricerca esatta tramite l'operatore ::-N- i.e. :information retrieval:-3-
+```
+
+A seconda del motore selezionato l'utente dovrà andare ad utilizzare la sintassi opportuna di quel motore.
+Le sintassi dei tre motori saranno mostrate di fianco al prompt della query, in modo che l'utente.
+
+In questo modo non dobbiamo ideare una sintassi comune e poi aggiustarla in base alla scelta del motore ma
+utilizziamo la sintassi diretta del motore così ci semplifichiamo la vita. 
+
+# [da_fare] MODIFICARE ALCUNE COSE DEI TERMINI DI RICERCA
+
+Rimuoviamo l'operatore OR perchè introduce molta logica difficile da gestire tra i diversi motori di Ricerca.
+
+Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo è più chiaro che non ci stiamo riferendo agli operatori AND e OR ma al fatto che all'interno dei campo i termini devono esserci o no in modo esatto. E' un podo per essere più chiari e precisi.
+
+
+
+
+
+
+
+
+
+
+# SCRAPING
 
 # FASE 1: DOWNLOAD DEI DOCUMENTI
 Downloader dei documenti.
@@ -34,8 +56,6 @@ DOBBIAMO AVERE IN MENTE
 
 Ne decidiamo alcuni di base, poi li espanderemo in futuro in base ai bisogni.
 Il parsing lo effettueremo con l'aiuto della libreria python pylucene.
-# FASE 3: PREPROCESSING
-# FASE 4: INDICIZZAZIONE
 
 
 
@@ -44,8 +64,6 @@ Il parsing lo effettueremo con l'aiuto della libreria python pylucene.
 
 
 
-PROPOSTA LLVM PER VERIFICARE LA CORRETTEZZA DEI DATI SULLA RILEVANZA (GIA' CALCOLATA) DEI DOCUMENTI DEL BENCHMARK
-Una voltal eseguito lo script di creazione del benchmark otteniamo una lista di documenti con relativa rilevanza ad una data query. Invece di essere noi manualmente a fare un controllo sull'assegnazione della "Rilevanza Normalizzata Arrotondata" lo facciamo fare ad una LLVM addestrata?
 
 
 
