@@ -566,25 +566,40 @@ article, aside, figure, footer, header, hgroup, section {
 /* .res_title{
   margin-bottom: 1vh;
   margin-left: .5vw;
-}
+} */
 
-.res_abstract{
-  margin-left: .5vw;
-  
+/* .res_abstract{
+    max-width: 150ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 } */
 
 .res_container{
   margin-left: .5vw;
 }
 
+.res_authors{
+  margin-top: 0.5vh;
+  margin-bottom: 0;
+}
+
+.res_title{
+  margin-bottom:0;
+  margin-top: .5vh;
+}
+
+.res_abstract{
+  margin-top: 0.5vh;
+}
 
 .res_list{
   margin-bottom: 1vh;
 }
 
-
-
-
+.link_title{
+  margin-right: 0.5vw;
+}
 
 
 

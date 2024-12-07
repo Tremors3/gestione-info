@@ -84,21 +84,30 @@ def results():
         risultati = [
             {
                 "link":"https://rfc-editor.org/rfc/rfc9000.html",
-                "title":"RFC 9000 Titolo Titolo",
+                "link_title":"RFC 9000 Titolo Titolo",
+                "title":"RFC 9321 Qualcosa qualcosa",
+                "formats":["pdf","html","esplodo","mi","incazzo"],
+                "authors": ["vaffanculo","vaffanculo","vaffanculo","vaffanculo"],
                 "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
             },
             {
                 "link":"https://rfc-editor.org/rfc/rfc8999.html",
-                "title":"RFC 8999 aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaa a a a a a a  ",
+                "link_title":"RFC 8999 aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaa a a a a a a  ",
+                "title":"RFC 9321 Qualcosa qualcosa",
+                "formats":["pdf","html","txt","mincazzo"],
+                "authors": ["vaffanculo","vaffanculo","vaffanculo","vaffanculo"],
                 "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
             },
             {
                 "link":"https://rfc-editor.org/rfc/rfc9321.html",
+                "link_title":"RFC 9321 Qualcosa qualcosa",
                 "title":"RFC 9321 Qualcosa qualcosa",
+                "formats":["pdf","html","txt","mincazzo"],
+                "authors": ["vaffanculo","vaffanculo","vaffanculo","vaffanculo"],
                 "abstract":"Estratto della pagina dell'rfc 9000 suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca suca "
             }
         ]
-        return render_template('results.html', risultati=risultati)
+        return render_template('results.html', risultati=risultati, num_result=len(risultati), max_words=250)
 
 
 # Funzione per formattare la query
