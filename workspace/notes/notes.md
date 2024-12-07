@@ -1,34 +1,32 @@
+# [idea] BENCHMARK
 
-# SCELTA DEL DATASET
-Abbiamo scelto di utilizzare come corpus i documenti RFC (Request for Comments) di Internet.  
-## Perché abbiamo scelto questo corpus
-### Molteplici Campi:
-- Gli RFC sono suddivisi in sezioni standard (es. Introduzione, Motivazione, Specifiche, Conclusione), il che facilita la creazione di campi come titolo, autore, data, testo, e anche campi specifici come formule, tabelle, o header tecnici.
-- Ogni RFC è numerato e ha un’identificazione univoca.
-### Lunghezza e complessità variegate:
-- Alcuni RFC sono brevi (es. RFC 1149, relativo alla trasmissione via piccioni), mentre altri sono molto lunghi e complessi (es. RFC 791, il protocollo IP).
-### Applicabilità per query avanzate:
-- Si possono formulare query che cercano informazioni in sezioni specifiche (es. "header TCP" nella sezione specifiche tecniche).
-- I contenuti includono anche numeri, formule tecniche, tabelle, e diagrammi, utili per testare indicizzazioni e ottimizzazioni.
+PROPOSTA LLM PER VERIFICARE LA CORRETTEZZA DEI DATI SULLA RILEVANZA (GIA' CALCOLATA) DEI DOCUMENTI DEL BENCHMARK
+Una voltal eseguito lo script di creazione del benchmark otteniamo una lista di documenti con relativa rilevanza ad una data query. Invece di essere noi manualmente a fare un controllo sull'assegnazione della "Rilevanza Normalizzata Arrotondata" lo facciamo fare ad una LLVM addestrata?
 
+# [da_fare] NOTA SULL'UTILIZZO DELLA SEARCH BAR
 
+Nella sezione a destra dell'interfaccia grafica elenchiamo tre sezioni, una per Search Engine (Whoosh, Postgresql, Pylucene).
+All'interno di queste sezione specifichiamo le possibili grammatiche di funzionalità offerte dai vari search engine. Per esempio:
 
+```
+SEZIONE WHOOSH
+Puoi effettuare una ricerca esatta tramite l'operatore ""<N>. i.e. "information retrieval"<3>
 
+SEZIONE POSTGRESQL
+Puoi effettuare una ricerca esatta tramite l'operatore ::-N- i.e. :information retrieval:-3-
+```
 
+A seconda del motore selezionato l'utente dovrà andare ad utilizzare la sintassi opportuna di quel motore.
+Le sintassi dei tre motori saranno mostrate di fianco al prompt della query, in modo che l'utente.
 
+In questo modo non dobbiamo ideare una sintassi comune e poi aggiustarla in base alla scelta del motore ma
+utilizziamo la sintassi diretta del motore così ci semplifichiamo la vita. 
 
+# [da_fare] MODIFICARE ALCUNE COSE DEI TERMINI DI RICERCA
 
+Rimuoviamo l'operatore OR perchè introduce molta logica difficile da gestire tra i diversi motori di Ricerca.
 
-
-
-
-
-
-# INTRODUZIONE AL SEARCH ENGINE
-
-## 1. A QUALE TIPOLOGIA DI UTENTI E' RIVOLTO IL SEARCH ENGINE?
-
-## 2. QUALE TIPO QUERY LANGUAGE IMPLEMENTARE? (keyword based) (è un search engine).
+Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo è più chiaro che non ci stiamo riferendo agli operatori AND e OR ma al fatto che all'interno dei campo i termini devono esserci o no in modo esatto. E' un podo per essere più chiari e precisi.
 
 
 
@@ -39,15 +37,11 @@ Abbiamo scelto di utilizzare come corpus i documenti RFC (Request for Comments) 
 
 
 
-
-
+# SCRAPING
 
 # FASE 1: DOWNLOAD DEI DOCUMENTI
-
 Downloader dei documenti.
-
 # FASE 2: PARSING DEI DOCUMENTI
-
 Gli RFC sono disponibili principalmente in formato testo puro o HTML, il che richiede un parser per estrarre i campi strutturati. Potresti dover fare parsing per separare i campi che saranno preprocessati nella fase successiva (es. titolo, abstract, e sezioni specifiche).
 
 Sarà suddivisa in tre sezioni:
@@ -63,11 +57,8 @@ DOBBIAMO AVERE IN MENTE
 Ne decidiamo alcuni di base, poi li espanderemo in futuro in base ai bisogni.
 Il parsing lo effettueremo con l'aiuto della libreria python pylucene.
 
-# FASE 3: PREPROCESSING
 
 
-
-# FASE 4: INDICIZZAZIONE
 
 
 

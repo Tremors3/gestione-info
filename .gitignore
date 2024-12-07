@@ -166,3 +166,8 @@ ignore
 corpus.json
 query.json
 exp-venv
+
+# Secrets
+Secrets/
+secrets
+secrets.env

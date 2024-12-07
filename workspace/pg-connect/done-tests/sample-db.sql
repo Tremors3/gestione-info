@@ -1,12 +1,12 @@
 -- Create the database
 CREATE DATABASE FruitDatabase;
 
--- Use the database
-USE FruitDatabase;
+-- Connect to the database
+-- FruitDatabase;
 
 -- Create the table for fruits
 CREATE TABLE Fruits (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     origin VARCHAR(50) NOT NULL,
     season VARCHAR(50) NOT NULL
