@@ -12,7 +12,7 @@
     <!-- TITLE -->
 
     <div class="titolo">
-      <h2>Risultati</h2>
+      <h2>{{ num_result }} Risultati</h2>
     </div>
 
     <div class="separatore"></div>
@@ -21,15 +21,26 @@
       
       <!-- CONTAINER DI SINISTRA -->
 
-      <div class="sinistra">
-        
+      <div class="results">
+        <ol>
+          {% for i in risultati %}
+            <li class="res_list">
+              <div class="res_container">
+                <a class="link_title" href="{% if i.link %}{{ i.link }}{% endif %}">{% if i.link_title %}{{ i.link_title }}{% endif %}</a> {% if i.formats %}[{% if i.formats|length > 0 %}{% for j in i.formats[:-1] %}<a href="{{ i.link }}.{{ j }}">{{ j }}</a>, {% endfor %}<a href="{{ i.link }}.{{ i.formats[-1] }}">{{ i.formats[-1] }}</a>{% endif %}]{% endif %}
+                <h3 class="res_title">{% if i.title %}{{ i.title }}{% endif %}</h3>
+                <p class="res_authors">{% if i.authors %}<b>Authors: </b> {% if i.authors|length > 0 %} {% for j in i.authors[:-1] %} {{ j }}, {% endfor %} {{ i.authors[-1] }} {% endif %}{% endif %}</p>
+                <p class="res_abstract"> {% if i.abstract %} <b>Abstract: </b>{% if i.abstract|length > max_words %} {{ i.abstract[0:max_words] }}... {% else %} {{ i.abstract }} {% endif %}{% endif %}</p>
+                <p class="res_date">{% if i.date %}<b>Date: </b>{{ i.date }}{% endif %}</p>
+                <p class="res_comment">{% if i.comment %}<b>Comment: </b>{{ i.comment }}{% endif %}</p>
+              </div>
+            </li>  
+          
+          {% endfor %}
+        </ol>
       </div> <!-- END sinistra -->
 
       <!-- CONTAINER DI DESTRA -->
 
-      <div class="destra">
-        
-      </div> <!-- END destra -->
     
     </div> <!-- END colonne is-desktop -->
 

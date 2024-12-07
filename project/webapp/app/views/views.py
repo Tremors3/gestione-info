@@ -81,7 +81,89 @@ def search():
 @blueprint.route('/results', methods=['GET'])
 def results():
     if request.method == 'GET':
-        return render_template('results.html')
+        risultati = [
+            {
+                #"link":"https://rfc-editor.org/rfc/rfc9000",
+                "link_title":"RFC 9000",
+                "title":"Qualcosa qualcosa 1",
+                "formats":["pdf","html","txt"],
+                "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
+                "date": "1111/11/11",
+                "comment": "commento",
+                "abstract":"Estratto della pagina dell'rfc 9000"
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc8999",
+                #"link_title":"RFC 8999",
+                "title":"Qualcosa qualcosa 2",
+                "formats":["pdf","html","txt"],
+                "authors": ["Autore 1","Autore 2","Autore 3"],
+                "date": "1111/11/11",
+                "comment": "commento",
+                "abstract":"Estratto della pagina dell'rfc 9000"
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc8999",
+                "link_title":"RFC 8999",
+                #"title":"Qualcosa qualcosa 2",
+                "formats":["pdf","html","txt"],
+                "authors": ["Autore 1","Autore 2","Autore 3"],
+                "date": "1111/11/11",
+                "comment": "commento",
+                "abstract":"Estratto della pagina dell'rfc 9000"
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc8999",
+                "link_title":"RFC 8999",
+                "title":"Qualcosa qualcosa 2",
+                #"formats":["pdf","html","txt"],
+                "authors": ["Autore 1","Autore 2","Autore 3"],
+                "date": "1111/11/11",
+                "comment": "commento",
+                "abstract":"Estratto della pagina dell'rfc 9000"
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc8999",
+                "link_title":"RFC 8999",
+                "title":"Qualcosa qualcosa 2",
+                "formats":["pdf","html","txt"],
+                #"authors": ["Autore 1","Autore 2","Autore 3"],
+                "date": "1111/11/11",
+                "comment": "commento",
+                "abstract":"Estratto della pagina dell'rfc 9000"
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc8999",
+                "link_title":"RFC 8999",
+                "title":"Qualcosa qualcosa 2",
+                "formats":["pdf","html","txt"],
+                "authors": ["Autore 1","Autore 2","Autore 3"],
+                #"date": "1111/11/11",
+                "comment": "commento",
+                "abstract":"Estratto della pagina dell'rfc 9000"
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc8999",
+                "link_title":"RFC 8999",
+                "title":"Qualcosa qualcosa 2",
+                "formats":["pdf","html","txt"],
+                "authors": ["Autore 1","Autore 2","Autore 3"],
+                "date": "1111/11/11",
+                #"comment": "commento",
+                "abstract":"Estratto della pagina dell'rfc 9000"
+            },
+            {
+                "link":"https://rfc-editor.org/rfc/rfc9321",
+                "link_title":"RFC 9321",
+                "title":"Qualcosa qualcosa 3",
+                "formats":["pdf","html","txt"],
+                "authors": ["Autore 1","Autore 2"],
+                "date": "1111/11/11",
+                "comment": "commento",
+                #"abstract":"Estratto della pagina dell'rfc 9000"
+            }
+        ]
+        return render_template('results.html', risultati=risultati, num_result=len(risultati), max_words=250)
 
 
 # Funzione per formattare la query
