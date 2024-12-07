@@ -6,7 +6,7 @@ class RFCReader:
     """Classe per il recupero degli URL risultanti delle query."""
     
     @staticmethod
-    def read_file(json_file="queries.json"):
+    def read_file(json_file="results.json"):
         """Legge un file JSON e restituisce i dati."""
         try:
             with open(json_file, 'r') as file:
