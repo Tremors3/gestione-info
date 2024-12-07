@@ -582,26 +582,34 @@ article, aside, figure, footer, header, hgroup, section {
 .res_authors{
   margin-top: 0.5vh;
   margin-bottom: 0;
+  font-size: 12pt;
 }
 
 .res_title{
   margin-bottom:0;
   margin-top: .5vh;
+  font-size: 15pt;
 }
 
 .res_abstract{
   margin-top: 0.5vh;
+  margin-bottom: 0.5vh;
+  font-size: 13pt;
 }
 
 .res_list{
-  margin-bottom: 1vh;
+  margin-bottom: 3vh;
 }
 
 .link_title{
   margin-right: 0.5vw;
 }
 
-
+.res_date, .res_comment{
+  margin-top: 0.5vh;
+  margin-bottom: 0.5vh;
+  font-size: 11pt;
+}
 
 
 
