@@ -505,13 +505,6 @@ article, aside, figure, footer, header, hgroup, section {
 }
 
 
-.message.is-link {
-  background-color: #f5fbff;
-}
-.message.is-link .message-header {
-  background-color: #086db1;
-  color: #fff;
-}
 .message-header {
   align-items: center;
   background-color: #333;
@@ -542,10 +535,58 @@ article, aside, figure, footer, header, hgroup, section {
   color: white !important;
 }
 
-.message.is-link .message-body {
-  border-color: #086db1;
-  color: #08456e;
+:root{
+  --woosh_color_header     : hsl(204, 91%, 36%);
+  --woosh_color_text       : hsl(204, 91%, 20%);
+  --woosh_color_code       : hsl(204, 91%, 94%);
+  --woosh_color_bg         : hsl(204, 91%, 98%);
+  
+  --pylucene_color_header  : hsl(187, 91%, 34%);
+  --pylucene_color_text    : hsl(187, 91%, 20%);
+  --pylucene_color_code    : hsl(204, 91%, 94%);
+  --pylucene_color_bg      : hsl(187, 91%, 98%);
+
+  --postgresql_color_header: hsl(135, 70%, 36%);
+  --postgresql_color_text  : hsl(135, 70%, 20%);
+  --postgresql_color_code  : hsl(135, 70%, 94%);
+  --postgresql_color_bg    : hsl(135, 70%, 98%);
 }
+
+.message.is-link#woosh {
+  background-color: var(--woosh_color_bg);
+}
+.message.is-link#pylucene {
+  background-color: var(--pylucene_color_bg);
+}
+.message.is-link#postgresql {
+  background-color: var(--postgresql_color_bg);
+}
+
+.message.is-link#woosh .message-body#woosh {
+  border-color: var(--woosh_color_header);
+  color: var(--woosh_color_text);
+}
+.message.is-link#woosh .message-header#woosh {
+  background-color: var(--woosh_color_header);
+  color: #fff;
+}
+.message.is-link#pylucene .message-body#pylucene {
+  border-color: var(--pylucene_color_header);
+  color: var(--pylucene_color_text);
+}
+.message.is-link#pylucene .message-header#pylucene {
+  background-color: var(--pylucene_color_header);
+  color: #fff;
+}
+.message.is-link#postgresql .message-body#postgresql {
+  border-color: var(--postgresql_color_header);
+  color: var(--postgresql_color_text );
+}
+.message.is-link#postgresql .message-header#postgresql {
+  background-color: var(--postgresql_color_header);
+  color: #fff;
+}
+
 .message-header + .message-body {
   border-width: 1px;
   border-top-left-radius: 0;
@@ -562,6 +603,31 @@ article, aside, figure, footer, header, hgroup, section {
   /* padding-top: 1.25em; */
 }
 
+.message-body #p{
+  margin-left: 1vw;
+  margin-bottom: .5vh;
+}
+.message-body ul{
+  margin-top: .5vh;
+}
+#woosh code {
+  background-color: var(--woosh_color_code);
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
+#pylucene code {
+  background-color: var(--pylucene_color_code);
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
+#postgresql code {
+  background-color: var(--postgresql_color_code);
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
 /*********************************************************  PAGINA RISULTATI  *******************************************************************/
 /* .res_title{
   margin-bottom: 1vh;

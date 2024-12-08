@@ -380,16 +380,66 @@
 
     <div class="destra">
 
-      <article class="message is-link">
-        <div class="message-header">
-          <h4 class="has-text-white is-marginless is-bold">Qualcosa</h4>
+      <article class="message is-link" id="woosh">
+        <div class="message-header" id="woosh">
+          <h4 class="has-text-white is-marginless is-bold">Woosh</h4>
         </div>
-        <div class="message-body">
+        <div class="message-body" id="woosh">
+          <p id="p"><b>Sintassi supportata</b></p>
           <ul>
-            <li>Testo <strong>testo strong</strong> </li>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim eaque at odio ipsum accusantium 
-              consequuntur libero facilis iusto, eveniet itaque quod minima, ratione cum cumque. Assumenda, tenetur? 
-              Officia, exercitationem explicabo.</li>
+            <li>Single term query: <code>"[term]"</code></li>
+            <li>Phrase query: <code>"[phrase]"</code></li>
+            <li>Logic operators: <code>AND, OR, NOT</code></li>
+            <li>Find documents containing x but not either y or z: <code>x NOT (y OR z)</code></li>
+            <li>Fields: <code>[field]:[term]</code> </li>
+            <li>Wildcards: <code>?, *</code> </li>
+            <li>Fuzzy term: <code>[term]~[edits]</code></li>
+            <li>Range: 
+              <ul>
+                <li>Inclusive: <code>[udp TO tcp]</code></li>
+                <li>Exclusive: <code>{udp TO tcp}</code></li>
+              </ul>
+            </li>
+            <li>Term boosting: <code>udp^2 tcp^0.5</code></li>
+            <li>Confronto: <code>>, <, >=, <=</code></li>
+          </ul>
+        </div>
+      </article>
+      <article class="message is-link" id="pylucene">
+        <div class="message-header" id="pylucene">
+          <h4 class="has-text-white is-marginless is-bold">Pylucene</h4>
+        </div>
+        <div class="message-body" id="pylucene">
+          <p id="p"><b>Sintassi supportata</b></p>
+          <ul>
+            <li>Single term query: <code>"[term]"</code></li>
+            <li>Phrase query: <code>"[phrase]"</code></li>
+            <li>Logic operators: <code>AND, OR, NOT, +, -</code></li>
+            <li>Fields: <code>[field]:[term]</code> </li>
+            <li>Wildcards: <code>?, *</code> </li>
+            <li>Fuzzy term (0.0 .. 1.0): <code>[term]~[edits]</code></li>
+            <li>Proximity search: <code>[term/phrase]~[distance]</code></li>
+            <li>Range: 
+              <ul>
+                <li>Inclusive: <code>[udp TO tcp]</code></li>
+                <li>Exclusive: <code>{udp TO tcp}</code></li>
+              </ul>
+            </li>
+            <li>Term boosting: <code>udp^2 tcp^0.5</code></li>
+            <li>Confronto: <code>>, <, >=, <=</code></li>
+            <li>Escape special characters with <code>\</code></li>
+          </ul>
+        </div>
+      </article>
+      <article class="message is-link" id="postgresql">
+        <div class="message-header" id="postgresql">
+          <h4 class="has-text-white is-marginless is-bold">PostgreSQL</h4>
+        </div>
+        <div class="message-body" id="postgresql">
+          <p id="p"><b>Sintassi supportata</b></p>
+          <ul>
+            <li>Operatori logici: <code>AND, OR, NOT</code></li>
+            <li>Proximity search: [sintassi]</li>
           </ul>
         </div>
       </article>
