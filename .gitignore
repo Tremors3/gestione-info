@@ -172,6 +172,7 @@ dataset.json
 query.json
 exp-venv/
 tmp_results/
+index_dir/
 #
 # Secrets
 Secrets/
