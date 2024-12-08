@@ -41,10 +41,10 @@ class RFCExtractor:
             rfc_number = RFCExtractor.extract_rfc_number(result)
             if rfc_number and rfc_number not in best_positions:
                 
-                best_positions[rfc_number] = {"document_id": rfc_number, "posizione": position}
+                best_positions[rfc_number] = {"document_id": rfc_number, "position": position}
                 position += 1
         
-        return sorted(best_positions.values(), key=lambda x: x["posizione"])
+        return sorted(best_positions.values(), key=lambda x: x["position"])
 
 class SearchEngineResultsProcessor:
     """Classe per gestire e processare i risultati dai motori di ricerca."""
@@ -61,7 +61,7 @@ class SearchEngineResultsProcessor:
         
         self.results_by_engine.append({
             "motore": engine_name,
-            "documenti": processed_results
+            "documents": processed_results
         })
     
     def clear_search_engine_results(self):
@@ -69,34 +69,34 @@ class SearchEngineResultsProcessor:
         
         self.results_by_engine.clear()
 
-    def aggregate_relevance(self):
+    def aggregate_scores(self):
         """Aggrega i punteggi di rilevanza basati su posizione e frequenza."""
         
         aggregati = {}
         
         for engine in self.results_by_engine:
-            for doc in engine["documenti"]:
+            for doc in engine["documents"]:
                 
                 doc_id = doc["document_id"]
-                posizione = doc["posizione"]
-                rilevanza = self._calculate_relevance(posizione)
+                position = doc["position"]
+                score = self._calculate_score(position)
                 
                 if doc_id not in aggregati:
-                    aggregati[doc_id] = {"document_id": doc_id, "punteggio_totale": 0, "frequenza": 0}
+                    aggregati[doc_id] = {"document_id": doc_id, "total_score": 0, "frequency": 0}
                     
-                aggregati[doc_id]["punteggio_totale"] += rilevanza
-                aggregati[doc_id]["frequenza"] += 1
+                aggregati[doc_id]["total_score"] += score
+                aggregati[doc_id]["frequency"] += 1
                 
         return aggregati
 
     @staticmethod
-    def _calculate_relevance(position):
+    def _calculate_score(position):
         """Calcola il punteggio di rilevanza logaritmico basato sulla posizione."""
         
         return 1 / np.log2(position + 1)
 
     @staticmethod
-    def normalize_scores(scores):
+    def normalize_relevance(scores):
         """Normalizza i punteggi tra 0.0 e 2.0."""
         
         min_score = min(scores)
@@ -107,29 +107,37 @@ class SearchEngineResultsProcessor:
         
         return [2 * (score - min_score) / (max_score - min_score) for score in scores]
 
-    def calculate_final_scores(self, aggregated_data):
+    def calculate_final_relevance(self, aggregated_data):
         """Calcola i punteggi finali combinando posizione e frequenza."""
         
-        documenti = []
+        documents = []
         
         for doc_id, values in aggregated_data.items():
-            punteggio_finale = values["punteggio_totale"] * (1 + self.alpha * values["frequenza"])
-            documenti.append({
+            relevance = values["total_score"] * (1 + self.alpha * values["frequency"])
+            documents.append({
                 "document_id": doc_id,
-                "punteggio_rilevanza": punteggio_finale
+                "relevance": relevance
             })
-            
-        if not documenti:
-            raise ValueError("Non ci sono documenti per cui calcolare la rilevanza.")
+          
+        if not documents:
+            raise ValueError("Non ci sono documents per cui calcolare la rilevanza.")
         
-        scores = [doc["punteggio_rilevanza"] for doc in documenti]
-        normalized_scores = self.normalize_scores(scores)
+        # TODO: Edit self.normalize_relevance(); modify doc['relevance'] directly instead of creating a separate relevance list.
+        # Right now we are reassign every relevance to the documents based on the position in the list; thas no good. 
         
-        for i, doc in enumerate(documenti):
-            doc["rilevanza_normalizzata"] = normalized_scores[i] + 1
-            doc["rilevanza_normalizzata_arrotondata"] = round(normalized_scores[i]) + 1
-            
-        return documenti
+        relevance = [doc["relevance"] for doc in documents]
+        normalized = self.normalize_relevance(relevance)
+        
+        # TODO: edit also this because of the previous todo.
+        
+        for i, doc in enumerate(documents):
+            doc["normalized"] = normalized[i] + 1
+            doc["rounded"] = round(normalized[i]) + 1
+        
+        #Sorting
+        documents = sorted(documents, key=lambda x: x['normalized'], reverse=True)
+        
+        return documents
 
 ###################################################################################################
 
@@ -146,37 +154,44 @@ def process_queries(queries, processor):
             random.shuffle(urls) # TODO: Levare Randomizzazione
             processor.add_search_engine_results(engine, urls) 
                     
-        # Aggrega e calcola i punteggi di rilevanza
-        aggregated_data = processor.aggregate_relevance()
-        final_scores = processor.calculate_final_scores(aggregated_data)
+        # Aggrega e calcola i punteggi delle posizioni
+        aggregated_data = processor.aggregate_scores()
+        final_scores = processor.calculate_final_relevance(aggregated_data)
         
         # Pulisce i risultati associati alla query corrente
         processor.clear_search_engine_results()
         
         # Appende il risultato finale alla lista del benchmark 
-        benchmark.append({"query": query_text, "scores": final_scores})
+        benchmark.append({"query": query_text, "relevance_values": final_scores})
     
     return benchmark
 
 def print_results(benchmark):
     """Stampa i risultati calcolati."""
+    
     print("Query e relativi documenti con rilevanza calcolata:")
     for query in benchmark:
+        
         query_text = query.get("query")
         print(f"\nTesto della Query: '{query_text}'")
-        for score in query.get("scores", []):
-            print(f"Rfc: {score['document_id']},\t",
-                  f"Punteggio rilevanza: {score['punteggio_rilevanza']:.5f},\t\t",
-                  f"Rilevanza normalizzata: {score['rilevanza_normalizzata']:.5f},\t",
-                  f"Rilevanza normalizzata arrotondata: {score['rilevanza_normalizzata_arrotondata']}")
+        
+        for score in query.get("relevance_values", []):
+            
+            print(
+                f"Rfc: {score['document_id']}, ",
+                f"Rilevanza: {score['relevance']:.5f}, ",
+                f"Normalizzata: {score['normalized']:.5f}, ",
+                f"Arrotondata: {score['rounded']}"
+            )
 
 def main():
     """Funzione principale per eseguire il calcolo dei punteggi di rilevanza."""
     
     # Configura il processore con i parametri desiderati
-    processor = SearchEngineResultsProcessor(max_results=20, alpha=1)
+    processor = SearchEngineResultsProcessor(max_results=10, alpha=1)
     
     # Legge le query dal file JSON
+    #queries = RFCReader.read_file("results-for-testing.json") # TESTING
     queries = RFCReader.read_file("results.json")
     if not queries:
         print("Nessuna query trovata. Terminazione del programma.")

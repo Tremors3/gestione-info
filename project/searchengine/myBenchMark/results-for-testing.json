@@ -1,6 +1,6 @@
 [
     {
-        "query": "QUIC protocol 1 site:rfc-editor.org",
+        "query": "Prompt query 1 site:rfc-editor.org",
         "results": {
             "google": [
                 "https://www.rfc-editor.org/rfc/rfc9308",
@@ -183,7 +183,7 @@
         }
     },
     {
-        "query": "QUIC protocol 2 site:rfc-editor.org",
+        "query": "Prompt query 2 site:rfc-editor.org",
         "results": {
             "google": [
                 "https://www.rfc-editor.org/rfc/rfc9308",
