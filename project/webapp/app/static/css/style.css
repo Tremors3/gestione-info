@@ -505,13 +505,6 @@ article, aside, figure, footer, header, hgroup, section {
 }
 
 
-.message.is-link {
-  background-color: #f5fbff;
-}
-.message.is-link .message-header {
-  background-color: #086db1;
-  color: #fff;
-}
 .message-header {
   align-items: center;
   background-color: #333;
@@ -542,10 +535,61 @@ article, aside, figure, footer, header, hgroup, section {
   color: white !important;
 }
 
-.message.is-link .message-body {
-  border-color: #086db1;
-  color: #08456e;
+:root{
+  --woosh_main: 204;
+  --pylucene_main: 120;
+  --postgresql_main: 30;
+  --saturation: 91%;
+  --header: 36%;
+  --text: 20%;
+  --bg: 98%;
+
+  --woosh_color_header     : hsl(var(--woosh_main),      var(--saturation), var(--header));
+  --woosh_color_text       : hsl(var(--woosh_main),      var(--saturation), var(--text));
+  --woosh_color_bg         : hsl(var(--woosh_main),      var(--saturation), var(--bg));
+  --pylucene_color_header  : hsl(var(--pylucene_main),   var(--saturation), var(--header));
+  --pylucene_color_text    : hsl(var(--pylucene_main),   var(--saturation), var(--text));
+  --pylucene_color_bg      : hsl(var(--pylucene_main),   var(--saturation), var(--bg));
+  --postgresql_color_header: hsl(var(--postgresql_main), var(--saturation), var(--header));
+  --postgresql_color_text  : hsl(var(--postgresql_main), var(--saturation), var(--text));
+  --postgresql_color_bg    : hsl(var(--postgresql_main), var(--saturation), var(--bg));
 }
+
+.message.is-link#woosh {
+  background-color: var(--woosh_color_bg);
+}
+.message.is-link#pylucene {
+  background-color: var(--pylucene_color_bg);
+}
+.message.is-link#postgresql {
+  background-color: var(--postgresql_color_bg);
+}
+
+.message.is-link#woosh .message-body#woosh {
+  border-color: var(--woosh_color_header);
+  color: var(--woosh_color_text);
+}
+.message.is-link#woosh .message-header#woosh {
+  background-color: var(--woosh_color_header);
+  color: #fff;
+}
+.message.is-link#pylucene .message-body#pylucene {
+  border-color: var(--pylucene_color_header);
+  color: var(--pylucene_color_text);
+}
+.message.is-link#pylucene .message-header#pylucene {
+  background-color: var(--pylucene_color_header);
+  color: #fff;
+}
+.message.is-link#postgresql .message-body#postgresql {
+  border-color: var(--postgresql_color_header);
+  color: var(--postgresql_color_text );
+}
+.message.is-link#postgresql .message-header#postgresql {
+  background-color: var(--postgresql_color_header);
+  color: #fff;
+}
+
 .message-header + .message-body {
   border-width: 1px;
   border-top-left-radius: 0;
