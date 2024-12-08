@@ -23,7 +23,7 @@
 
       <div class="results">
         <ol>
-          <!-- {% if risultati %} -->
+          {% if risultati %}
             {% for i in risultati %}
               <li class="res_list">
                 <div class="res_container">
@@ -36,9 +36,9 @@
                 </div>
               </li>  
               {% endfor %}
-            <!-- {% else %} -->
-              <!-- <h3 class="res_title">Nessun risultato trovato</h3> -->
-          <!-- {% endif %} -->
+            {% else %}
+              <h3 class="res_title">Nessun risultato trovato</h3>
+          {% endif %}
         </ol>
       </div> <!-- END sinistra -->
       <!-- CONTAINER DI DESTRA -->

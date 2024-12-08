@@ -45,7 +45,7 @@ class SearchForm(FlaskForm):
     ############################################################# Ternimi dinamici #############################################################
     terms                 = FieldList(FormField(TermForm), min_entries=0)
     ########################################################## Vogno o meno l'estratto ##########################################################
-    abstracts             = RadioField(default="SHOW_ABSTRACTS", coerce=str, choices=[("SHOW_ABSTRACTS", "Show Abstracts"),("HIDE_ABSTRACTS", "Hide Abstracts")])
+    abstracts             = RadioField(default="True", coerce=str, choices=[("True", "Show Abstracts"),("False", "Hide Abstracts")])
     ######################################################## Dimensione della richiesta ########################################################
     size                  = SelectField(default=25, coerce=int, choices=[(200, '200'), (100, '100'), (50, '50'), (25, '25')])
     ############################################################################################################################################
@@ -76,27 +76,30 @@ def search():
 
             # Default response vuota
             response = {}
-
-            # Scelta del search engine
-            if "WHOOSH" == query.get("search_engine"):
-                response = processWhoosh(query)
-                
-            if "PYLUCENE" == query.get("search_engine"):
-                pass #response = processPyLucene(query)
-                
-            if "POSTGRESQL" == query.get("search_engine"):
-                pass #response = processPostgresql(query)
             
             # Valori per il salvataggio
             result_id = str(uuid.uuid4())
             file_path = f"{result_id}.json"
             
-            # Salva i risultati su file per essere recuperati alla richiesta
-            save_results_to_file(response, file_path)
+            # Scelta del search engine
+            if "WHOOSH" == query.get("search_engine"):
+                response = processWhoosh(query)
+                # Salva i risultati su file per essere recuperati alla richiesta
+                save_results_to_file(response, file_path)
+                
+            if "PYLUCENE" == query.get("search_engine"):
+                pass #response = processPyLucene(query)
+                # Salva i risultati su file per essere recuperati alla richiesta
+                #save_results_to_file(response, file_path)
+                
+            if "POSTGRESQL" == query.get("search_engine"):
+                pass #response = processPostgresql(query)
+                # Salva i risultati su file per essere recuperati alla richiesta
+                #save_results_to_file(response, file_path)
 
-            return redirect(url_for('views.results', result_id=result_id))
+            return redirect(url_for('views.results', result_id=result_id, show_abstracts=query.get('abstracts')))
 
-        return redirect(url_for('views.results', result_id=None))
+        return redirect(url_for('views.results', result_id=None, show_abstracts=None))
 
     if request.method == 'GET':
 
@@ -127,6 +130,9 @@ def results():
             result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
             #Aggiunta Titolo
             result["link_title"] = f"RFC {result.get('number')}"
+            # Eventuale rimozione degli abstracts
+            if request.args.get('show_abstracts', "True") == "False":
+                del result["abstract"]
 
         # risultati = [
         #     {
@@ -207,3 +213,10 @@ def delete_file(filename: str):
             os.remove(filepath)
     except IOError as e:
         print(f"Errore nella cancellazione del file {filepath}: {e}")
+
+# Funzione per castare in modo sicuro
+def safecast(value, to_type, default=None):
+    try:
+        return to_type(value)
+    except (ValueError, TypeError):
+        return default
