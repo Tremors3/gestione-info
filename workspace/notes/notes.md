@@ -1,7 +1,5 @@
-### [idea] BENCHMARK
 
-PROPOSTA LLM PER VERIFICARE LA CORRETTEZZA DEI DATI SULLA RILEVANZA (GIA' CALCOLATA) DEI DOCUMENTI DEL BENCHMARK
-Una voltal eseguito lo script di creazione del benchmark otteniamo una lista di documenti con relativa rilevanza ad una data query. Invece di essere noi manualmente a fare un controllo sull'assegnazione della "Rilevanza Normalizzata Arrotondata" lo facciamo fare ad una LLVM addestrata?
+# COSE DA FINIRE
 
 ### [da_finire(quello_di_postgresql)] NOTA SULL'UTILIZZO DELLA SEARCH BAR
 
@@ -39,6 +37,9 @@ Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo √
 
 - [ ] Riorganizzare la demo di whoosh facendo tutti i controlli necessari, mettendo apposto i percorsi, ecc...
 
+### [da_fare] PROVARE I DIVERSI STEMMER / LEMMATIZER - IN GENERALE METTERE APPOSTO LA FASE DI PREPROCESSING
+
+- [ ] Provare i diversi stemmer / lemmatizer; anche se rischiano di fare overstemming: per esempio cambiando "Quick" in "Quic" il protocollo, e ci√≤ non va bene.
 
 
 
