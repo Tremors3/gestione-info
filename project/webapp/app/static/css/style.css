@@ -536,32 +536,20 @@ article, aside, figure, footer, header, hgroup, section {
 }
 
 :root{
-  --woosh_main: 204;
-  --pylucene_main: 173;
-  --postgresql_main: 268;
-
-  --woosh_saturation: 91%;
-  --pylucene_saturation: 74%;
-  --postgresql_saturation: 91%;
+  --woosh_color_header     : hsl(204, 91%, 36%);
+  --woosh_color_text       : hsl(204, 91%, 20%);
+  --woosh_color_code       : hsl(204, 91%, 94%);
+  --woosh_color_bg         : hsl(204, 91%, 98%);
   
-  --woosh_header: 36%;
-  --pylucene_header: 33%;
-  --postgresql_header: 73%;
-  
-  --text: 20%;
-  --bg: 98%;
+  --pylucene_color_header  : hsl(187, 91%, 34%);
+  --pylucene_color_text    : hsl(187, 91%, 20%);
+  --pylucene_color_code    : hsl(204, 91%, 94%);
+  --pylucene_color_bg      : hsl(187, 91%, 98%);
 
-  --woosh_color_header     : hsl(var(--woosh_main),      var(--woosh_saturation), var(--woosh_header));
-  --woosh_color_text       : hsl(var(--woosh_main),      var(--woosh_saturation), var(--text));
-  --woosh_color_bg         : hsl(var(--woosh_main),      var(--woosh_saturation), var(--bg));
-
-  --pylucene_color_header  : hsl(var(--pylucene_main),   var(--pylucene_saturation), var(--pylucene_header));
-  --pylucene_color_text    : hsl(var(--pylucene_main),   var(--pylucene_saturation), var(--text));
-  --pylucene_color_bg      : hsl(var(--pylucene_main),   var(--pylucene_saturation), var(--bg));
-
-  --postgresql_color_header: hsl(var(--postgresql_main), var(--postgresql_saturation), var(--postgresql_header));
-  --postgresql_color_text  : hsl(var(--postgresql_main), var(--postgresql_saturation), var(--text));
-  --postgresql_color_bg    : hsl(var(--postgresql_main), var(--postgresql_saturation), var(--bg));
+  --postgresql_color_header: hsl(135, 70%, 36%);
+  --postgresql_color_text  : hsl(135, 70%, 20%);
+  --postgresql_color_code  : hsl(135, 70%, 94%);
+  --postgresql_color_bg    : hsl(135, 70%, 98%);
 }
 
 .message.is-link#woosh {
@@ -615,6 +603,31 @@ article, aside, figure, footer, header, hgroup, section {
   /* padding-top: 1.25em; */
 }
 
+.message-body #p{
+  margin-left: 1vw;
+  margin-bottom: .5vh;
+}
+.message-body ul{
+  margin-top: .5vh;
+}
+#woosh code {
+  background-color: var(--woosh_color_code);
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
+#pylucene code {
+  background-color: var(--pylucene_color_code);
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
+#postgresql code {
+  background-color: var(--postgresql_color_code);
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
 /*********************************************************  PAGINA RISULTATI  *******************************************************************/
 /* .res_title{
   margin-bottom: 1vh;

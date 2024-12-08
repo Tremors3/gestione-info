@@ -385,8 +385,23 @@
           <h4 class="has-text-white is-marginless is-bold">Woosh</h4>
         </div>
         <div class="message-body" id="woosh">
+          <p id="p"><b>Sintassi supportata</b></p>
           <ul>
-            <li>sintassi da inserire</li>
+            <li>Single term query: <code>"[term]"</code></li>
+            <li>Phrase query: <code>"[phrase]"</code></li>
+            <li>Logic operators: <code>AND, OR, NOT</code></li>
+            <li>Find documents containing x but not either y or z: <code>x NOT (y OR z)</code></li>
+            <li>Fields: <code>[field]:[term]</code> </li>
+            <li>Wildcards: <code>?, *</code> </li>
+            <li>Fuzzy term: <code>[term]~[edits]</code></li>
+            <li>Range: 
+              <ul>
+                <li>Inclusive: <code>[udp TO tcp]</code></li>
+                <li>Exclusive: <code>{udp TO tcp}</code></li>
+              </ul>
+            </li>
+            <li>Term boosting: <code>udp^2 tcp^0.5</code></li>
+            <li>Confronto: <code>>, <, >=, <=</code></li>
           </ul>
         </div>
       </article>
@@ -395,8 +410,24 @@
           <h4 class="has-text-white is-marginless is-bold">Pylucene</h4>
         </div>
         <div class="message-body" id="pylucene">
+          <p id="p"><b>Sintassi supportata</b></p>
           <ul>
-            <li>sintassi da inserire</li>
+            <li>Single term query: <code>"[term]"</code></li>
+            <li>Phrase query: <code>"[phrase]"</code></li>
+            <li>Logic operators: <code>AND, OR, NOT, +, -</code></li>
+            <li>Fields: <code>[field]:[term]</code> </li>
+            <li>Wildcards: <code>?, *</code> </li>
+            <li>Fuzzy term (0.0 .. 1.0): <code>[term]~[edits]</code></li>
+            <li>Proximity search: <code>[term/phrase]~[distance]</code></li>
+            <li>Range: 
+              <ul>
+                <li>Inclusive: <code>[udp TO tcp]</code></li>
+                <li>Exclusive: <code>{udp TO tcp}</code></li>
+              </ul>
+            </li>
+            <li>Term boosting: <code>udp^2 tcp^0.5</code></li>
+            <li>Confronto: <code>>, <, >=, <=</code></li>
+            <li>Escape special characters with <code>\</code></li>
           </ul>
         </div>
       </article>
@@ -405,8 +436,10 @@
           <h4 class="has-text-white is-marginless is-bold">PostgreSQL</h4>
         </div>
         <div class="message-body" id="postgresql">
+          <p id="p"><b>Sintassi supportata</b></p>
           <ul>
-            <li>sintassi da inserire</li>
+            <li>Operatori logici: <code>AND, OR, NOT</code></li>
+            <li>Proximity search: [sintassi]</li>
           </ul>
         </div>
       </article>
