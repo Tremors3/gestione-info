@@ -36,7 +36,11 @@ class MyParser:
     TOTAL_RFC_NUMBER = 9688  # Numero totale di documenti disponibili
 
     PATHS = {
-        "DEFAULT_OUTPUT_FILE" : "corpus.json",
+        
+        # Paths
+        "DEFAULT_OUTPUT_FILE" : "./project/searchengine/dataset/dataset.json",
+        
+        # LINKS & URLS 
         "URL_METADATA" : "https://www.rfc-editor.org/search/rfc_search_detail.php?page=All&pubstatus[]=Any&pub_date_type=any&abstract=abson&keywords=keyson&sortkey=Number&sorting=ASC",
         "URL_PREFIX"  : "https://www.rfc-editor.org/rfc/rfc",
         "URL_POSTFIX" : ".html"
@@ -80,7 +84,8 @@ class MyParser:
             response.raise_for_status()
             return response.text
         except requests.exceptions.RequestException as e:
-            logging.warning(f"Errore durante il download della pagina: {e}")
+            # Log Rimosso perchè duplica la barra di caricamento
+            #logging.warning(f"Errore durante il download della pagina: {e}")
             return None
 
     @staticmethod
@@ -281,17 +286,17 @@ class MyParser:
                     return row[1].get_text().replace('\n',' ').replace('\r', '').strip()
         return ""
 
-    # %%%%%% GENERATE CORPUS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    # %%%%%% GENERATE DATASET %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     @staticmethod
-    def generate_corpus(
+    def generate_dataset(
         index_begin: int=1,
         index_end: int = None,
         output_file: str = None,
         workers: int = 10, timeout: int = 10, delay_ms: int = 50
     ) -> None:
         """
-        Genera un corpus scaricando e parsificando le pagine specificate.
+        Genera un dataset scaricando e parsificando le pagine specificate.
         """
         
         # Impostazione dei valori di default
@@ -308,14 +313,14 @@ class MyParser:
         for page in MyParser._download_and_parse_pages(metadata, workers, timeout, delay_ms):
             page_list.append(page)
 
-        # Salvataggio del corpus nel file
+        # Salvataggio del dataset nel file
         logging.debug(f"Scrivendo su file...")
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(page_list, f, ensure_ascii=False, indent=4)
-        logging.info(f"Corpus salvato in \"{output_file}\".")
+        logging.info(f"dataset salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_corpus(index_begin=9000, index_end=9000)
+    MyParser.generate_dataset(index_begin=9000, index_end=9000)
 
 # UNIT TESTING
 if __name__ == "__main__":
