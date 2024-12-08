@@ -1,3 +1,5 @@
+import os
+import uuid
 import json
 
 # datetime
@@ -7,7 +9,7 @@ from datetime import date, timedelta, datetime
 from project.searchengine.myWhoosh.myWhoosh import process as processWhoosh
 
 # Flask Utils for redirecting, blueprients, exc...
-from flask import Blueprint, request, render_template, redirect, url_for, session
+from flask import Blueprint, request, render_template, redirect, url_for
 
 # Flask Forms
 from flask_wtf import FlaskForm
@@ -55,6 +57,9 @@ blueprint = Blueprint('views', __name__,
                       template_folder = '../templates',
                       static_folder   = '../static')
 
+TEMP_DIR = os.path.join("project", "webapp", "app", "views", "tmp_results")
+os.makedirs(TEMP_DIR, exist_ok=True)
+
 # Route principale
 @blueprint.route('/', methods=['POST', 'GET'])
 @blueprint.route('/search', methods=['POST', 'GET'])
@@ -69,8 +74,8 @@ def search():
             # Parsa la form in json
             query = form_to_json(form, donot=('csrf_token', 'submit'))
 
-            # Salva la query su file
-            #save_query_to_file(query, "query.json")
+            # Default response vuota
+            response = {}
 
             # Scelta del search engine
             if "WHOOSH" == query.get("search_engine"):
@@ -82,13 +87,16 @@ def search():
             if "POSTGRESQL" == query.get("search_engine"):
                 pass #response = processPostgresql(query)
             
-            # Print of the response
-            # print(response)
+            # Valori per il salvataggio
+            result_id = str(uuid.uuid4())
+            file_path = f"{result_id}.json"
+            
+            # Salva i risultati su file per essere recuperati alla richiesta
+            save_results_to_file(response, file_path)
 
-            #session['search_results'] = json.dumps(response)
-            session['search_results'] = response  # Flask lo serializza automaticamente
+            return redirect(url_for('views.results', result_id=result_id))
 
-        return redirect(url_for('views.results'))
+        return redirect(url_for('views.results', result_id=None))
 
     if request.method == 'GET':
 
@@ -101,19 +109,24 @@ def results():
     
     if request.method == 'GET':
         
-        results = json.loads(session.get('search_results', {}))
+        # Valori per il recupero
+        result_id = request.args.get('result_id', None)
         
-        # Aggiunta di altri campi
+        # Recupero dei risultati
+        if result_id:
+            # Nome del file temporaneo
+            file_path = f"{result_id}.json"
+            # Ritiro dei risultati
+            results = load_results_from_file(file_path)
+            # Cancellazione del file dopo il recupero
+            delete_file(file_path)
+        
+        # Aggiunta di ulteriori campi
         for result in results:
-            
             # Aggiunga Link
             result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-            
             #Aggiunta Titolo
             result["link_title"] = f"RFC {result.get('number')}"
-            
-            # Mettere apposto links
-            result["files"] = [f.lower().replace("text", "txt") for f in result['files'] if f not in ['HTML with inline errata']]
 
         # risultati = [
         #     {
@@ -129,7 +142,6 @@ def results():
         # ]
 
         return render_template('results.html', risultati=results, num_result=len(results), max_words=250)
-
 
 # Funzione per formattare la query
 def form_to_json(form: FlaskForm, donot: set[str]):
@@ -165,11 +177,33 @@ def form_to_json(form: FlaskForm, donot: set[str]):
 
     return form_data
 
-# Funzione per salvare la query in un file JSON
-def save_query_to_file(query: dict, filename: str):
-    """Salva la query in un file JSON."""
+# Funzioni di gestione dei file temporanei
+def save_results_to_file(results: dict, filename: str):
+    """Salva i risultati in un file JSON nel directory temporaneo."""
     try:
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(query, f, ensure_ascii=False, indent=4)
+        filepath = os.path.join(TEMP_DIR, filename)
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=4)
     except IOError as e:
-        print(f"Errore nel salvataggio del file {filename}: {e}")
+        print(f"Errore nel salvataggio del file {filepath}: {e}")
+
+def load_results_from_file(filename: str):
+    """Carica i risultati da un file JSON nel directory temporaneo."""
+    try:
+        filepath = os.path.join(TEMP_DIR, filename)
+        if not os.path.isfile(filepath):
+            return []
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.loads(json.loads(f.read()))
+    except (IOError, json.JSONDecodeError) as e:
+        print(f"Errore nella lettura del file {filepath}: {e}")
+        return []
+
+def delete_file(filename: str):
+    """Cancella un file JSON nel directory temporaneo."""
+    try:
+        filepath = os.path.join(TEMP_DIR, filename)
+        if os.path.exists(filepath):
+            os.remove(filepath)
+    except IOError as e:
+        print(f"Errore nella cancellazione del file {filepath}: {e}")

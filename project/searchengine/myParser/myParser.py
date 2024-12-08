@@ -251,7 +251,7 @@ class MyParser:
             # Costruzione dei metadati
             current = {
                 "Number": element[0].get_text().split('\u00a0')[1].split(' ')[0].strip(),
-                "Files": [tf.strip() for tf in element[1].get_text().replace('\u00a0', ' ').split(',')],
+                "Files": [tf.strip().lower().replace("text", "txt") for tf in element[1].get_text().replace('\u00a0', ' ').split(',') if tf.strip() in ['HTML', 'TEXT', 'XML', 'PDF']],
                 "Title": element[2].get_text().replace('\u00a0', ' ').strip(),
                 "Authors": [au.strip() for au in element[3].get_text().replace('\u00a0', ' ').split(',')],
                 "Date": date,
@@ -320,7 +320,7 @@ class MyParser:
         logging.info(f"dataset salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_dataset(index_begin=9000, index_end=9000)
+    MyParser.generate_dataset(index_begin=8000, index_end=9000)
 
 # UNIT TESTING
 if __name__ == "__main__":

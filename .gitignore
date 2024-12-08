@@ -162,6 +162,7 @@ cython_debug/
 #.idea/
 
 
+
 ## Custom
 #
 # General
@@ -169,7 +170,8 @@ ignore
 corpus.json
 dataset.json
 query.json
-exp-venv
+exp-venv/
+tmp_results/
 #
 # Secrets
 Secrets/

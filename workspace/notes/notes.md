@@ -33,6 +33,11 @@ Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo �
 - [ ] Gli indici di tutti i modelli di ranking e dei vari sistemi devono essere creati subito dopo il download dei documenti tramite il parser.
       Ogni volta che viene ricreato il dataset devono venir ricreati anche tutti gli indici dei vari sistemi e modelli.
 
+      Per adesso funzione così (va automatizzato come scritto sopra):
+            1. Cancellare la cartella "index_dir" di whoosh
+            2. Rieseguire il parser
+            3. Effettuare una ricerca (alla prima ricerca verrà effettuato l'indice)
+
 ### [da_fare] RIORGANIZZARE DEMO WHOOSH
 
 - [ ] Riorganizzare la demo di whoosh facendo tutti i controlli necessari, mettendo apposto i percorsi, ecc...
