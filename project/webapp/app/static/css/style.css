@@ -600,6 +600,7 @@ article, aside, figure, footer, header, hgroup, section {
   border-style: solid;
   border-width: 1px;
   color: #333;
+  /* width: 96%; */
   /* padding-top: 1.25em; */
 }
 
@@ -628,6 +629,36 @@ article, aside, figure, footer, header, hgroup, section {
   font-family: courier, monospace;
   padding: 0 3px;
 }
+
+.message#woosh{
+  width: 100%;
+}
+
+.collapsible {
+  
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  border: none;
+  text-align: left;
+  outline: none;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+.message_content {
+  padding: 0 18px;  
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
 /*********************************************************  PAGINA RISULTATI  *******************************************************************/
 /* .res_title{
   margin-bottom: 1vh;

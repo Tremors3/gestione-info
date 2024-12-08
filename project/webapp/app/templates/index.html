@@ -120,9 +120,8 @@
                         <div class="control">
                           <span class="select">
                             <select default="AND" name="terms-${uniqueId}-operator" id="terms-${uniqueId}-operator">
-                              <option value="AND">AND</option>
-                              <option value="OR">OR</option>
-                              <option value="NOT">NOT</option>
+                              <option value="AND">IN</option>
+                              <option value="NOT">NOT IN</option>
                             </select>
                           </span>
                         </div>
@@ -381,10 +380,8 @@
     <div class="destra">
 
       <article class="message is-link" id="woosh">
-        <div class="message-header" id="woosh">
-          <h4 class="has-text-white is-marginless is-bold">Woosh</h4>
-        </div>
-        <div class="message-body" id="woosh">
+        <button class="collapsible message-header" id="woosh">Whoosh</button>
+        <div class="message_content message-body" id="woosh">
           <p id="p"><b>Sintassi supportata</b></p>
           <ul>
             <li>Single term query: <code>"[term]"</code></li>
@@ -405,11 +402,10 @@
           </ul>
         </div>
       </article>
+
       <article class="message is-link" id="pylucene">
-        <div class="message-header" id="pylucene">
-          <h4 class="has-text-white is-marginless is-bold">Pylucene</h4>
-        </div>
-        <div class="message-body" id="pylucene">
+        <button class="collapsible message-header" id="pylucene">PyLucene</button>
+        <div class="message_content message-body" id="pylucene">
           <p id="p"><b>Sintassi supportata</b></p>
           <ul>
             <li>Single term query: <code>"[term]"</code></li>
@@ -431,11 +427,10 @@
           </ul>
         </div>
       </article>
+      
       <article class="message is-link" id="postgresql">
-        <div class="message-header" id="postgresql">
-          <h4 class="has-text-white is-marginless is-bold">PostgreSQL</h4>
-        </div>
-        <div class="message-body" id="postgresql">
+        <button class="collapsible message-header" id="postgresql">PostgreSQL</button>
+        <div class="message_content message-body" id="postgresql">
           <p id="p"><b>Sintassi supportata</b></p>
           <ul>
             <li>Operatori logici: <code>AND, OR, NOT</code></li>
@@ -443,8 +438,24 @@
           </ul>
         </div>
       </article>
-
+      <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+            } 
+          });
+        }
+        </script>
     </div> <!-- END destra -->
+    
 
   </div> <!-- END colonne is-desktop -->
 </div> <!-- END main-div -->
