@@ -7,18 +7,19 @@ sys.dont_write_bytecode = True
 # Importazioni dei moduli del progetto
 from project.webapp.run import start as start_web_server
 from project.searchengine.myParser.myParser import start as start_parser
+from project.searchengine.myBenchmark.createBenchMark import start as start_benchmark
 from project.searchengine.myLogger.myLogger import bcolors, logging
 
 # Importazione della funzione di aiuto
 from graboid import help
 
 def web_server() -> None:
-    """Avvia il web server del progetto"""
+    """Avvia il web server del progetto."""
     print(f"{bcolors.GREEN}Avvio del web server ...{bcolors.RESET}")
     start_web_server()
 
 def parser() -> None:
-    """Avvia il parser del motore di ricerca"""
+    """Avvia il parser del motore di ricerca."""
     print(f"{bcolors.GREEN}Avvio del parser ...{bcolors.RESET}")
     #import time
     #start = time.time()
@@ -26,6 +27,11 @@ def parser() -> None:
     #end = time.time()
     #tot = str(end-start).split(".")
     #print("Tempo esecuzione:", tot[0] +"."+ tot[1][:4], "secondi")
+
+def benchmark() -> None:
+    """Avvia lo script che crea il benchmark."""
+    print(f"{bcolors.GREEN}Creazione del Benchmark ...{bcolors.RESET}")
+    start_benchmark()
 
 def error(flag) -> callable:
     """Mostra un messaggio di errore per flag non supportate e suggerisce l'uso della guida"""
@@ -38,7 +44,8 @@ class Options:
     # Dizionario delle flag
     FUNCS: dict[str, Callable[[], None]] = {
         "-w" : web_server,
-        "-p" : parser
+        "-p" : parser,
+        "-b" : benchmark
     }
 
 if __name__ == "__main__":

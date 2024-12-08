@@ -125,7 +125,7 @@ def print_results(results):
                 print(f"    - {link}")
 
 
-def main():
+def start():
     """Funzione principale per eseguire il programma."""
     load_dotenv(dotenv_path="secrets.env")
     api_key = os.getenv('API_KEY')
@@ -150,4 +150,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    start()

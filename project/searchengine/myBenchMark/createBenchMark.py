@@ -184,7 +184,7 @@ def print_results(benchmark):
                 f"Arrotondata: {score['rounded']}"
             )
 
-def main():
+def start():
     """Funzione principale per eseguire il calcolo dei punteggi di rilevanza."""
     
     # Configura il processore con i parametri desiderati
@@ -204,4 +204,4 @@ def main():
     print_results(benchmark)
 
 if __name__ == "__main__":
-    main()
+    start()

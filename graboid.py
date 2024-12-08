@@ -100,12 +100,13 @@ def help():
 ┌──────────────╢ Help Page ╟──────────────┐
 │                                         │╲
 │  SYNOPSIS                               │╲│
-│       python graboid.py -[w,p,h] [-s]   │╲│
+│       python graboid.py -[w,p,b,h] [-s] │╲│
 │                                         │╲│
 │  OPTIONS                                │╲│
 │   -h  Show help                         │╲│
 │   -w  Start web server                  │╲│
 │   -p  Start parser                      │╲│
+│   -b  Create benchmark                  │╲│
 │   -s  Sync dependencies                 │╲│
 │                                         │╲│
 └─────────────────╢ 1/1 ╟─────────────────┘╲│ 
