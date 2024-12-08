@@ -537,22 +537,31 @@ article, aside, figure, footer, header, hgroup, section {
 
 :root{
   --woosh_main: 204;
-  --pylucene_main: 120;
-  --postgresql_main: 30;
-  --saturation: 91%;
-  --header: 36%;
+  --pylucene_main: 173;
+  --postgresql_main: 268;
+
+  --woosh_saturation: 91%;
+  --pylucene_saturation: 74%;
+  --postgresql_saturation: 91%;
+  
+  --woosh_header: 36%;
+  --pylucene_header: 33%;
+  --postgresql_header: 73%;
+  
   --text: 20%;
   --bg: 98%;
 
-  --woosh_color_header     : hsl(var(--woosh_main),      var(--saturation), var(--header));
-  --woosh_color_text       : hsl(var(--woosh_main),      var(--saturation), var(--text));
-  --woosh_color_bg         : hsl(var(--woosh_main),      var(--saturation), var(--bg));
-  --pylucene_color_header  : hsl(var(--pylucene_main),   var(--saturation), var(--header));
-  --pylucene_color_text    : hsl(var(--pylucene_main),   var(--saturation), var(--text));
-  --pylucene_color_bg      : hsl(var(--pylucene_main),   var(--saturation), var(--bg));
-  --postgresql_color_header: hsl(var(--postgresql_main), var(--saturation), var(--header));
-  --postgresql_color_text  : hsl(var(--postgresql_main), var(--saturation), var(--text));
-  --postgresql_color_bg    : hsl(var(--postgresql_main), var(--saturation), var(--bg));
+  --woosh_color_header     : hsl(var(--woosh_main),      var(--woosh_saturation), var(--woosh_header));
+  --woosh_color_text       : hsl(var(--woosh_main),      var(--woosh_saturation), var(--text));
+  --woosh_color_bg         : hsl(var(--woosh_main),      var(--woosh_saturation), var(--bg));
+
+  --pylucene_color_header  : hsl(var(--pylucene_main),   var(--pylucene_saturation), var(--pylucene_header));
+  --pylucene_color_text    : hsl(var(--pylucene_main),   var(--pylucene_saturation), var(--text));
+  --pylucene_color_bg      : hsl(var(--pylucene_main),   var(--pylucene_saturation), var(--bg));
+
+  --postgresql_color_header: hsl(var(--postgresql_main), var(--postgresql_saturation), var(--postgresql_header));
+  --postgresql_color_text  : hsl(var(--postgresql_main), var(--postgresql_saturation), var(--text));
+  --postgresql_color_bg    : hsl(var(--postgresql_main), var(--postgresql_saturation), var(--bg));
 }
 
 .message.is-link#woosh {
