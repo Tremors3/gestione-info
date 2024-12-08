@@ -3,8 +3,11 @@ import json
 # datetime
 from datetime import date, timedelta, datetime
 
+# Our Imports
+from project.searchengine.myWhoosh.myWhoosh import process as processWhoosh
+
 # Flask Utils for redirecting, blueprients, exc...
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, session
 
 # Flask Forms
 from flask_wtf import FlaskForm
@@ -67,7 +70,23 @@ def search():
             query = form_to_json(form, donot=('csrf_token', 'submit'))
 
             # Salva la query su file
-            save_query_to_file(query, "query.json")
+            #save_query_to_file(query, "query.json")
+
+            # Scelta del search engine
+            if "WHOOSH" == query.get("search_engine"):
+                response = processWhoosh(query)
+                
+            if "PYLUCENE" == query.get("search_engine"):
+                pass #response = processPyLucene(query)
+                
+            if "POSTGRESQL" == query.get("search_engine"):
+                pass #response = processPostgresql(query)
+            
+            # Print of the response
+            # print(response)
+
+            #session['search_results'] = json.dumps(response)
+            session['search_results'] = response  # Flask lo serializza automaticamente
 
         return redirect(url_for('views.results'))
 
@@ -77,93 +96,39 @@ def search():
             "form" : SearchForm()
         })
 
-
 @blueprint.route('/results', methods=['GET'])
 def results():
+    
     if request.method == 'GET':
-        risultati = [
-            {
-                #"link":"https://rfc-editor.org/rfc/rfc9000",
-                "link_title":"RFC 9000",
-                "title":"Qualcosa qualcosa 1",
-                "formats":["pdf","html","txt"],
-                "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
-                "date": "1111/11/11",
-                "comment": "commento",
-                "abstract":"Estratto della pagina dell'rfc 9000"
-            },
-            {
-                "link":"https://rfc-editor.org/rfc/rfc8999",
-                #"link_title":"RFC 8999",
-                "title":"Qualcosa qualcosa 2",
-                "formats":["pdf","html","txt"],
-                "authors": ["Autore 1","Autore 2","Autore 3"],
-                "date": "1111/11/11",
-                "comment": "commento",
-                "abstract":"Estratto della pagina dell'rfc 9000"
-            },
-            {
-                "link":"https://rfc-editor.org/rfc/rfc8999",
-                "link_title":"RFC 8999",
-                #"title":"Qualcosa qualcosa 2",
-                "formats":["pdf","html","txt"],
-                "authors": ["Autore 1","Autore 2","Autore 3"],
-                "date": "1111/11/11",
-                "comment": "commento",
-                "abstract":"Estratto della pagina dell'rfc 9000"
-            },
-            {
-                "link":"https://rfc-editor.org/rfc/rfc8999",
-                "link_title":"RFC 8999",
-                "title":"Qualcosa qualcosa 2",
-                #"formats":["pdf","html","txt"],
-                "authors": ["Autore 1","Autore 2","Autore 3"],
-                "date": "1111/11/11",
-                "comment": "commento",
-                "abstract":"Estratto della pagina dell'rfc 9000"
-            },
-            {
-                "link":"https://rfc-editor.org/rfc/rfc8999",
-                "link_title":"RFC 8999",
-                "title":"Qualcosa qualcosa 2",
-                "formats":["pdf","html","txt"],
-                #"authors": ["Autore 1","Autore 2","Autore 3"],
-                "date": "1111/11/11",
-                "comment": "commento",
-                "abstract":"Estratto della pagina dell'rfc 9000"
-            },
-            {
-                "link":"https://rfc-editor.org/rfc/rfc8999",
-                "link_title":"RFC 8999",
-                "title":"Qualcosa qualcosa 2",
-                "formats":["pdf","html","txt"],
-                "authors": ["Autore 1","Autore 2","Autore 3"],
-                #"date": "1111/11/11",
-                "comment": "commento",
-                "abstract":"Estratto della pagina dell'rfc 9000"
-            },
-            {
-                "link":"https://rfc-editor.org/rfc/rfc8999",
-                "link_title":"RFC 8999",
-                "title":"Qualcosa qualcosa 2",
-                "formats":["pdf","html","txt"],
-                "authors": ["Autore 1","Autore 2","Autore 3"],
-                "date": "1111/11/11",
-                #"comment": "commento",
-                "abstract":"Estratto della pagina dell'rfc 9000"
-            },
-            {
-                "link":"https://rfc-editor.org/rfc/rfc9321",
-                "link_title":"RFC 9321",
-                "title":"Qualcosa qualcosa 3",
-                "formats":["pdf","html","txt"],
-                "authors": ["Autore 1","Autore 2"],
-                "date": "1111/11/11",
-                "comment": "commento",
-                #"abstract":"Estratto della pagina dell'rfc 9000"
-            }
-        ]
-        return render_template('results.html', risultati=risultati, num_result=len(risultati), max_words=250)
+        
+        results = json.loads(session.get('search_results', {}))
+        
+        # Aggiunta di altri campi
+        for result in results:
+            
+            # Aggiunga Link
+            result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
+            
+            #Aggiunta Titolo
+            result["link_title"] = f"RFC {result.get('number')}"
+            
+            # Mettere apposto links
+            result["files"] = [f.lower().replace("text", "txt") for f in result['files'] if f not in ['HTML with inline errata']]
+
+        # risultati = [
+        #     {
+        #         "link":"https://rfc-editor.org/rfc/rfc9000",
+        #         "link_title":"RFC 9000",
+        #         "title":"Qualcosa qualcosa 1",
+        #         "formats":["pdf","html","txt"],
+        #         "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
+        #         "date": "1111/11/11",
+        #         "comment": "commento",
+        #         "abstract":"Estratto della pagina dell'rfc 9000"
+        #     }
+        # ]
+
+        return render_template('results.html', risultati=results, num_result=len(results), max_words=250)
 
 
 # Funzione per formattare la query
