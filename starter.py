@@ -7,7 +7,7 @@ sys.dont_write_bytecode = True
 # Importazioni dei moduli del progetto
 from project.webapp.run import start as start_web_server
 from project.searchengine.myParser.myParser import start as start_parser
-from project.searchengine.myBenchmark.createBenchMark import start as start_benchmark
+from project.searchengine.myBenchMark.createBenchMark import start as start_benchmark
 from project.searchengine.myLogger.myLogger import bcolors, logging
 
 # Importazione della funzione di aiuto
@@ -49,16 +49,16 @@ class Options:
     }
 
 if __name__ == "__main__":
-    
+
     # Controllo degli argomenti passati da linea di comando
     if len(sys.argv) > 1 and len(sys.argv[1]):
-    
+
         flag = sys.argv[1]
-    
+
         # Esegui la funzione corrispondente o mostra un errore se la flag non è valida
         Options.FUNCS.get(flag, lambda: error(flag))()
     else:
-    
+
         # Messaggio di default se non viene passata alcuna flag
         logging.info("Nessuna flag specificata. Usa \'python graboid.py -h\' per la guida.")
         help()
