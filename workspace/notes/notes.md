@@ -30,14 +30,19 @@ Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo �
 
 ### [da_fare] MODERNIZZAZIONE DELLA STRUTTURA DEGLI SCRIPT DI AVVIO DEL SISTEMA
 
-- [ ] Modernizzare l'intero sistema di avvio del sistema. Mi riferisco agli script "graboid" e "starter".
+- [x] Modernizzare l'avvio del sistema. Mi riferisco agli script "graboid" e "starter".
       Per adesso i due script utilizzano sys per il recupero degli argomenti di sistema.
       Suggerisco l'utilizzo di strumenti più sofisticati e adatti allo scopo come "argparser" visto a lezione di Complementi.
 
       Inoltre voglio ridefinire i comandi e le opzioni possibili in modo da avere:
-        - un comando che consente di inizializzare e nel caso reinizializzare il progetto da capo;
-        - diversi comandi che consentono di eseguire singolarmente le varie sezioni della pipeline di inizializzazione;
-        - altri comandi che consentono di avviare l'applicazione web e le altre funzionalità.
+        - [x] - un comando che consente di inizializzare e nel caso reinizializzare il progetto da capo;
+        - [x] - diversi comandi che consentono di eseguire singolarmente le varie sezioni della pipeline di inizializzazione;
+        - [x] - altri comandi che consentono di avviare l'applicazione web e le altre funzionalità.
+
+### [da_fare] ORGANIZZARE LE CLASSI DI WHOOSH, PYLUCENE, E POSTGRESS + RIORGANIZZARE DEMO WHOOSH
+
+- [ ] Riorganizzare la demo di whoosh facendo tutti i controlli necessari, mettendo apposto i percorsi, ecc...
+- [ ] Realizzare il punto precedente in modo che lo schema organizzativo sia replicabile anche per pylucene e postgress.
 
 ### [da_fare] QUANDO VENGONO CREATI GLI INVERTED INDEX dei SEARCH ENGINE ?
 
@@ -48,10 +53,6 @@ Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo �
             1. Cancellare la cartella "index_dir" di whoosh
             2. Rieseguire il parser
             3. Effettuare una ricerca (alla prima ricerca verrà effettuato l'indice)
-
-### [da_fare] RIORGANIZZARE DEMO WHOOSH
-
-- [ ] Riorganizzare la demo di whoosh facendo tutti i controlli necessari, mettendo apposto i percorsi, ecc...
 
 ### [da_fare] PROVARE I DIVERSI STEMMER / LEMMATIZER - IN GENERALE METTERE APPOSTO LA FASE DI PREPROCESSING
 
