@@ -28,6 +28,17 @@ Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo �
 
 # COSE DA FARE
 
+### [da_fare] MODERNIZZAZIONE DELLA STRUTTURA DEGLI SCRIPT DI AVVIO DEL SISTEMA
+
+- [ ] Modernizzare l'intero sistema di avvio del sistema. Mi riferisco agli script "graboid" e "starter".
+      Per adesso i due script utilizzano sys per il recupero degli argomenti di sistema.
+      Suggerisco l'utilizzo di strumenti più sofisticati e adatti allo scopo come "argparser" visto a lezione di Complementi.
+
+      Inoltre voglio ridefinire i comandi e le opzioni possibili in modo da avere:
+        - un comando che consente di inizializzare e nel caso reinizializzare il progetto da capo;
+        - diversi comandi che consentono di eseguire singolarmente le varie sezioni della pipeline di inizializzazione;
+        - altri comandi che consentono di avviare l'applicazione web e le altre funzionalità.
+
 ### [da_fare] QUANDO VENGONO CREATI GLI INVERTED INDEX dei SEARCH ENGINE ?
 
 - [ ] Gli indici di tutti i modelli di ranking e dei vari sistemi devono essere creati subito dopo il download dei documenti tramite il parser.
