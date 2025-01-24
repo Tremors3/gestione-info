@@ -19,7 +19,7 @@ class MyWhoosh:
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
     
     # INDEX & DATASET DIRECTORY PATHS
-    INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes")
+    INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes_dir")
     DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
     
     # #################################################################################################### #
