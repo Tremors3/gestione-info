@@ -15,6 +15,12 @@ from project.searchengine.myLogger.myLogger import bcolors, logging
 
 # #################################################################################################### #
 
+from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
+#from project.searchengine.myPostgress.myPostgress import MyPostgress
+#from project.searchengine.myPylucene.myPylucene import MyPylucene
+
+# #################################################################################################### #
+
 # Disabilita la generazione dei file .pyc
 sys.dont_write_bytecode = True
 
@@ -75,7 +81,9 @@ class Application:
     def indexes(self) -> None:
         """Costruisce gli Indici Invertiti."""
         print(f"{bcolors.GREEN}Costruzione degli Indici Invertiti ...{bcolors.RESET}")
-        pass
+        MyWhoosh.create_indexes()
+        #MyPostgress.create_indexes()
+        #MyPylucene.create_indexes()
     
     def web(self) -> None:
         """Avvia il web server del progetto."""

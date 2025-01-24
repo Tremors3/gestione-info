@@ -20,15 +20,16 @@ Le sintassi dei tre motori saranno mostrate di fianco al prompt della query, in 
 In questo modo non dobbiamo ideare una sintassi comune e poi aggiustarla in base alla scelta del motore ma
 utilizziamo la sintassi diretta del motore così ci semplifichiamo la vita. 
 
-### [da_finire(parte_whoosh)] MODIFICARE ALCUNE COSE DEI TERMINI DI RICERCA
+### [fatto] MODIFICARE ALCUNE COSE DEI TERMINI DI RICERCA
 
-Rimuoviamo l'operatore OR perchè introduce molta logica difficile da gestire tra i diversi motori di Ricerca.
+- [x] Rimuoviamo l'operatore OR perchè introduce molta logica difficile da gestire tra i diversi motori di Ricerca.
 
-Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo è più chiaro che non ci stiamo riferendo agli operatori AND e OR ma al fatto che all'interno dei campo i termini devono esserci o no in modo esatto. E' un podo per essere più chiari e precisi.
+- [x] Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo è più chiaro che non ci stiamo riferendo agli operatori AND e OR ma al fatto che all'interno dei campo i termini devono esserci o no in modo esatto. E' un podo per essere più chiari e precisi.
+      - L'abbiamo semplicemente effettuato la rinomina da frontend sulla pagina web. I valori presentati sono `NOT` e `NOT IN`, mentre i valori effettivi sono `AND` e `NOT`.
 
 # COSE DA FARE
 
-### [da_fare] MODERNIZZAZIONE DELLA STRUTTURA DEGLI SCRIPT DI AVVIO DEL SISTEMA
+### [fatto] MODERNIZZAZIONE DELLA STRUTTURA DEGLI SCRIPT DI AVVIO DEL SISTEMA
 
 - [x] Modernizzare l'avvio del sistema. Mi riferisco agli script "graboid" e "starter".
       Per adesso i due script utilizzano sys per il recupero degli argomenti di sistema.
@@ -39,7 +40,7 @@ Rnominiamo "AND" ad "IN", mentre rinominiamo "NOT" ad "NOT IN"; in questo modo �
         - [x] - diversi comandi che consentono di eseguire singolarmente le varie sezioni della pipeline di inizializzazione;
         - [x] - altri comandi che consentono di avviare l'applicazione web e le altre funzionalità.
 
-### [da_fare] ORGANIZZARE LE CLASSI DI WHOOSH, PYLUCENE, E POSTGRESS + RIORGANIZZARE DEMO WHOOSH
+### [da_fare] ORGANIZZARE LE CLASSI DI WHOOSH, PYLUCENE, E POSTGRESS + RIFORMULARE DEMO WHOOSH
 
 - [ ] Riorganizzare la demo di whoosh facendo tutti i controlli necessari, mettendo apposto i percorsi, ecc...
 - [ ] Realizzare il punto precedente in modo che lo schema organizzativo sia replicabile anche per pylucene e postgress.

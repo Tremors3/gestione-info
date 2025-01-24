@@ -6,7 +6,7 @@ import json
 from datetime import date, timedelta, datetime
 
 # Our Imports
-from project.searchengine.myWhoosh.myWhoosh import process as processWhoosh
+from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
 
 # Flask Utils for redirecting, blueprients, exc...
 from flask import Blueprint, request, render_template, redirect, url_for
@@ -83,7 +83,7 @@ def search():
             
             # Scelta del search engine
             if "WHOOSH" == query.get("search_engine"):
-                response = processWhoosh(query)
+                response = MyWhoosh.process(query)
                 # Salva i risultati su file per essere recuperati alla richiesta
                 save_results_to_file(response, file_path)
                 
