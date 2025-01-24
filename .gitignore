@@ -173,6 +173,7 @@ query.json
 exp-venv/
 tmp_results/
 index_dir/
+indexes_dir/
 #
 # Secrets
 Secrets/

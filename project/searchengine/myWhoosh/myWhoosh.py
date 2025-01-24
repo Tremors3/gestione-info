@@ -1,24 +1,57 @@
-import os, json
+import os, sys, json, shutil
+
+# #################################################################################################### #
+
 from whoosh import index
 from whoosh.fields import Schema, TEXT, ID, NUMERIC, STORED, KEYWORD, DATETIME
 from whoosh.qparser import QueryParser, GtLtPlugin
 
+# #################################################################################################### #
+
+from project.searchengine.myLogger.myLogger import logger as logging, bcolors
+
+# #################################################################################################### #
+
 class MyWhoosh:
     
-    DATASET_PATH = os.path.join("project", "searchengine", "dataset", "dataset.json")
-    INDEX_DIR_PATH = os.path.join("project", "searchengine", "myWhoosh", "index_dir")
+    # CURRENT WORKING DIRECTORY & FILE PATHS
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
     
-    @staticmethod
-    def _create_index_dir():
-        """ Funzione che controlla se l'indice è già stato creato, se no lo crea. """
-        
-        # Crea la cartella dove sarranno messi gli indici
-        os.mkdir(MyWhoosh.INDEX_DIR_PATH)
+    # INDEX & DATASET DIRECTORY PATHS
+    INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes_dir")
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
     
-        with open(MyWhoosh.DATASET_PATH, mode="r", encoding='utf-8') as f:
-            doc = json.load(f)
+    # #################################################################################################### #
 
-        schema = Schema(
+    @staticmethod
+    def _prepare_folders_and_files():
+        """ Funzione che prepara la cartella degli indici. """
+        
+        # Controllo se il file del dataset esiste
+        if not os.path.isfile(MyWhoosh.DATASET_FILE_PATH):
+            logging.error(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyWhoosh.DATASET_FILE_PATH}\'.")
+            sys.exit(1)
+        
+        # Controllo se la cartella degli indici esiste
+        if os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
+            # Se esiste la elimino
+            shutil.rmtree(MyWhoosh.INDEX_DIRECTORY_PATH)
+        
+        # Creazione della cartella degli indici
+        if not os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
+            os.mkdir(MyWhoosh.INDEX_DIRECTORY_PATH)
+
+    @staticmethod
+    def _write_indexes():
+        """ Funzione che scrive gli indici per la ricerca. """
+        
+        # Apertura del file del dataset
+        with open(MyWhoosh.DATASET_FILE_PATH, mode="r", encoding='utf-8') as f:
+            documents = json.load(f)
+
+        # Schema per l'indice
+        SCHEMA = Schema(
             number    = ID(stored=True, unique=True),
             files     = STORED,
             title     = TEXT(stored=True),
@@ -30,52 +63,60 @@ class MyWhoosh:
             keywords  = KEYWORD(commas=True),
             content   = TEXT
         )
+        
+        writer = index.create_in(MyWhoosh.INDEX_DIRECTORY_PATH, SCHEMA).writer()
 
-        ix = index.create_in(MyWhoosh.INDEX_DIR_PATH, schema)
-        writer = ix.writer()
-
-        for d in doc:
+        # Scrittura degli indici
+        for doc in documents:
             writer.add_document(
-                number    = d["Number"],
-                files     = d["Files"],
-                title     = d["Title"],
-                authors   = d["Authors"],
-                date      = d["Date"],
-                more_info = d["More Info"],
-                status    = d["Status"],
-                abstract  = d["Abstract"],
-                keywords  = d["Keywords"],
-                content   = d["Content"]
+                number    = doc["Number"],
+                files     = doc["Files"],
+                title     = doc["Title"],
+                authors   = doc["Authors"],
+                date      = doc["Date"],
+                more_info = doc["More Info"],
+                status    = doc["Status"],
+                abstract  = doc["Abstract"],
+                keywords  = doc["Keywords"],
+                content   = doc["Content"]
             )
 
         writer.commit()
-        
+
+    @staticmethod
+    def create_indexes():
+        """ Funzione che crea gli indici per la ricerca. """
+        MyWhoosh._prepare_folders_and_files()
+        MyWhoosh._write_indexes()
+
+    # #################################################################################################### #
+
     @staticmethod
     def _results_to_json(results):
         """Converte i risultati di Whoosh in un formato JSON-friendly."""
         
         results_list = []
+        
         for result in results:
             
             result = dict(result)
-            
-            # Aggunta alla lista
+
             results_list.append(result)
         
         return json.dumps(results_list)  
 
     @staticmethod
-    def execute_query(data: dict):
-        """ Funzione che esegue una query """
+    def _execute_query(data: dict):
+        """ Funzione che esegue la query di ricerca. """
 
         # Controllare se è necessario indicizzare i documenti
-        if not os.path.exists(MyWhoosh.INDEX_DIR_PATH):
-            MyWhoosh._create_index_dir()
+        if not os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
+            MyWhoosh.create_indexes()
         
         ### Esecuzione della query ###
         
         # Apertura dell'indice
-        ix = index.open_dir(MyWhoosh.INDEX_DIR_PATH)
+        ix = index.open_dir(MyWhoosh.INDEX_DIRECTORY_PATH)
 
         # Corpo della query principale
         query = data["ricerca_principale"]
@@ -106,12 +147,16 @@ class MyWhoosh:
             
             # Formattazione dei Risultati
             results = MyWhoosh._results_to_json(results)
-               
+            
         return results
+    
+    # #################################################################################################### #
+    
+    @staticmethod
+    def process(query: dict):
+        return MyWhoosh._execute_query(query)
 
-def process(query: dict):
-    return MyWhoosh.execute_query(query)
+# #################################################################################################### #
 
 if __name__ == "__main__":
-    #process()
-    pass
+    MyWhoosh._prepare_folders_and_files()

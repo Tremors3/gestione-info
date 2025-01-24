@@ -1,6 +1,7 @@
-import numpy as np
+import os
 import json
 import random
+import numpy as np
 
 class RFCReader:
     """Classe per il recupero degli URL risultanti delle query."""
@@ -118,12 +119,12 @@ class SearchEngineResultsProcessor:
                 "document_id": doc_id,
                 "relevance": relevance
             })
-          
+        
         if not documents:
             raise ValueError("Non ci sono documents per cui calcolare la rilevanza.")
         
         # TODO: Edit self.normalize_relevance(); modify doc['relevance'] directly instead of creating a separate relevance list.
-        # Right now we are reassign every relevance to the documents based on the position in the list; thas no good. 
+        # Right now we are reassigning every relevance to the documents based on the position in the list; thas no good. 
         
         relevance = [doc["relevance"] for doc in documents]
         normalized = self.normalize_relevance(relevance)
@@ -134,7 +135,7 @@ class SearchEngineResultsProcessor:
             doc["normalized"] = normalized[i] + 1
             doc["rounded"] = round(normalized[i]) + 1
         
-        #Sorting
+        # Sorting
         documents = sorted(documents, key=lambda x: x['normalized'], reverse=True)
         
         return documents
@@ -190,9 +191,13 @@ def start():
     # Configura il processore con i parametri desiderati
     processor = SearchEngineResultsProcessor(max_results=10, alpha=1)
     
+    # Percorso del file JSON contenente le query
+    queries_file_name = "results-for-testing.json" # TESTING
+    #queries_file_name = "results.json"
+    queries_file_path = os.path.join(os.path.dirname(__file__), queries_file_name)
+    
     # Legge le query dal file JSON
-    #queries = RFCReader.read_file("results-for-testing.json") # TESTING
-    queries = RFCReader.read_file("results.json")
+    queries = RFCReader.read_file(queries_file_path)
     if not queries:
         print("Nessuna query trovata. Terminazione del programma.")
         return
@@ -202,6 +207,9 @@ def start():
     
     # Stampa i risultati
     print_results(benchmark)
+    
+    # Ritorna il benchmark
+    return benchmark
 
 if __name__ == "__main__":
     start()
