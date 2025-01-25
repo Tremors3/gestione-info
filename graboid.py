@@ -28,12 +28,11 @@ class Graboid:
     
     def initialize_paths(self):
         
-        # CURRENT WORKING PATHS & FILES
-        self.CURRENT_WORKING_DIRECTORY_PATH = os.path.dirname(os.path.realpath(__file__))
-        self.CURRENT_WORKING_DIRECTORY = os.path.basename(os.path.abspath(os.getcwd()))
-        self.EXPECTED_WORKING_DIRECTORY = "gestione-info"
+        # CURRENT & EXPECTED WORKING DIRECTORY PATHS
+        self.CURRENT_WORKING_DIRECTORY_PATH = os.path.abspath(os.getcwd())
+        self.EXPECTED_WORKING_DIRECTORY_PATH = os.path.dirname(os.path.realpath(__file__))
 
-        # VIRTUAL ENVIROMENTS PATHS & FILES
+        # VIRTUAL ENVIROMENT PATHS & FILES
         self.PYTHON_REQUIREMENTS_FILE = "requirements.txt"
         PYTHON_EXECUTABLE_EXTENSION = ".exe" if platform == "win32" else ""
         PYTHON_EXECUTABLE_FILE = f"python{PYTHON_EXECUTABLE_EXTENSION}"
@@ -42,7 +41,7 @@ class Graboid:
         
         # APPLICATION SCRIPT FILE
         self.APPLICATION_SCRIPT_FILE_PATH = "starter.py"
-    
+
     def initialize_argparser(self):
         
         # DEFAULT OPTIONS
@@ -145,8 +144,17 @@ class Graboid:
         """Funzione per preparare gli argomenti da passare allo script"""
         return [ f'--{key.replace("_", "-")}' for key, value in args.__dict__.items() if key not in blacklist and value ]
     
+    def _validate_current_woring_path(self):
+        """Funzione per validare la directory di lavoro corrente"""
+        return self.CURRENT_WORKING_DIRECTORY_PATH == self.EXPECTED_WORKING_DIRECTORY_PATH
+    
     def start(self):
         """Entry Point dello Script"""
+        
+        # Controllo sulla directory di lavoro
+        if not self._validate_current_woring_path():
+            logging.error(f"Lo script deve essere eseguito dalla directory: {self.EXPECTED_WORKING_DIRECTORY_PATH}")
+            return
         
         # Parsing degli argomenti
         parsed_args = self.parser.parse_args()
