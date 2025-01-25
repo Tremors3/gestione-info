@@ -10,7 +10,7 @@ from typing import Callable, Any
 # Importazioni dei moduli del progetto
 from project.webapp.run import start as start_web_server
 from project.searchengine.myParser.myParser import start as start_parser
-from project.searchengine.myBenchmark.createBenchMark import start as start_benchmark
+from project.searchengine.myBenchMark.createBenchMark import start as start_benchmark
 from project.searchengine.myLogger.myLogger import bcolors, logging
 
 # #################################################################################################### #
