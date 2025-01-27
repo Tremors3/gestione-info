@@ -25,10 +25,6 @@ from org.apache.lucene.search import IndexSearcher
 
 # #################################################################################################### #
 
-#from project.searchengine.myLogger.myLogger import logger as logging, bcolors
-
-# #################################################################################################### #
-
 class MyPyLucene:
     
     # CURRENT WORKING DIRECTORY & FILE PATHS
@@ -37,7 +33,6 @@ class MyPyLucene:
     
     # INDEX & DATASET DIRECTORY PATHS
     INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes_dir")
-    #DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
     DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
 
     @staticmethod
@@ -46,7 +41,6 @@ class MyPyLucene:
         
         # Controllo se il file del dataset esiste
         if not os.path.isfile(MyPyLucene.DATASET_FILE_PATH):
-            #logging.error(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyPyLucene.DATASET_FILE_PATH}\'.")
             print(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyPyLucene.DATASET_FILE_PATH}\'.")
             sys.exit(1)
         
@@ -63,29 +57,37 @@ class MyPyLucene:
     def _write_indexes():
         """ Funzione che scrive gli indici per la ricerca. """    
         
+        # Inizializzazione di Lucene
         lucene.initVM(vmargs=['-Djava.awt.headless=true'])
         
+        # Apertura della directory
         directory = NIOFSDirectory(Paths.get(MyPyLucene.INDEX_DIRECTORY_PATH))
         
+        # Creazione dell'analizzatore
         analyzer = StandardAnalyzer()
-        #analyzer = LimitTokenCountAnalyzer(analyzer, MyPyLucene.NoT)
         
+        # Configurazione dell'indice
         config = IndexWriterConfig(analyzer)
+        
+        # Creazione dell'indice
         writer = IndexWriter(directory, config)
         
         # Apertura del file del dataset
         with open(MyPyLucene.DATASET_FILE_PATH, mode="r", encoding='utf-8') as f:
             documents = json.load(f)
-            print(f"Numero di documenti nel JSON: {len(documents)}")
+        
+        print(f"Numero di documenti nel JSON: {len(documents)}")
         
         count=0
+        
         for jdoc in documents:
 
             count += 1
 
+            # Creazione del documento
             doc = Document()
         
-            # Stored Fields
+            # Campi memorizzati
             doc.add(Field("number",     jdoc["Number"],              StringField.TYPE_STORED))
             doc.add(Field("files",      " ".join(jdoc["Files"]),     TextField.TYPE_STORED))
             doc.add(Field("title",      jdoc["Title"],               TextField.TYPE_STORED))
@@ -95,15 +97,16 @@ class MyPyLucene:
             doc.add(Field("status",     jdoc["Status"],              StringField.TYPE_STORED))
             doc.add(Field("abstract",   jdoc["Abstract"],            TextField.TYPE_STORED))
             
-            # Not Stored
+            # Campi non memorizzati
             doc.add(Field("keywords",   " ".join(jdoc["Keywords"]),  TextField.TYPE_NOT_STORED))
             doc.add(Field("content",    jdoc["Content"],             TextField.TYPE_NOT_STORED))
             
-            # Adding document to writer
+            # Aggiunta del documento all'indice
             writer.addDocument(doc)
 
-        print(f"Number of indexed documents: {count}")
+        print(f"Numero di documenti nell'indice: {writer.numDocs()}")
 
+        # Commit e chiusura del writer
         writer.commit()
         writer.close()
 
@@ -117,23 +120,29 @@ class MyPyLucene:
     
     @staticmethod
     def _results_to_json(searcher, scoreDocs):
-        """Converte i risultati di Whoosh in un formato JSON-friendly."""
-                
+        """Converte i risultati di Pylucene in un formato JSON-friendly."""
+        
         results_list = []
         
+        # Per ogni documento
         for scoreDoc in scoreDocs:
-            doc = searcher.doc(scoreDoc.doc)  # Recupera il documento
+            
+            # Recupera il documento
+            doc = searcher.doc(scoreDoc.doc)
 
-            # Crea un dizionario con i campi memorizzati
             result = {}
             
+            # Per ogni campo da estrarre
             for field_name in ["title", "abstract", "content", "number", "files", "authors", "date"]:
                 
+                # Recupera il valore del campo
                 field_value = doc.get(field_name)
                 
-                if field_value:  # Se il campo esiste, aggiungilo al dizionario
+                # Se il campo esiste, viene immesso nel dizionario
+                if field_value:    
                     result[field_name] = field_value
 
+            # Aggiunge il documento alla lista dei risultati
             results_list.append(result)
         
         return results_list  
@@ -146,26 +155,36 @@ class MyPyLucene:
         if not os.path.exists(MyPyLucene.INDEX_DIRECTORY_PATH):
             MyPyLucene.create_indexes()
         
+        # Inizializzazione di Lucene
         lucene.initVM(vmargs=['-Djava.awt.headless=true'])
         
+        # Apertura della directory
         fsDir = NIOFSDirectory(Paths.get(MyPyLucene.INDEX_DIRECTORY_PATH))
         
+        # Apertura del reader
         reader = DirectoryReader.open(fsDir)
         
+        # Apertura del searcher
         searcher = IndexSearcher(reader)
         
+        # Creazione dell'analizzatore
         analyzer = StandardAnalyzer()
         
         print(f"Numero di documenti nell'indice: {reader.numDocs()}")  # Mostra il numero di documenti
         
+        # Creazione del parser
         parser = QueryParser("content", analyzer) # "keywords"
         
+        # Impostazione dell'operatore di default
         parser.setDefaultOperator(QueryParser.Operator.AND)
         
+        # Parserizzazione della query
         query = parser.parse(data["ricerca_principale"])
         
+        # Estrazione dei risultati
         scoreDocs = searcher.search(query, data.get("size")).scoreDocs
         
+        # Formattazione dei Risultati
         results = MyPyLucene._results_to_json(searcher, scoreDocs)
         
         return results
@@ -182,10 +201,9 @@ if __name__ == "__main__":
     
     #MyPyLucene.create_indexes()
     
-    results = MyPyLucene._execute_query(data = {
+    results = MyPyLucene.process({
         "ricerca_principale": "QUIC Protocol",
-        "size": 5
+        "size": 25
     })
     
-    for doc in results:
-        print(doc, '\n')
+    for doc in results: print(doc, '\n')
