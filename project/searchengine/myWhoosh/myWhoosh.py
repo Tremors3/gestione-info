@@ -154,6 +154,7 @@ class MyWhoosh:
     
     @staticmethod
     def process(query: dict):
+        print(query)
         return MyWhoosh._execute_query(query)
 
 # #################################################################################################### #

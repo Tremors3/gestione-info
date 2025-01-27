@@ -17,7 +17,7 @@ from project.searchengine.myLogger.myLogger import bcolors, logging
 
 from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
 #from project.searchengine.myPostgress.myPostgress import MyPostgress
-#from project.searchengine.myPylucene.myPylucene import MyPylucene
+#from project.searchengine.myPylucene.myPylucene import MyPyLucene
 
 # #################################################################################################### #
 
