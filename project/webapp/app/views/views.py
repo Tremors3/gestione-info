@@ -20,16 +20,23 @@ from flask import Blueprint, request, render_template, redirect, url_for
 # Flask Forms
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, DecimalField, DateField, IntegerField, StringField, SubmitField, SelectField, TextAreaField, RadioField, FieldList, FormField
-from wtforms.validators import DataRequired, InputRequired, Length, ValidationError
+from wtforms.validators import DataRequired, InputRequired, Length, ValidationError, Regexp
 
 # #################################################################################################### #
 
 # Validatore per il formato delle date
-def validate_date_format(form, field):
+def validate_date_format_month(form, field):
     if field.data:
         try: datetime.strptime(field.data.strftime('%Y-%m'), '%Y-%m')
         except ValueError:
             raise ValidationError("La data deve essere nel formato YYYY-MM (esempio: 2023-12).")
+
+# Validatore per il formato delle date
+def validate_date_format_year(form, field):
+    if field.data:
+        try: datetime.strptime(field.data.strftime('%Y'), '%Y')
+        except ValueError:
+            raise ValidationError("La data deve essere nel formato YYYY (esempio: 2023).")
 
 # #################################################################################################### #
 
@@ -55,9 +62,9 @@ class SearchForm(FlaskForm):
     ######################################################## Valore di "standard track" ########################################################
     standard_track_value  = SelectField(default="PROPOSED_STANDARD", choices=[('PROPOSED_STANDARD', 'Proposed Standard'), ('DRAFT_STANDARD', 'Draft Standard'), ('INTERNET_STANDARD', 'Internet Standard')], render_kw={"id":"standard_track"})
     ############################################################## Selettore data ##############################################################
-    date_year             = DateField(format='%Y-%m', validators=[validate_date_format], render_kw={"id":"date_year",      "class":"input is-small", "type": "month", "placeholder":"YYYY"})
-    date_from_date        = DateField(format='%Y-%m', validators=[validate_date_format], render_kw={"id":"date_from_date", "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
-    date_to_date          = DateField(format='%Y-%m', validators=[validate_date_format], render_kw={"id":"date_to_date",   "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
+    date_year             = IntegerField(validators=[Regexp(r'^\d{4}$', message="Deve essere un anno valido (4 cifre)")],  render_kw={"id":"date_year", "class":"input is-small", "type": "number", "placeholder":"YYYY", "min": 1900, "max": datetime.now().year})
+    date_from_date        = DateField(format='%Y-%m', render_kw={"id":"date_from_date", "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
+    date_to_date          = DateField(format='%Y-%m', render_kw={"id":"date_to_date",   "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
     dates                 = RadioField(default="ALL_DATES", coerce=str, choices=[("ALL_DATES", "All Dates"),("SPECIFIC_YEAR", "Specific year"),("DATE_RANGE","Date Range")])
     ############################################################# Ternimi dinamici #############################################################
     terms                 = FieldList(FormField(TermForm), min_entries=0)

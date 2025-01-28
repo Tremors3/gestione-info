@@ -91,16 +91,16 @@ class MyPyLucene:
         
             # Campi memorizzati
             doc.add(Field("number",     jdoc["Number"],              StringField.TYPE_STORED))
-            doc.add(Field("files",      " ".join(jdoc["Files"]),     TextField.TYPE_STORED))
             doc.add(Field("title",      jdoc["Title"],               TextField.TYPE_STORED))
             doc.add(Field("authors",    " ".join(jdoc["Authors"]),   TextField.TYPE_STORED))
             doc.add(Field("date",       jdoc["Date"],                TextField.TYPE_STORED))
-            doc.add(Field("more_info",  jdoc["More Info"],           StringField.TYPE_STORED))
             doc.add(Field("status",     jdoc["Status"],              StringField.TYPE_STORED))
             doc.add(Field("abstract",   jdoc["Abstract"],            TextField.TYPE_STORED))
+            doc.add(Field("keywords",   " ".join(jdoc["Keywords"]),  TextField.TYPE_STORED))
+            doc.add(Field("more_info",  jdoc["More Info"],           StringField.TYPE_STORED))
+            doc.add(Field("files",      " ".join(jdoc["Files"]),     TextField.TYPE_STORED))
             
             # Campi non memorizzati
-            doc.add(Field("keywords",   " ".join(jdoc["Keywords"]),  TextField.TYPE_NOT_STORED))
             doc.add(Field("content",    jdoc["Content"],             TextField.TYPE_NOT_STORED))
             
             # Aggiunta del documento all'indice
@@ -124,25 +124,19 @@ class MyPyLucene:
         
         results_list = []
         
-        # Per ogni documento
         for scoreDoc in scoreDocs:
-            
-            # Recupera il documento
+
             doc = searcher.doc(scoreDoc.doc)
 
             result = {}
             
-            # Per ogni campo da estrarre
+            # Campi da estrarre
             for field_name in ["number", "files", "title", "authors", "date", "more_info", "status", "abstract"]:
                 
-                # Recupera il valore del campo
                 field_value = doc.get(field_name)
                 
-                # Se il campo esiste, viene immesso nel dizionario
-                if field_value:    
-                    result[field_name] = field_value
+                if field_value: result[field_name] = field_value
 
-            # Aggiunge il documento alla lista dei risultati
             results_list.append(result)
         
         return results_list  
@@ -151,10 +145,10 @@ class MyPyLucene:
     def _filter_results_by_date(data, documents):
         """Filtra i risultati precedentemente ottenuti per data."""
 
-        # Controllo della chiave 'dates' in modo sicuro
         date_value = data.get("dates", "").strip().upper()
 
-        # Nel caso non ci sia bisogno di effettuare filtraggi, restituisci tutti i documenti
+        # Nel caso non ci sia bisogno di effettuare filtraggi, 
+        # restutuzione di tutti i documenti
         if date_value == "ALL_DATES": return documents
         
         results = []
@@ -162,9 +156,9 @@ class MyPyLucene:
         for doc in documents:
             
             # Filtraggio per anno specifico (SPECIFIC_YEAR)
-            if date_value == "SPECIFIC_YEAR":
+            if date_value == "SPECIFIC_YEAR" and data["date_year"]:
                 
-                specific_year = data.get("date_year", "").split('-')[0] if data.get("date_year") else None
+                specific_year = data.get("date_year", 2000)
                 document_year = doc.get("date", "").split('-')[0] if doc.get("date") else None
                 
                 # Verifica che la data del documenti corrisponda a quella filtrata
@@ -172,7 +166,7 @@ class MyPyLucene:
                     results.append(doc)
             
             # Filtraggio per intervallo di date (DATE_RANGE)
-            elif date_value == "DATE_RANGE":
+            elif date_value == "DATE_RANGE" and data["date_from_date"] and data["date_to_date"]:
                 
                 from_date_str = data.get("date_from_date")
                 to_date_str = data.get("date_to_date")
@@ -180,6 +174,7 @@ class MyPyLucene:
                 if from_date_str and to_date_str:
                     
                     try:
+                        
                         # Parsing delle date
                         doc_date = datetime.strptime(doc.get("date", ""), "%Y-%m")
                         from_date = datetime.strptime(from_date_str, "%Y-%m")
@@ -191,7 +186,6 @@ class MyPyLucene:
                     
                     except Exception: pass
         
-        # Restituzione dei risultati
         return results
 
     @staticmethod
@@ -219,6 +213,18 @@ class MyPyLucene:
 
         # #################################################################################################### #
         
+        # QUERY PRINCIPALE - RICERCA SUL CONTENUTO DEL DOCUMENTO
+        
+        content_query_builder = BooleanQuery.Builder()
+        
+        parser = QueryParser("content", analyzer)
+        
+        #parser.setDefaultOperator(QueryParser.Operator.AND)
+        
+        content_query = parser.parse(data["ricerca_principale"])
+        
+        # #################################################################################################### #
+        
         # RICERCA SU PIU' CAMPI
         
         ## Enum BooleanClause.Occur.
@@ -228,45 +234,50 @@ class MyPyLucene:
         # MUST_NOT - Use this operator for clauses that must not appear in the matching documents.
         # SHOULD - Use this operator for clauses that should appear in the matching documents.
         
-        # Crea un BooleanQuery per combinare le query su più campi
-        terms_query_builder = BooleanQuery.Builder()
+        run_terms_search = data["terms"]
         
-        for term_data in data["terms"]:
+        if run_terms_search:
             
-            # Recupero dei valori del termine
-            term = term_data["term"]
-            op = term_data["operator"].strip().upper()
-            field = term_data["field"].strip().upper()
-            
-            # Mappatura tra chiavi e operatori
-            operator_mapping = {
-                "AND": BooleanClause.Occur.MUST,
-                "NOT": BooleanClause.Occur.MUST_NOT,
-                "OR": BooleanClause.Occur.SHOULD
-            }
-            # Imposta l'operatore
-            op = operator_mapping.get(op, BooleanClause.Occur.SHOULD)
-            
-            # Mappatura tra chiavi e campi
-            field_mapping = {
-                "TITLE": "title",
-                "DESCRIPTION": "abstract",
-                "KEYWORDS": "keywords",
-                "CONTENT": "content"
-            }
-            # Imposta il campo
-            field = field_mapping.get(field, "content")
-            
-            # Crea il parser per il campo
-            parser = QueryParser(field, analyzer)
-            
-            # Costruzione della query
-            query = parser.parse(term)
-            
-            # Aggiungi la query al BooleanQuery
-            terms_query_builder.add(query, op)
+            # Crea un BooleanQuery per combinare le query sullo stato
+            terms_query_builder = BooleanQuery.Builder()
         
-        terms_query = terms_query_builder.build()
+            for term_data in data["terms"]:
+                
+                # Recupero dei valori del termine
+                term = term_data["term"]
+                op = term_data["operator"].strip().upper()
+                field = term_data["field"].strip().upper()
+                
+                # Mappatura tra chiavi e operatori
+                operator_mapping = {
+                    "AND": BooleanClause.Occur.MUST,
+                    "NOT": BooleanClause.Occur.MUST_NOT,
+                    "OR": BooleanClause.Occur.SHOULD
+                }
+                
+                # Imposta l'operatore
+                op = operator_mapping.get(op, BooleanClause.Occur.SHOULD)
+                
+                # Mappatura tra chiavi e campi
+                field_mapping = {
+                    "TITLE": "title",
+                    "DESCRIPTION": "abstract",
+                    "KEYWORDS": "keywords"
+                }
+                
+                # Imposta il campo
+                field = field_mapping.get(field, "abstract")
+                
+                # Crea il parser per il campo
+                parser = QueryParser(field, analyzer)
+                
+                # Costruzione della query
+                query = parser.parse(term)
+                
+                # Aggiungi la query al BooleanQuery
+                terms_query_builder.add(query, op)
+            
+            terms_query = terms_query_builder.build()
         
         # #################################################################################################### #
         
@@ -320,26 +331,28 @@ class MyPyLucene:
         # COSTRUZIONE DELLA QUERY FINALE
         
         final_query_builder = BooleanQuery.Builder()
-        final_query_builder.add(terms_query, BooleanClause.Occur.MUST)
+        final_query_builder.add(content_query, BooleanClause.Occur.MUST)
+        if run_terms_search: final_query_builder.add(terms_query, BooleanClause.Occur.MUST)
         if run_status_search: final_query_builder.add(status_query, BooleanClause.Occur.MUST)
         #if run_date_search: final_query_builder.add(date_query, BooleanClause.Occur.MUST)
         
         # #################################################################################################### #
         
-        # Estrazione dei risultati
+        # ESTRAZIONE DEI RISULTATI
+        
+        # Estrazione
         scoreDocs = searcher.search(final_query_builder.build(), data.get("size", 25)).scoreDocs
         
-        # Verifica il numero di risultati
+        # Logging
         print(f"Numero di risultati trovati: {len(scoreDocs)}")  
         
-        # Formattazione dei Risultati
+        # Formattazione
         results = MyPyLucene._results_to_json(searcher, scoreDocs)
         
         # #################################################################################################### #
         
         # OPERAZIONI POST-PROCESSING
         
-        # FILTRAGGIO PER DATA
         results = MyPyLucene._filter_results_by_date(data, results)
         
         # #################################################################################################### #
@@ -398,5 +411,5 @@ def test_query_execution():
 
 if __name__ == "__main__":
     #test_indexes_creation()
-    #test_query_execution()
+    test_query_execution()
     pass
