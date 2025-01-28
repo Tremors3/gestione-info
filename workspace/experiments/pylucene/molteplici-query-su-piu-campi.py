@@ -91,16 +91,16 @@ class MyPyLucene:
         
             # Campi memorizzati
             doc.add(Field("number",     jdoc["Number"],              StringField.TYPE_STORED))
-            doc.add(Field("files",      " ".join(jdoc["Files"]),     TextField.TYPE_STORED))
             doc.add(Field("title",      jdoc["Title"],               TextField.TYPE_STORED))
             doc.add(Field("authors",    " ".join(jdoc["Authors"]),   TextField.TYPE_STORED))
             doc.add(Field("date",       jdoc["Date"],                TextField.TYPE_STORED))
-            doc.add(Field("more_info",  jdoc["More Info"],           StringField.TYPE_STORED))
             doc.add(Field("status",     jdoc["Status"],              StringField.TYPE_STORED))
             doc.add(Field("abstract",   jdoc["Abstract"],            TextField.TYPE_STORED))
+            doc.add(Field("keywords",   " ".join(jdoc["Keywords"]),  TextField.TYPE_STORED))
+            doc.add(Field("more_info",  jdoc["More Info"],           StringField.TYPE_STORED))
+            doc.add(Field("files",      " ".join(jdoc["Files"]),     TextField.TYPE_STORED))
             
             # Campi non memorizzati
-            doc.add(Field("keywords",   " ".join(jdoc["Keywords"]),  TextField.TYPE_NOT_STORED))
             doc.add(Field("content",    jdoc["Content"],             TextField.TYPE_NOT_STORED))
             
             # Aggiunta del documento all'indice
@@ -156,9 +156,9 @@ class MyPyLucene:
         for doc in documents:
             
             # Filtraggio per anno specifico (SPECIFIC_YEAR)
-            if date_value == "SPECIFIC_YEAR":
+            if date_value == "SPECIFIC_YEAR" and data["date_year"]:
                 
-                specific_year = data.get("date_year", "").split('-')[0] if data.get("date_year") else None
+                specific_year = data.get("date_year", 2000)
                 document_year = doc.get("date", "").split('-')[0] if doc.get("date") else None
                 
                 # Verifica che la data del documenti corrisponda a quella filtrata
@@ -166,7 +166,7 @@ class MyPyLucene:
                     results.append(doc)
             
             # Filtraggio per intervallo di date (DATE_RANGE)
-            elif date_value == "DATE_RANGE":
+            elif date_value == "DATE_RANGE" and data["date_from_date"] and data["date_to_date"]:
                 
                 from_date_str = data.get("date_from_date")
                 to_date_str = data.get("date_to_date")
