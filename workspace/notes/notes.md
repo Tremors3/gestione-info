@@ -57,11 +57,6 @@
 
 ### [da_fare] I TRE SEARCH ENGINE DEVONO POTER ESEGUIRE LE QUERY CON TUTTI I DIVERSI PARAMETRI AGGIUNTIVI
 
-SPELLING CORRECTION & SYNONIMS
-- [ ] - E' meglio che togliamo la SPELLING CORRECTION e i SINONIMI (Espansione delle query con termini sinonimi)? Non mi sembra molto difficile da implementare e inoltre l'implementazione sarebbe comune a tutti e tre i search engine... per esempio utilizzando la libreria NLTK. Ma conviene farlo?
-   - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
-   - [ ] - Spelling Correction & Synonims (Non Ancora Supportata)
-
 RICERCA PER DATA
 - La ricerca per data per PyLucene è stata implementata in post-processing; cioè dopo la ricerca applicata da pylucene.
 
@@ -78,20 +73,28 @@ PyLucene
 - [x] - Ricerca per Data (Supportata)
 
 Postgress
-- [ ] - Query Principale (Supportata)
-- [ ] - Ricerca per Termini (Supportata)
-- [ ] - Ricerca per Stato (Supportata)
+- [ ] - Query Principale (Non Ancora Supportata)
+- [ ] - Ricerca per Termini (Non Ancora Supportata)
+- [ ] - Ricerca per Stato (Non Ancora Supportata)
 - [ ] - Ricerca per Data (Non Ancora Supportata)
 
-### [da_fare] CREARE LO SCRIPT SEPARATO PER GESTIONE DI PYLUCENE
+### [da_fare] CREARE LO SCRIPT SEPARATO PER GESTIONE DI PYLUCENE [OPPURE] RINUNCIARE AGLI SCRIPT DI AVVIO E PACCHETTIZZARE L'APP PER L'INSTALLAZIONE
 
 - [ ] Bisogna creare uno script che consenta di utilizzare da linea di comando pylucene perchè non è possibile utilizzarlo nell'ambiente virtuale su cui va il webserver purtroppo. Si potrebbe cercare di installare pylucene all'interno del venv ma è praticamente impossibile e richiederebbe troppo tempo. Pylucene verrà gestito interamente da uno script specializzato realizzato "ad-hok", possibilmente utilizzando ArgumentParser.
 
+#### OPPURE
+
+- [ ] Invece di utilizzare uno script alternativo con l'unico scopo di permettere l'utilizzazione di PyLucene, possiamo invece pacchettizzare e permettere l'installazione del programma come mostratoci dal prof in Complementi di Programmazione. Sarà compito della prof gestire il venv in cui è installata l'applicazione. Questo non vuol dire che dovremo cancellare gli script "graboid.py" e "starter.py"; restano ottimi per il testare parti di programma.
+
 ### [da_fare] STABILIRE UNA FASE COMUNE DI PREPROCESSING ED IMPLEMENTARLA
 
-- [ ] Stabilire un trattamento di preprocessing delle query comune per tutti i search engine e testare le varie configurazioni tra Stemmer, Lemmatizer, Parsers, Taggers, Rimozione Stopwords, ecc.
-   
-   - Questa fase comune a tutti i search engine potrebbe essere implementata direttamente dal web server. Oppure utilizzando la pipeline di preprocessing fornita da ciascun search engine.
+UNICA PIPELINE DI PREPROCESSING vs UTILIZZARE QUELLE FORNITE DAI SE.
+- [ ] Stabilire una fase di preprocessing comune per tutti i search engine e testare Stemmer, Lemmatizer, Parsers, Taggers, Rimozione Stopwords, ecc... Questa fase comune a tutti i search engine potrebbe essere implementata direttamente dal web server. Oppure utilizzando la pipeline di preprocessing fornita da ciascun search engine.
+
+SPELLING CORRECTION & SYNONIMS
+- [ ] - E' meglio che togliamo la SPELLING CORRECTION e i SINONIMI (Espansione delle query con termini sinonimi)? Non mi sembra molto difficile da implementare e inoltre l'implementazione sarebbe comune a tutti e tre i search engine... per esempio utilizzando la libreria NLTK. Ma conviene farlo?
+   - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
+   - [ ] - Spelling Correction & Synonims (Non Ancora Supportata)
 
 ### OBIETTIVO
 ### VOGLIO ARRIVARE A FINE FEBBRAIO COL DOVER FARE SOLAMENTE (1. MODELLI DI RANKING, 2.a FUNZIONI PER VALUTARE I MODELLI DI RANKING, 2.b GRAFICI, 3. DOCUMENTAZIONE, 4. PRESENTAZIONE)
