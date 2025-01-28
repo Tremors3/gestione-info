@@ -118,9 +118,14 @@ class MyWhoosh:
         
         for result in results:
             
-            result = dict(result)
+            result_dict = dict(result)
 
-            results_list.append(result)
+            # Converte datetime in stringhe
+            for key, value in result_dict.items():
+                if isinstance(value, datetime):
+                    result_dict[key] = value.strftime('%Y-%m')  # Formatta come stringa
+
+            results_list.append(result_dict)
         
         return json.dumps(results_list)
 
