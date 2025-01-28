@@ -68,8 +68,12 @@ class Application:
         # Costruzione del Dataset
         self.parser()
         
+        # [ ] AVVIO DEL DOCKER PER POSTGRES
+
         # Creazione degli Indici
         self.indexes()
+
+        # [ ] CHIUSURA DEL DOCKER PER POSTGRES
 
     @howMuchTimeDoesItTake
     def parser(self) -> None:
@@ -88,7 +92,10 @@ class Application:
     def web(self) -> None:
         """Avvia il web server del progetto."""
         print(f"{bcolors.GREEN}Avvio del web server ...{bcolors.RESET}")
+
+        # [ ] AVVIO DEL DOCKER PER POSTGRES
         start_web_server()
+        # [ ] CHIUSURA DEL DOCKER PER POSTGRES
         
     def benchmark(self) -> None:
         """Avvia lo script che crea il benchmark."""
