@@ -1,15 +1,15 @@
+
+# Importazioni standard
 import os, sys, json, shutil
 from datetime import datetime
 
-# ################################################## #
-
+# Importazioni Whoosh per la gestione dell'indicizzazione e della ricerca
 from whoosh.fields import Schema, TEXT, ID, NUMERIC, STORED, KEYWORD, DATETIME
 from whoosh.qparser import QueryParser, GtLtPlugin
 from whoosh.query import Wildcard, DateRange, Term, Phrase, And, Or, Not
 from whoosh import index
 
-# ################################################## #
-
+# Importazione del logger personalizzato del progetto
 from project.searchengine.myLogger.myLogger import logger as logging, bcolors
 
 # ################################################## #
@@ -128,6 +128,10 @@ class MyWhoosh:
     def _execute_query(data: dict):
         """ Funzione che esegue la query di ricerca. """
 
+        # ########################################################### #
+        # INIZIALIZZAZIONE PARAMETRI
+        # ########################################################### #
+
         # Verifica se la cartella degli indici esiste, altrimenti crea gli indici
         if not os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
             MyWhoosh.create_indexes()
@@ -135,19 +139,19 @@ class MyWhoosh:
         # Apertura dell'indice esistente
         ix = index.open_dir(MyWhoosh.INDEX_DIRECTORY_PATH)
 
-        # ################################################## #
-
+        # ########################################################### #
         # QUERY PRINCIPALE - RICERCA SUL CONTENUTO DEL DOCUMENTO
+        # ########################################################### #
 
         # Parsing della query principale sul campo "content" con la ricerca case-insensitive
         content_query = QueryParser("content", ix.schema).parse(
             data["ricerca_principale"].lower()
         )
 
-        # ################################################## #
+        # ########################################################### #
+        # RICERCA SU PIU' CAMPI - CREAZIONE DI UNA QUERY BOOLEANA COMBINATA
+        # ########################################################### #
         
-        # RICERCA SU PIU' CAMPI
-
         # Inizializzazione delle liste per gli operatori logici
         and_terms, not_terms, or_terms = [], [], []
 
@@ -189,9 +193,9 @@ class MyWhoosh:
         query_parts = [q for q in [and_query, not_query, or_query] if q]
         terms_query = And(query_parts) if query_parts else None
 
-        # ################################################## #
-        
-        # RICERCA PER STATO
+        # ########################################################### #
+        # RICERCA PER STATO - CREAZIONE DI UNA QUERY PER LO STATO DEI DOCUMENTI
+        # ########################################################### #
 
         status_query = None  # Valore di default per la query dello stato
 
@@ -234,10 +238,10 @@ class MyWhoosh:
             if status_filters:
                 status_query = Or(status_filters)
         
-        # ################################################## #
-        
-        # RICERCA PER DATA
-        
+        # ########################################################### #
+        # RICERCA PER DATA - CREAZIONE DI UNA QUERY PER IL FILTRAGGIO SULLE DATE
+        # ########################################################### #
+
         date_query = None  # Valore di default per la query della data
         date_filter = data.get("dates", "").strip().upper() # Opzione selezionata
 
@@ -277,9 +281,9 @@ class MyWhoosh:
                     except ValueError:
                         pass  # In caso di errore nel parsing, non fare nulla
 
-        # ################################################## #
-
-        # CREAZIONE DELLA QUERY COMBINATA
+        # ########################################################### #
+        # COSTRUZIONE DELLA QUERY FINALE - COMBINAZIONE DELLE QUERY INDIVIDUALI
+        # ########################################################### #
 
         # Filtra le parti della query che sono valide (non None)
         combined_query_parts = [q for q in [content_query, terms_query, status_query, date_query] if q]
@@ -287,9 +291,9 @@ class MyWhoosh:
         # Combina le query valide con un operatore "AND" (e.g., tutte le condizioni devono essere soddisfatte)
         combined_query = And(combined_query_parts) if combined_query_parts else None
 
-        # ################################################## #
-
-        # ESECUZIONE DELLA RICERCA
+        # ########################################################### #
+        # ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI
+        # ########################################################### #
 
         # Apre un "searcher" per eseguire la ricerca sugli indici
         with ix.searcher() as searcher:
@@ -299,7 +303,9 @@ class MyWhoosh:
 
             # Converte i risultati in formato JSON-friendly
             results = MyWhoosh._results_to_json(results)
-
+        
+        # ########################################################### #
+        
         # Restituisce i risultati formattati
         return results
     
