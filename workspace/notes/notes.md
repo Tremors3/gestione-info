@@ -60,30 +60,28 @@
 SPELLING CORRECTION & SYNONIMS
 - [ ] - E' meglio che togliamo la SPELLING CORRECTION e i SINONIMI (Espansione delle query con termini sinonimi)? Non mi sembra molto difficile da implementare e inoltre l'implementazione sarebbe comune a tutti e tre i search engine... per esempio utilizzando la libreria NLTK. Ma conviene farlo?
    - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
+   - [ ] - Spelling Correction & Synonims (Non Ancora Supportata)
 
 RICERCA PER DATA
 - La ricerca per data per PyLucene è stata implementata in post-processing; cioè dopo la ricerca applicata da pylucene.
 
 Whoosh
 - [x] - Query Principale (Supportata)
-- [x] - Ricerca per Termini Secondari (Supportata)
-- [ ] - Ricerca per Stato (Non Ancora Supportata)
-- [ ] - Ricerca per Data (Non Ancora Supportata)
-- [ ] - Spelling Correction & Synonims (Non Ancora Supportata)
+- [x] - Ricerca per Termini (Supportata)
+- [x] - Ricerca per Stato (Supportata)
+- [x] - Ricerca per Data (Supportata)
 
 PyLucene
 - [x] - Query Principale (Supportata)
-- [x] - Ricerca per Termini Secondari (Supportata)
+- [x] - Ricerca per Termini (Supportata)
 - [x] - Ricerca per Stato (Supportata)
 - [x] - Ricerca per Data (Supportata)
-- [ ] - Spelling Correction & Synonims (Non Ancora Supportata)
 
 Postgress
 - [ ] - Query Principale (Supportata)
-- [ ] - Ricerca per Termini Secondari (Supportata)
+- [ ] - Ricerca per Termini (Supportata)
 - [ ] - Ricerca per Stato (Supportata)
 - [ ] - Ricerca per Data (Non Ancora Supportata)
-- [ ] - Spelling Correction & Synonims (Non Ancora Supportata)
 
 ### [da_fare] CREARE LO SCRIPT SEPARATO PER GESTIONE DI PYLUCENE
 
