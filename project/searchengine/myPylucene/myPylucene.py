@@ -22,7 +22,7 @@ from org.apache.lucene.index import DirectoryReader, Term
 from org.apache.lucene.queryparser.classic import QueryParser
 from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause, TermQuery, TermRangeQuery
 
-# ########################################################### #
+# #################################################################################################### #
 
 class MyPyLucene:
     
@@ -115,7 +115,7 @@ class MyPyLucene:
         MyPyLucene._prepare_folders_and_files()
         MyPyLucene._write_indexes()
 
-    # ########################################################### #
+    # #################################################################################################### #
     
     @staticmethod
     def _results_to_json(searcher, scoreDocs):
@@ -398,13 +398,13 @@ class MyPyLucene:
         
         return results
 
-    # ########################################################### #
+    # #################################################################################################### #
     
     @staticmethod
     def process(query: dict):
         return MyPyLucene._execute_query(query)
 
-# ########################################################### #
+# #################################################################################################### #
 
 def test_indexes_creation():
     MyPyLucene.create_indexes()
