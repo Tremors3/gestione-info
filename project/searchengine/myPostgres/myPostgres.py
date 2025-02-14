@@ -6,6 +6,7 @@ _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|
 
 
 class MyPostgres:
+     
     # CURRENT WORKING DIRECTORY & FILE PATHS
     CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
@@ -20,7 +21,7 @@ class MyPostgres:
             user="postgres",
             password="postgres",
             host="127.0.0.1",
-            port=5432
+            port=55432
         )
         return conn.cursor()
     
@@ -57,7 +58,9 @@ class MyPostgres:
 
     @staticmethod
     def _populate_table():
+        
         cursor = __class__.__cursor()
+        
         with open(__class__.DATASET_FILE_PATH, mode="r", encoding='utf-8') as f:
             documents = json.load(f)
 
@@ -97,10 +100,10 @@ class MyPostgres:
 
 if __name__ == "__main__":
     my = MyPostgres()
-    # my._initialize_table()
-    # my._populate_table()
-    # my.create_indexes()
-    # my.test_index()
+    my._initialize_table()
+    my._populate_table()
+    my.create_indexes()
+    #my.test_index()
 
 
 

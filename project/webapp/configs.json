@@ -5,6 +5,7 @@
         "AUTO_CONNECT": true
     },
     "MODE_SETTINGS": {
-        "ENABLE_DEBUG": true
+        "ENABLE_DEBUG": true,
+        "ENABLE_RELOADER": false
     }
 }
