@@ -28,7 +28,6 @@ class MyPostgres:
     @staticmethod
     def _initialize_table():
         cursor = __class__.__cursor()
-        cursor.execute('DROP TABLE IF EXISTS dataset')
         cursor.execute(
             'CREATE TABLE dataset (\
                 id integer PRIMARY KEY,\
@@ -85,6 +84,7 @@ class MyPostgres:
                 cursor.execute(query)
         cursor.execute("COMMIT;")
 
+
     @staticmethod
     def create_indexes():
         cursor = __class__.__cursor()
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     my._initialize_table()
     my._populate_table()
     my.create_indexes()
-    my.test_index()
+    #my.test_index()
 
 
 

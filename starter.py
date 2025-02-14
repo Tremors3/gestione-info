@@ -18,7 +18,7 @@ from project.searchengine.myLogger.myLogger import bcolors, logging
 # #################################################################################################### #
 
 from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
-#from project.searchengine.myPostgres.myPostgres import MyPostgres
+from project.searchengine.myPostgres.myPostgres import MyPostgres
 #from project.searchengine.myPylucene.myPylucene import MyPylucene
 
 # #################################################################################################### #
@@ -80,7 +80,7 @@ class Application:
     def docker(self) -> None:
         """Costruzione ed avvio del container docker per postgres."""
         print(f"{bcolors.GREEN}Creazione container docker ...{bcolors.RESET}")
-        DockerPG()
+        DockerPG().start()
 
     def docker_remove(self) -> None:
         """Costruzione ed avvio del container docker per postgres."""
@@ -101,21 +101,20 @@ class Application:
         print(f"{bcolors.GREEN}Costruzione degli Inverted Index ...{bcolors.RESET}")
         
         # Whoosh Indexes
-        MyWhoosh.create_indexes()
+        #MyWhoosh.create_indexes()
         
         # PyLucene Indexes
         #MyPylucene.create_indexes()
         
         # Postgres Indexes
-        #docker_pg = DockerPG()
-        #docker_pg.start() # Apertura container
-        #MyPostgres.create_indexes()
-        #docker_pg.stop() # Chiusura container
+        docker_pg = DockerPG()
+        docker_pg.start() # Apertura container
+        MyPostgres.create_indexes()
+        docker_pg.stop() # Chiusura container
     
     def web(self) -> None:
         """Avvia il web server del progetto."""
         print(f"{bcolors.GREEN}Avvio del web server ...{bcolors.RESET}")
-        from time import sleep
         
         docker_pg = DockerPG()
         docker_pg.start() # Apertura container
