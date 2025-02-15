@@ -113,20 +113,16 @@ class MyPostgres(metaclass=Singleton):
             cursor.execute('DROP TABLE IF EXISTS dataset;')
             cursor.execute("""
                 CREATE TABLE dataset (
-                    id          integer PRIMARY KEY,
-                    files       text[],
-                    title       text,
-                    authors     text[],
-                    date        date,
-                    more_info   text,
-                    status      text,
-                    abstract    text,
-                    keywords    text[],
-                    
-                    title_tsv    tsvector,
-                    abstract_tsv tsvector,
-                    keywords_tsv tsvector,
-                    content_tsv  tsvector
+                    id integer PRIMARY KEY,
+                    files text[],
+                    title text,
+                    authors text[],
+                    date date,
+                    more_info text,
+                    status text,
+                    abstract text,
+                    keywords text[],
+                    content text
                 );
             """)
             self.conn.commit()
@@ -148,6 +144,7 @@ class MyPostgres(metaclass=Singleton):
     @staticmethod
     def __array_to_string(arr) -> str:
         """Converte una lista compatibile col tipo ARRAY di PostgreSQL."""
+        #return "ARRAY[" + ",".join(f"E'{__class__.__sanitize(x)}'" for x in arr) + "]"
         return "ARRAY[E'" + "',E'".join(map(lambda x: __class__.__sanitize(x), arr)) + "']"
     
     @staticmethod
@@ -165,22 +162,8 @@ class MyPostgres(metaclass=Singleton):
         documents = __class__.__get_documents()
         
         insert_query = """
-            INSERT INTO dataset (
-                id,
-                files,
-                title,
-                authors,
-                date,
-                more_info,
-                status,
-                abstract,
-                keywords,
-                
-                title_tsv,
-                abstract_tsv,
-                keywords_tsv,
-                content_tsv
-            ) VALUES {values};
+            INSERT INTO dataset (id, files, title, authors, date, more_info, status, abstract, keywords, content)
+            VALUES {values};
         """
 
         try:
@@ -193,7 +176,6 @@ class MyPostgres(metaclass=Singleton):
                     
                     bar() # Progressing the bar
                     
-                    # Stored Types
                     id_ = doc["Number"]
                     files = __class__.__array_to_string(doc["Files"])
                     title = __class__.__sanitize(doc["Title"])
@@ -203,31 +185,10 @@ class MyPostgres(metaclass=Singleton):
                     status = doc["Status"]
                     abstract = __class__.__sanitize(doc["Abstract"])
                     keywords = __class__.__array_to_string(doc["Keywords"])
-                    
-                    # TSVector Types
-                    title_tsv = title
-                    abstract_tsv = abstract
-                    content_tsv = __class__.__sanitize(doc["Content"])
-                    keywords_tsv = __class__.__sanitize(' '.join(keywords))
-                    
-                    insert_values.append("""('{id}', {files}, E'{title}', {authors}, to_date('{date}', 'YYYY-MM'), E'{more_info}', '{status}', E'{abstract}', {keywords}, to_tsvector('english', E'{title_tsv}'), to_tsvector('english', E'{abstract_tsv}'), to_tsvector('english', E'{keywords_tsv}'), to_tsvector('english', E'{content_tsv}'))""".format(
-                        
-                        # Stored Types
-                        id=id_,
-                        files=files,
-                        title=title,
-                        authors=authors,
-                        date=date,
-                        more_info=more_info,
-                        status=status,
-                        abstract=abstract,
-                        keywords=keywords,
-                        
-                        # TSV Types
-                        title_tsv=title_tsv,
-                        abstract_tsv=abstract_tsv,
-                        keywords_tsv=keywords_tsv,
-                        content_tsv=content_tsv
+                    content = __class__.__sanitize(doc["Content"])
+
+                    insert_values.append("('{}', {}, E'{}', {}, to_date('{}', 'YYYY-MM'), E'{}', '{}', E'{}',  {}, E'{}')".format(
+                        id_, files, title, authors, date, more_info, status, abstract, keywords, content
                     ))
                     
                     if (idx % block_size == 0) or (idx >= len(documents)): # default block size is 500
@@ -251,10 +212,9 @@ class MyPostgres(metaclass=Singleton):
         cursor = self._get_cursor()
         
         indexes = [
-            "CREATE INDEX title_idx ON dataset USING GIN (title_tsv);",
-            "CREATE INDEX abstract_idx ON dataset USING GIN (abstract_tsv);",
-            "CREATE INDEX password_idx ON dataset USING GIN (keywords_tsv);",
-            "CREATE INDEX content_idx ON dataset USING GIN (content_tsv);",
+            "CREATE INDEX abstract_idx ON dataset USING GIN (to_tsvector('english', abstract));",
+            "CREATE INDEX content_idx ON dataset USING GIN (to_tsvector('english', content));",
+            "CREATE INDEX title_idx ON dataset USING GIN (to_tsvector('english', title));"
         ]
         
         try:
@@ -279,11 +239,11 @@ class MyPostgres(metaclass=Singleton):
         self._populate_table()
         self._construct_indexes()
     
-    def process(self, query: dict):
+    def process(self, query: str = ""):
         cursor = self._get_cursor()
         
         results = cursor.execute(
-            "SELECT id, ts_rank_cd(content_tsv, query) AS rank FROM dataset, to_tsquery('QUIC & Protocol') query WHERE query @@ content_tsv ORDER BY rank DESC LIMIT 10;"
+            "SELECT id, ts_rank_cd(to_tsvector(content), query) AS rank FROM dataset, to_tsquery('QUIC & Protocol') query WHERE query @@ to_tsvector(content) ORDER BY rank DESC LIMIT 10;"
         )
         
         return results.fetchall()
@@ -334,6 +294,6 @@ def test_query_execution(postgres):
 
 if __name__ == "__main__":
     postgres = MyPostgres()
-    #test_indexes_creation(postgres)
+    test_indexes_creation(postgres)
     test_query_execution(postgres)
     pass

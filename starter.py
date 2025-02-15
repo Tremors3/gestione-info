@@ -109,7 +109,8 @@ class Application:
         # Postgres Indexes
         docker_pg = DockerPG()
         docker_pg.start() # Apertura container
-        MyPostgres.create_indexes()
+        postgres = MyPostgres()
+        postgres.create_indexes()
         docker_pg.stop() # Chiusura container
     
     def web(self) -> None:
