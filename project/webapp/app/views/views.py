@@ -1,12 +1,18 @@
-import os
-import uuid
-import json
+
+# imports
+import os, uuid, json
 
 # datetime
 from datetime import date, timedelta, datetime
 
+# #################################################################################################### #
+
 # Our Imports
 from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
+#from project.searchengine.myPylucene.MyPylucene import MyPyLucene
+#from project.searchengine.myPostgress.myPostgress import myPostgress
+
+# #################################################################################################### #
 
 # Flask Utils for redirecting, blueprients, exc...
 from flask import Blueprint, request, render_template, redirect, url_for
@@ -14,7 +20,25 @@ from flask import Blueprint, request, render_template, redirect, url_for
 # Flask Forms
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, DecimalField, DateField, IntegerField, StringField, SubmitField, SelectField, TextAreaField, RadioField, FieldList, FormField
-from wtforms.validators import DataRequired, InputRequired, Length, ValidationError
+from wtforms.validators import DataRequired, InputRequired, Length, ValidationError, Regexp
+
+# #################################################################################################### #
+
+# Validatore per il formato delle date
+def validate_date_format_month(form, field):
+    if field.data:
+        try: datetime.strptime(field.data.strftime('%Y-%m'), '%Y-%m')
+        except ValueError:
+            raise ValidationError("La data deve essere nel formato YYYY-MM (esempio: 2023-12).")
+
+# Validatore per il formato delle date
+def validate_date_format_year(form, field):
+    if field.data:
+        try: datetime.strptime(field.data.strftime('%Y'), '%Y')
+        except ValueError:
+            raise ValidationError("La data deve essere nel formato YYYY (esempio: 2023).")
+
+# #################################################################################################### #
 
 class TermForm(FlaskForm):
     operator = SelectField('Operator', default='AND', choices=[('AND', 'AND'), ('OR', 'OR'), ('NOT', 'NOT')], render_kw={"id":"terms-operator"})
@@ -38,7 +62,7 @@ class SearchForm(FlaskForm):
     ######################################################## Valore di "standard track" ########################################################
     standard_track_value  = SelectField(default="PROPOSED_STANDARD", choices=[('PROPOSED_STANDARD', 'Proposed Standard'), ('DRAFT_STANDARD', 'Draft Standard'), ('INTERNET_STANDARD', 'Internet Standard')], render_kw={"id":"standard_track"})
     ############################################################## Selettore data ##############################################################
-    date_year             = DateField(format='%Y',    render_kw={"id":"date_year",      "class":"input is-small", "type": "month", "placeholder":"YYYY"})
+    date_year             = IntegerField(validators=[Regexp(r'^\d{4}$', message="Deve essere un anno valido (4 cifre)")],  render_kw={"id":"date_year", "class":"input is-small", "type": "number", "placeholder":"YYYY", "min": 1900, "max": datetime.now().year})
     date_from_date        = DateField(format='%Y-%m', render_kw={"id":"date_from_date", "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
     date_to_date          = DateField(format='%Y-%m', render_kw={"id":"date_to_date",   "class":"input is-small", "type": "month", "placeholder":"YYYY[-MM]"})
     dates                 = RadioField(default="ALL_DATES", coerce=str, choices=[("ALL_DATES", "All Dates"),("SPECIFIC_YEAR", "Specific year"),("DATE_RANGE","Date Range")])
@@ -52,13 +76,19 @@ class SearchForm(FlaskForm):
     submit                = SubmitField(render_kw={"class":"button is-link is-medium", "style":"margin-left: 0%; border-radius:0;"})
     ############################################################################################################################################
 
+# #################################################################################################### #
+
 # Blueprint per le viste
 blueprint = Blueprint('views', __name__,
                       template_folder = '../templates',
                       static_folder   = '../static')
 
+# #################################################################################################### #
+
 TEMP_DIR = os.path.join("project", "webapp", "app", "views", "tmp_results")
 os.makedirs(TEMP_DIR, exist_ok=True)
+
+# #################################################################################################### #
 
 # Route principale
 @blueprint.route('/', methods=['POST', 'GET'])
@@ -88,12 +118,12 @@ def search():
                 save_results_to_file(response, file_path)
                 
             if "PYLUCENE" == query.get("search_engine"):
-                pass #response = processPyLucene(query)
+                pass #response = MyPyLucene.process(query)
                 # Salva i risultati su file per essere recuperati alla richiesta
                 #save_results_to_file(response, file_path)
                 
             if "POSTGRESQL" == query.get("search_engine"):
-                pass #response = processPostgresql(query)
+                pass #response = MyPostgress.process(query)
                 # Salva i risultati su file per essere recuperati alla richiesta
                 #save_results_to_file(response, file_path)
 
@@ -106,6 +136,8 @@ def search():
         return render_template('index.html', context={
             "form" : SearchForm()
         })
+
+# #################################################################################################### #
 
 @blueprint.route('/results', methods=['GET'])
 def results():
@@ -149,6 +181,8 @@ def results():
 
         return render_template('results.html', risultati=results, num_result=len(results), max_words=250)
 
+# #################################################################################################### #
+
 # Funzione per formattare la query
 def form_to_json(form: FlaskForm, donot: set[str]):
 
@@ -177,11 +211,16 @@ def form_to_json(form: FlaskForm, donot: set[str]):
             # Aggiungiamo i termini aggiuntivi (per ultimi)
             form_data[field_name] = subfields
 
+        # Se il campo è un DateField, formattalo "anno-mese"
+        elif isinstance(field, DateField):
+            form_data[field_name] = field.data.strftime('%Y-%m') if field.data else None
+
         # Altrimenti, aggiungi direttamente il valore
-        else:
-            form_data[field_name] = field.data
+        else: form_data[field_name] = field.data
 
     return form_data
+
+# #################################################################################################### #
 
 # Funzioni di gestione dei file temporanei
 def save_results_to_file(results: dict, filename: str):
@@ -214,9 +253,10 @@ def delete_file(filename: str):
     except IOError as e:
         print(f"Errore nella cancellazione del file {filepath}: {e}")
 
+# #################################################################################################### #
+
 # Funzione per castare in modo sicuro
 def safecast(value, to_type, default=None):
-    try:
-        return to_type(value)
+    try: return to_type(value)
     except (ValueError, TypeError):
         return default

@@ -1,24 +1,26 @@
 
 # COSE DA FINIRE
 
-### [da_finire(quello_di_postgresql)] NOTA SULL'UTILIZZO DELLA SEARCH BAR
+### [da_finire] NOTA SULL'UTILIZZO DELLA SEARCH BAR
 
-Nella sezione a destra dell'interfaccia grafica elenchiamo tre sezioni, una per Search Engine (Whoosh, Postgresql, Pylucene).
-All'interno di queste sezione specifichiamo le possibili grammatiche di funzionalità offerte dai vari search engine. Per esempio:
+- [ ] Da completare.
+   
+   Nella sezione a destra dell'interfaccia grafica elenchiamo tre sezioni, una per Search Engine (Whoosh, Postgresql, Pylucene).
+   All'interno di queste sezione specifichiamo le possibili grammatiche di funzionalità offerte dai vari search engine. Per esempio:
 
-```
-SEZIONE WHOOSH
-Puoi effettuare una ricerca esatta tramite l'operatore ""<N>. i.e. "information retrieval"<3>
+   ```
+   SEZIONE WHOOSH
+   Puoi effettuare una ricerca esatta tramite l'operatore ""<N>. i.e. "information retrieval"<3>
 
-SEZIONE POSTGRESQL
-Puoi effettuare una ricerca esatta tramite l'operatore ::-N- i.e. :information retrieval:-3-
-```
+   SEZIONE POSTGRESQL
+   Puoi effettuare una ricerca esatta tramite l'operatore ::-N- i.e. :information retrieval:-3-
+   ```
 
-A seconda del motore selezionato l'utente dovrà andare ad utilizzare la sintassi opportuna di quel motore.
-Le sintassi dei tre motori saranno mostrate di fianco al prompt della query, in modo che l'utente.
+   A seconda del motore selezionato l'utente dovrà andare ad utilizzare la sintassi opportuna di quel motore.
+   Le sintassi dei tre motori saranno mostrate di fianco al prompt della query, in modo che l'utente.
 
-In questo modo non dobbiamo ideare una sintassi comune e poi aggiustarla in base alla scelta del motore ma
-utilizziamo la sintassi diretta del motore così ci semplifichiamo la vita. 
+   In questo modo non dobbiamo ideare una sintassi comune e poi aggiustarla in base alla scelta del motore ma
+   utilizziamo la sintassi diretta del motore così ci semplifichiamo la vita.
 
 ### [fatto] MODIFICARE ALCUNE COSE DEI TERMINI DI RICERCA
 
@@ -40,27 +42,67 @@ utilizziamo la sintassi diretta del motore così ci semplifichiamo la vita.
         - [x] - diversi comandi che consentono di eseguire singolarmente le varie sezioni della pipeline di inizializzazione;
         - [x] - altri comandi che consentono di avviare l'applicazione web e le altre funzionalità.
 
-### [da_fare] ORGANIZZARE LE CLASSI DI WHOOSH, PYLUCENE, E POSTGRESS + RIFORMULARE DEMO WHOOSH
+### [fatto] ORGANIZZARE LA CLASSE DI WHOOSH + RIFORMULARE DEMO WHOOSH
 
-- [ ] Riorganizzare la demo di whoosh facendo tutti i controlli necessari, mettendo apposto i percorsi, ecc...
-- [ ] Realizzare il punto precedente in modo che lo schema organizzativo sia replicabile anche per pylucene e postgress.
+- [x] Riorganizzare la demo di whoosh facendo tutti i controlli necessari, mettendo apposto i percorsi, ecc...
 
 ### [da_fare] QUANDO VENGONO CREATI GLI INVERTED INDEX dei SEARCH ENGINE ?
 
-- [ ] Gli indici di tutti i modelli di ranking e dei vari sistemi devono essere creati subito dopo il download dei documenti tramite il parser.
+- [x] Gli indici di tutti i modelli di ranking e dei vari sistemi devono essere creati subito dopo il download dei documenti tramite il parser.
       Ogni volta che viene ricreato il dataset devono venir ricreati anche tutti gli indici dei vari sistemi e modelli.
 
-      Per adesso funzione così (va automatizzato come scritto sopra):
-            1. Cancellare la cartella "index_dir" di whoosh
-            2. Rieseguire il parser
-            3. Effettuare una ricerca (alla prima ricerca verrà effettuato l'indice)
+      - [x] - Indici di Whoosh Funzionanti
+      - [x] - Indici di pyLucene Funzionanti (su script separato)
+      - [ ] - Indici di Postgress Ancora da Automatizzare
 
-### [da_fare] PROVARE I DIVERSI STEMMER / LEMMATIZER - IN GENERALE METTERE APPOSTO LA FASE DI PREPROCESSING
+### [da_fare] I TRE SEARCH ENGINE DEVONO POTER ESEGUIRE LE QUERY CON TUTTI I DIVERSI PARAMETRI AGGIUNTIVI
 
-- [ ] Provare i diversi stemmer / lemmatizer; anche se rischiano di fare overstemming: per esempio cambiando "Quick" in "Quic" il protocollo, e ciò non va bene.
+RICERCA PER DATA
+- La ricerca per data per PyLucene è stata implementata in post-processing; cioè dopo la ricerca applicata da pylucene.
+
+Whoosh
+- [x] - Query Principale (Supportata)
+- [x] - Ricerca per Termini (Supportata)
+- [x] - Ricerca per Stato (Supportata)
+- [x] - Ricerca per Data (Supportata)
+
+PyLucene
+- [x] - Query Principale (Supportata)
+- [x] - Ricerca per Termini (Supportata)
+- [x] - Ricerca per Stato (Supportata)
+- [x] - Ricerca per Data (Supportata)
+
+Postgress
+- [ ] - Query Principale (Non Ancora Supportata)
+- [ ] - Ricerca per Termini (Non Ancora Supportata)
+- [ ] - Ricerca per Stato (Non Ancora Supportata)
+- [ ] - Ricerca per Data (Non Ancora Supportata)
+
+### [da_fare] CREARE LO SCRIPT SEPARATO PER GESTIONE DI PYLUCENE [OPPURE] RINUNCIARE AGLI SCRIPT DI AVVIO E PACCHETTIZZARE L'APP PER L'INSTALLAZIONE
+
+- [ ] Bisogna creare uno script che consenta di utilizzare da linea di comando pylucene perchè non è possibile utilizzarlo nell'ambiente virtuale su cui va il webserver purtroppo. Si potrebbe cercare di installare pylucene all'interno del venv ma è praticamente impossibile e richiederebbe troppo tempo. Pylucene verrà gestito interamente da uno script specializzato realizzato "ad-hok", possibilmente utilizzando ArgumentParser.
+
+#### OPPURE
+
+- [ ] Invece di utilizzare uno script alternativo con l'unico scopo di permettere l'utilizzazione di PyLucene, possiamo invece pacchettizzare e permettere l'installazione del programma come mostratoci dal prof in Complementi di Programmazione. Sarà compito della prof gestire il venv in cui è installata l'applicazione. Questo non vuol dire che dovremo cancellare gli script "graboid.py" e "starter.py"; restano ottimi per il testare parti di programma.
+
+### [da_fare] STABILIRE UNA FASE COMUNE DI PREPROCESSING ED IMPLEMENTARLA
+
+UNICA PIPELINE DI PREPROCESSING vs UTILIZZARE QUELLE FORNITE DAI SE.
+- [ ] Stabilire una fase di preprocessing comune per tutti i search engine e testare Stemmer, Lemmatizer, Parsers, Taggers, Rimozione Stopwords, ecc... Questa fase comune a tutti i search engine potrebbe essere implementata direttamente dal web server. Oppure utilizzando la pipeline di preprocessing fornita da ciascun search engine.
+
+SPELLING CORRECTION & SYNONIMS
+- [ ] - E' meglio che togliamo la SPELLING CORRECTION e i SINONIMI (Espansione delle query con termini sinonimi)? Non mi sembra molto difficile da implementare e inoltre l'implementazione sarebbe comune a tutti e tre i search engine... per esempio utilizzando la libreria NLTK. Ma conviene farlo?
+   - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
+   - [ ] - Spelling Correction & Synonims (Non Ancora Supportata)
+
+### OBIETTIVO
+### VOGLIO ARRIVARE A FINE FEBBRAIO COL DOVER FARE SOLAMENTE (1. MODELLI DI RANKING, 2.a FUNZIONI PER VALUTARE I MODELLI DI RANKING, 2.b GRAFICI, 3. DOCUMENTAZIONE, 4. PRESENTAZIONE)
+   - Questo implica che il banchmark deve essere già ottenuto, e di conseguenza anche la scelta delle query.
 
 ### [da_fare] FINIRE DI SCEGLIERE LE QUERY + OTTENERE BENCHMARK
 
+- [ ] Molte delle query non sono corrette e non vanno bene, vanno rimosse, sostituite e aggiustate.
 - [ ] Scegliere le query e farle passare per lo script automatico che trova i documenti più rilevanti e ne restituisce la rilevanza.
 
 POSSIBILI QUERY
