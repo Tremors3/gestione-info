@@ -2,9 +2,9 @@ import pg8000
 
 # Connect to PostgreSQL
 conn = pg8000.connect(
-    database="FruitDatabase",
+    database="testing",
     user="postgres",
-    password="admin",
+    password="postgres",
     host="127.0.0.1",
     port=5432
 )
@@ -13,7 +13,11 @@ conn = pg8000.connect(
 cur = conn.cursor()
 
 # Execute a query
-cur.execute("SELECT * FROM fruitsdatabase")
+cur.execute("CREATE TABLE testing_table (id SERIAL PRIMARY KEY, name VARCHAR(50) NOT NULL);")
+
+cur.execute("INSERT INTO testing_table (name) VALUES ('testing')")
+
+cur.execute("SELECT * FROM testing_table")
 
 # Fetch and print the results
 rows = cur.fetchall()

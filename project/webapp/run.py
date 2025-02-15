@@ -9,7 +9,8 @@ def start():
     app.run(
         app.config['NETWORK_SETTINGS']['IP_ADDRESS'],
         app.config['NETWORK_SETTINGS']['PORT_NUMBER'],
-        debug=app.config['MODE_SETTINGS']['ENABLE_DEBUG']
+        debug=app.config['MODE_SETTINGS']['ENABLE_DEBUG'],
+        use_reloader=app.config['MODE_SETTINGS']['ENABLE_RELOADER']
     )
     
 if __name__ == '__main__':

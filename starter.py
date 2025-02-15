@@ -1,6 +1,7 @@
 
 # #################################################################################################### #
 
+import re
 import sys
 import time
 from typing import Callable, Any
@@ -8,6 +9,7 @@ from typing import Callable, Any
 # #################################################################################################### #
 
 # Importazioni dei moduli del progetto
+from project.docker.myDocker import DockerPG
 from project.webapp.run import start as start_web_server
 from project.searchengine.myParser.myParser import start as start_parser
 from project.searchengine.myBenchMark.createBenchMark import start as start_benchmark
@@ -16,8 +18,8 @@ from project.searchengine.myLogger.myLogger import bcolors, logging
 # #################################################################################################### #
 
 from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
-#from project.searchengine.myPostgress.myPostgress import MyPostgress
-#from project.searchengine.myPylucene.myPylucene import MyPyLucene
+from project.searchengine.myPostgres.myPostgres import MyPostgres
+#from project.searchengine.myPylucene.myPylucene import MyPylucene
 
 # #################################################################################################### #
 
@@ -49,7 +51,7 @@ class Application:
     
     def dispatcher(self, flag: str, *args) -> None:
         """Chiama la callback associata alla flag passata come argomento."""
-        method = flag.replace("--", "").strip()
+        method = re.sub(r"^--", "", flag).replace("-", "_").strip()
         callback = getattr(self, method, None)
         if callback: callback(*args)
         return callback
@@ -61,15 +63,31 @@ class Application:
 
     # #################################################################################################### #
     
+    # INIZIALIZZAZIONE
+    
     def init(self) -> None:
         """Inizializza l'ambiente di sviluppo."""
         print(f"{bcolors.GREEN}Inizializzazione dell'applicazione ...{bcolors.RESET}")
-        
+
         # Costruzione del Dataset
         self.parser()
-        
+
         # Creazione degli Indici
         self.indexes()
+
+    # DOCKER
+
+    def docker(self) -> None:
+        """Costruzione ed avvio del container docker per postgres."""
+        print(f"{bcolors.GREEN}Creazione container docker ...{bcolors.RESET}")
+        DockerPG().start()
+
+    def docker_remove(self) -> None:
+        """Costruzione ed avvio del container docker per postgres."""
+        print(f"{bcolors.GREEN}Cancellazione container docker ...{bcolors.RESET}")
+        DockerPG().delete()
+
+    # COMPONENTI
 
     @howMuchTimeDoesItTake
     def parser(self) -> None:
@@ -80,16 +98,29 @@ class Application:
     @howMuchTimeDoesItTake
     def indexes(self) -> None:
         """Costruisce gli Indici Invertiti."""
-        print(f"{bcolors.GREEN}Costruzione degli Indici Invertiti ...{bcolors.RESET}")
-        MyWhoosh.create_indexes()
-        #MyPostgress.create_indexes()
+        print(f"{bcolors.GREEN}Costruzione degli Inverted Index ...{bcolors.RESET}")
+        
+        # Whoosh Indexes
+        #MyWhoosh.create_indexes()
+        
+        # PyLucene Indexes
         #MyPylucene.create_indexes()
+        
+        # Postgres Indexes
+        docker_pg = DockerPG()
+        docker_pg.start() # Apertura container
+        MyPostgres.create_indexes()
+        docker_pg.stop() # Chiusura container
     
     def web(self) -> None:
         """Avvia il web server del progetto."""
         print(f"{bcolors.GREEN}Avvio del web server ...{bcolors.RESET}")
-        start_web_server()
         
+        docker_pg = DockerPG()
+        docker_pg.start() # Apertura container
+        start_web_server()
+        docker_pg.stop() # Chiusura container
+    
     def benchmark(self) -> None:
         """Avvia lo script che crea il benchmark."""
         print(f"{bcolors.GREEN}Creazione del Benchmark ...{bcolors.RESET}")

@@ -69,7 +69,10 @@ class Graboid:
         exclusive_group.add_argument('-p', '--parser', action='store_true', help='Esegue il parser.')
         exclusive_group.add_argument('-w', '--web', action='store_true', help='Avvia il web server.')
         exclusive_group.add_argument('-b', '--benchmark', action='store_true', help='Crea i benchmark.')
-        exclusive_group.add_argument('-x', '--indexes', action='store_true', help='Costruisce gli Indici Invertiti.')
+        exclusive_group.add_argument('-x', '--indexes', action='store_true', help='Costruisce gli Inverted Index.')
+        # Docker
+        exclusive_group.add_argument('-d', '--docker', action='store_true', help='Avvia il container docker di Postgres.')
+        exclusive_group.add_argument('-dr', '--docker-remove', action='store_true', help='Rimuove il container docker di Postgres.')
 
     # #################################################################################################### #
 
