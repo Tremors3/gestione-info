@@ -1,19 +1,22 @@
 import logging
 
-# Classe per i colori
+# Classe per colori
 class bcolors:
-    GREEN = '\033[32m'  # Green
-    RESET = '\033[0m'  # Reset color
-    DEBUG = '\033[34m'  # Blue
-    INFO = '\033[37m'  # White
-    WARNING = '\033[33m'  # Yellow
-    ERROR = '\033[31m'  # Red
-    CRITICAL = '\033[91m'  # Bright Red
+    GREEN = '\033[32m'      # Green
+    RESET = '\033[0m'       # Reset color
+    DEBUG = '\033[34m'      # Blue
+    INFO = '\033[37m'       # White
+    WARNING = '\033[33m'    # Yellow
+    ERROR = '\033[31m'      # Red
+    CRITICAL = '\033[91m'   # Bright Red
 
-# Formatter personalizzato per aggiungere i colori
+# Formatter personalizzato per aggiungere colori
 class CustomFormatter(logging.Formatter):
+    
     def __init__(self):
+        
         super().__init__()
+        
         self.FORMATS = {
             logging.DEBUG   : bcolors.DEBUG    + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
             logging.INFO    : bcolors.INFO     + "%(asctime)s - %(levelname)s - %(message)s" + bcolors.RESET,
@@ -29,13 +32,16 @@ class CustomFormatter(logging.Formatter):
 
 # Configurazione del logger
 logger = logging.getLogger("colored_logger")
-logger.setLevel(logging.DEBUG)  # Imposta il livello minimo di log
 
-# Aggiungi un handler
+# Impostazione livello minimo
+logger.setLevel(logging.DEBUG)
+
+# Configurazione dell'handler
 handler = logging.StreamHandler()
 handler.setLevel(logging.DEBUG)
 handler.setFormatter(CustomFormatter())
 
+# Aggiunta dell'handler al logger
 logger.addHandler(handler)
 
 if __name__ == '__main__':

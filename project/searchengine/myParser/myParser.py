@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 import concurrent.futures
 
 # Import del logger personalizzato (colori)
-from project.searchengine.myLogger.myLogger import logger as logging
+from project.utils.logger import logger as logging, bcolors
 
 # Per barre di caricamento
 from alive_progress import alive_bar

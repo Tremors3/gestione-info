@@ -11,7 +11,7 @@ _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|
 
 # Importazione di moduli del progetto
 from project.utils.metaclasses import Singleton
-#from project.searchengine.myLogger.myLogger import bcolors, logging
+from project.utils.logger import logger as logging, bcolors
 
 # ################################################## #
 

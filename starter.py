@@ -11,9 +11,9 @@ from typing import Callable, Any
 # Importazioni dei moduli del progetto
 from project.docker.myDocker import DockerPG
 from project.webapp.run import start as start_web_server
+from project.utils.logger import logger as logging, bcolors
 from project.searchengine.myParser.myParser import start as start_parser
-from project.searchengine.myBenchMark.createBenchMark import start as start_benchmark
-from project.searchengine.myLogger.myLogger import bcolors, logging
+from project.searchengine.myBenchmark.createBenchmark import start as start_benchmark
 
 # #################################################################################################### #
 
@@ -59,7 +59,7 @@ class Application:
     def start(self):
         """ Entry point dell'applicazione """
         if len(self.args) and not self.dispatcher(self.args[0]):
-            logging.error(f"La flag '{self.args[0]}' non è supportata.")
+            print(f"La flag '{self.args[0]}' non è supportata.")
 
     # #################################################################################################### #
     

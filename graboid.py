@@ -11,7 +11,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # #################################################################################################### #
 
-from project.searchengine.myLogger.myLogger import logger as logging, bcolors
+from project.utils.logger import logger as logging, bcolors
 
 # #################################################################################################### #
 

@@ -10,7 +10,7 @@ from whoosh.query import Wildcard, DateRange, Term, Phrase, And, Or, Not
 from whoosh import index
 
 # Importazione del logger personalizzato del progetto
-from project.searchengine.myLogger.myLogger import logger as logging, bcolors
+from project.utils.logger import logger as logging, bcolors
 
 # ################################################## #
 
