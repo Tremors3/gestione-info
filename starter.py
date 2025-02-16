@@ -101,7 +101,7 @@ class Application:
         print(f"{bcolors.GREEN}Costruzione degli Inverted Index ...{bcolors.RESET}")
         
         # Whoosh Indexes
-        #MyWhoosh.create_indexes()
+        MyWhoosh.create_indexes()
         
         # PyLucene Indexes
         #MyPylucene.create_indexes()

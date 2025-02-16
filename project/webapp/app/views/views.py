@@ -10,7 +10,7 @@ from datetime import date, timedelta, datetime
 # Our Imports
 from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
 #from project.searchengine.myPylucene.MyPylucene import MyPyLucene
-#from project.searchengine.myPostgress.myPostgress import myPostgress
+#from project.searchengine.myPostgres.myPostgres import MyPostgres
 
 # #################################################################################################### #
 

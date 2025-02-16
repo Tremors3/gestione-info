@@ -38,15 +38,18 @@ class MyPostgres(metaclass=Singleton):
             reconnect_interval:int = 0.5):
         """Inizializza la connessione al database con i parametri di configurazione."""
         
+        # Database Parameters
         self.db_password = db_password
         self.db_user = db_user
         self.db_name = db_name
         self.address = address
         self.port = port
 
+        # Reconnection Parameters
         self.reconnect_attempts = reconnect_attempts
         self.reconnect_interval = reconnect_interval
         
+        # Connecting to the database
         self.conn: Optional[pg8000.Connection] = None
         self._connect()
     
@@ -55,12 +58,12 @@ class MyPostgres(metaclass=Singleton):
     def _connect(self):
         """Cerca di instaurare una connessione al database."""
         
-        attempt = 0
+        attempt = 0 # Indice del tentativo
         
         while attempt < self.reconnect_attempts:
         
             try:
-        
+                
                 self.conn = pg8000.connect(
                     database=self.db_name,
                     user=self.db_user,
@@ -159,7 +162,7 @@ class MyPostgres(metaclass=Singleton):
         with open(__class__.DATASET_FILE_PATH, mode="r", encoding='utf-8') as f:
             return json.load(f)
 
-    def _populate_table(self, block_size: int = 500):
+    def _populate_table(self, block_size: int = 1000): # 1 <= bs <= 1000
         """Popola la tabella con il dataset."""
         cursor = self._get_cursor()
         documents = __class__.__get_documents()
@@ -223,7 +226,7 @@ class MyPostgres(metaclass=Singleton):
                         abstract=abstract,
                         keywords=keywords,
                         
-                        # TSV Types
+                        # TSVector Types
                         title_tsv=title_tsv,
                         abstract_tsv=abstract_tsv,
                         keywords_tsv=keywords_tsv,
@@ -279,36 +282,208 @@ class MyPostgres(metaclass=Singleton):
         self._populate_table()
         self._construct_indexes()
     
-    def process(self, query: dict):
+    @staticmethod
+    def _build_query(data: dict):
+        
+        definitions, conditions, statuses, ranks = [], [], [], []
+    
+        ############################################################
+        ## QUERY PRINCIPALE - RICERCA SUL CONTENUTO DEL DOCUMENTO ##
+        ############################################################
+        
+        # Inizializza la base della query
+        ricerca_principale = data.get("ricerca_principale")
+        
+        # Crea la definizione, il rank, e la condizione per la query principale
+        definitions.append(f"LATERAL plainto_tsquery('english', '{ricerca_principale}') AS main")
+        ranks.append(f"ts_rank_cd(content_tsv, main)")
+        conditions.append(f"main @@ content_tsv")
+        
+        #######################################################################
+        ## RICERCA SU PIU' CAMPI - CREAZIONE DI UNA QUERY BOOLEANA COMBINATA ##
+        #######################################################################
+        
+        # Per ogni termine secondario...
+        for idx, term in enumerate(data["terms"], start=1):
+            operator = term["operator"]
+            term_value = term["term"]
+            field = term["field"]
+
+            # Crea la definizione
+            definitions.append(f"LATERAL plainto_tsquery('english', '{term_value}') AS term{idx}")
+            
+            # Chiavi e nomi dei campi
+            field_mapping = {
+                "TITLE": "title",
+                "DESCRIPTION": "abstract",
+                "KEYWORDS": "keywords"
+            }; field = field_mapping[field]
+            
+            # Aggiungi il calcolo del ranking
+            ranks.append(f"ts_rank_cd({field}_tsv, term{idx})")
+
+            # Aggiungi la condizione appropriata
+            if operator in ("AND", "NOT"):
+                conditions.append(f"{operator} term{idx} @@ {field}_tsv".removeprefix("AND "))
+
+        # Unisci tutte le condizioni, i ranking 
+        # calcolati e le definizioni dei remini
+        where_clause = " AND ".join(conditions)
+        select_clause = ", ".join(definitions)
+        rank_clause = " + ".join(ranks)
+        
+        ###########################################################################
+        ## RICERCA PER STATO - CREAZIONE DI UNA QUERY PER LO STATO DEI DOCUMENTI ##
+        ###########################################################################
+
+        ## Pattern Matching documentation in Postgres
+        # https://www.postgresql.org/docs/current/functions-matching.html
+
+        # Verifica se i parametri per la ricerca dello stato sono abilitati
+        run_status_search = any(data[key] for key in [
+            "standard_track", "best_current_practice", "informational", "experimental", "historic"
+        ])
+
+        # Se sono presenti parametri di stato, esegui la ricerca
+        if run_status_search:
+
+            # Mappatura tra i parametri di stato e i valori di stato
+            status_mapping = {
+                "best_current_practice": "Best Current Practice",
+                "informational": "Informational",
+                "experimental": "Experimental",
+                "historic": "Historic",
+            }
+
+            # Verifica e aggiungi lo stato specifico per "standard_track"
+            if data["standard_track"]:
+                
+                # Estrai il valore specificato per "standard_track" e convertilo in maiuscolo
+                value = data["standard_track_value"].strip().upper()
+                
+                # Mappatura dei valori dello "standard_track"
+                standard_track_mapping = {
+                    "PROPOSED_STANDARD": "Proposed Standard",
+                    "DRAFT_STANDARD": "Draft Standard",
+                    "INTERNET_STANDARD": "Internet Standard",
+                }
+                
+                # Se il valore specificato esiste nella mappatura
+                if value in standard_track_mapping:
+                    # Aggiungi la query per lo stato
+                    standard_track = standard_track_mapping[value].lower()
+                    statuses.append(f"status ILIKE \'%{standard_track}%\'")
+
+            # Aggiungi gli altri stati mappati ("Best Current Practice", "Informational", "Experimental", "Historic")
+            for key, status in status_mapping.items():
+                # Verifica che lo stato sia "checked"
+                if data[key]:
+                    # Aggiungi la query per lo stato
+                    statuses.append(f"status ILIKE \'%{status}%\'")
+        
+        statuses_clause = " AND ({statuses})".format(statuses=" OR ".join(statuses)) if statuses else ""
+        
+        ############################################################################
+        ## RICERCA PER DATA - CREAZIONE DI UNA QUERY PER IL FILTRAGGIO SULLE DATE ##
+        ############################################################################
+        
+        ## Date filtering documentation for Postgres
+        # https://www.postgresql.org/docs/current/functions-comparison.html#FUNCTIONS-COMPARISON-OP-TABLE
+        # https://www.postgresql.org/docs/current/functions-formatting.html
+
+        date_query = ""
+        
+        # Opzione di filtraggio selezionata
+        date_filter = data.get("dates", "").strip().upper()
+
+        # Se l'opzione selezionata è "ALL_DATES", non filtriamo per data
+        if date_filter != "ALL_DATES":
+            
+            # Filtro per un anno specifico (SPECIFIC_YEAR)
+            if date_filter == "SPECIFIC_YEAR" and (data["date_year"]):
+                
+                specific_year_int = data.get("date_year")
+
+                if specific_year_int:
+                    date_query = f"EXTRACT(YEAR FROM date) IS NOT DISTINCT FROM {specific_year_int}"
+
+            # Filtro per intervallo di date (DATE_RANGE)
+            elif date_filter == "DATE_RANGE" and (data["date_from_date"] and data["date_to_date"]):
+                
+                from_date_str = data.get("date_from_date", "").strip()
+                to_date_str = data.get("date_to_date", "").strip()
+
+                if from_date_str and to_date_str:
+                    date_query = f"date BETWEEN to_date('{from_date_str}', 'YYYY-MM') AND to_date('{to_date_str}', 'YYYY-MM')"
+    
+        date_clause = f" AND ({date_query})" if date_query else ""
+        
+        ###########################################################################
+        ## COSTRUZIONE DELLA QUERY FINALE - COMBINAZIONE DELLE QUERY INDIVIDUALI ##
+        ###########################################################################
+        
+        # Crea la query che sarà presentata a postgres, includendo la clausola per il ranking, le definizioni e le condizioni
+        base_query = "SELECT id, {rank_clause} AS rank FROM dataset, {select_clause} WHERE {where_clause}{statuses_clause}{date_clause} ORDER BY rank DESC LIMIT {size}"
+        final_query = base_query.format(rank_clause=rank_clause, select_clause=select_clause, where_clause=where_clause, statuses_clause=statuses_clause, date_clause=date_clause, size=data["size"])
+        
+        return final_query
+    
+    def process(self, data: dict):
+        
+        # Getting the cursor
         cursor = self._get_cursor()
         
-        results = cursor.execute(
-            "SELECT id, ts_rank_cd(content_tsv, query) AS rank FROM dataset, to_tsquery('QUIC & Protocol') query WHERE query @@ content_tsv ORDER BY rank DESC LIMIT 10;"
-        )
+        # Formatting the query
+        final_query = __class__._build_query(data)
         
+        # Query execution
+        results = cursor.execute(final_query)
+        
+        # Results retrueval
         return results.fetchall()
 
     # #################################################################################################### #
 
-def test_indexes_creation(postgres):
-    postgres.create_indexes()
+if __name__ == "__main__":
 
-def test_query_execution(postgres):
-    results = postgres.process({
+    ## FORMATTED QUERY EXAMPLE:
+    """
+    SELECT id,
+        ts_rank_cd(content_tsv, main) + ts_rank_cd(title_tsv, term1) + ts_rank_cd(abstract_tsv, term2) + ts_rank_cd(keywords_tsv, term3) AS rank
+    FROM dataset,
+        LATERAL plainto_tsquery('english', 'QUIC Protocol') AS main,
+        LATERAL plainto_tsquery('english', 'QUIC') AS term1,
+        LATERAL plainto_tsquery('english', 'document') AS term2,
+        LATERAL plainto_tsquery('english', 'network') AS term3
+    WHERE main @@ content_tsv
+        AND term1 @@ title_tsv
+        AND term2 @@ abstract_tsv
+        AND NOT term3 @@ keywords_tsv
+        AND (status ILIKE '%proposed standard%'
+            OR status ILIKE '%Best Current Practice%'
+            OR status ILIKE '%Informational%'
+            OR status ILIKE '%Experimental%'
+            OR status ILIKE '%Historic%')
+        AND (EXTRACT(YEAR FROM date) IS NOT DISTINCT FROM 2021)
+    ORDER BY rank DESC
+    LIMIT 25
+    """
+    
+    data = {
         "ricerca_principale":"QUIC Protocol",
         "spelling_correction":False,
         "synonims":False,
-        "search_engine":"PYLUCENE",
+        "search_engine":"POSTGRES",
         "standard_track":True,
         "best_current_practice":False,
         "informational":False,
         "experimental":False,
         "historic":False,
-        "standard_track_value":"PROPOSED_STANDARD",
+        "standard_track_value":"PROPOSED_STANDARD", # PROPOSED_STANDARD | DRAFT_STANDARD | INTERNET_STANDARD
         "date_year":"2021",
         "date_from_date":"2021-04",
         "date_to_date":"2021-06",
-        "dates":"DATE_RANGE",
+        "dates":"DATE_RANGE", # SPECIFIC_YEAR | DATE_RANGE
         "terms":[
             {
                 "operator":"AND",
@@ -328,12 +503,19 @@ def test_query_execution(postgres):
         ],
         "abstracts":"True",
         "size":25
-    })
+    }
     
-    for doc in results: print(doc, '\n')
+    def test_indexes_creation(postgres):
+        postgres.create_indexes()
 
-if __name__ == "__main__":
+    def test_query_execution(postgres, data):
+        results = postgres.process(data)
+        for doc in results: print(doc, '\n')
+
+    def test_query_construction(data):
+        MyPostgres._build_query(data)
+    
     postgres = MyPostgres()
     #test_indexes_creation(postgres)
-    test_query_execution(postgres)
-    pass
+    #test_query_execution(postgres, data)
+    test_query_construction(data)
