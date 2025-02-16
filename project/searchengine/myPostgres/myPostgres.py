@@ -24,8 +24,8 @@ class MyPostgres(metaclass=Singleton):
     # INDEX & DATASET DIRECTORY PATHS
     DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
     
-    # #################################################################################################### #
-    
+    # ################################################## #
+
     def __init__(self, 
             db_user:str="postgres", 
             db_password:str="postgres", 
@@ -34,7 +34,7 @@ class MyPostgres(metaclass=Singleton):
             port:int=55432,
             reconnect_attempts:int = 5,
             reconnect_interval:int = 0.5):
-        """Inizializza la connessione al database con i parametri di configurazione."""
+        """Inizializza la connessione al database."""
         
         # Database Parameters
         self.db_password = db_password
@@ -62,6 +62,7 @@ class MyPostgres(metaclass=Singleton):
         
             try:
                 
+                # Tentativo di connessione
                 self.conn = pg8000.connect(
                     database=self.db_name,
                     user=self.db_user,
@@ -107,11 +108,16 @@ class MyPostgres(metaclass=Singleton):
     
     def _initialize_table(self):
         """Crea la tabella per il dataset sovrascrivendo quella esistente"""
+        
+        # Ottenimento del cursore
         cursor = self._get_cursor()
         
         try:
             
+            # Drop della tabella se esiste
             cursor.execute('DROP TABLE IF EXISTS dataset;')
+            
+            # La tabella viene ricreata
             cursor.execute("""
                 CREATE TABLE dataset (
                     id          integer PRIMARY KEY,
@@ -130,11 +136,14 @@ class MyPostgres(metaclass=Singleton):
                     content_tsv  tsvector
                 );
             """)
-            self.conn.commit()
-            print(f"Tabella creata con successo.")
             
+            # Commit
+            self.conn.commit()
+
+            print("Creazione della tabella completata.")
+
         except Exception as e:
-            self.conn.rollback()
+            self.conn.rollback() # Rollback
             print(f"Errore durante la creazione della tabella: {e}")
             raise
     
@@ -148,23 +157,31 @@ class MyPostgres(metaclass=Singleton):
     
     @staticmethod
     def __array_to_string(arr) -> str:
-        """Converte una lista compatibile col tipo ARRAY di PostgreSQL."""
+        """Converte una lista python in ARRAY di PostgreSQL."""
         return "ARRAY[E'" + "',E'".join(map(lambda x: __class__.__sanitize(x), arr)) + "']"
     
     @staticmethod
     def __get_documents():
         """Funzione che restituisce il contenuto del dataset."""
+        
+        # Controllo se il file del dataset esiste
         if not os.path.isfile(__class__.DATASET_FILE_PATH):
             raise FileNotFoundError(f"Il file del dataset non è stato trovato al seguente percorso: \'{__class__.DATASET_FILE_PATH}\'.")
         
+        # Apertura e lettura del dataset da file JSON e restituzione
         with open(__class__.DATASET_FILE_PATH, mode="r", encoding='utf-8') as f:
             return json.load(f)
 
     def _populate_table(self, block_size: int = 1000): # 1 <= bs <= 1000
-        """Popola la tabella con il dataset."""
+        """Funzione che popola la tabella con il dataset."""
+        
+        # Ottenimento del cursore
         cursor = self._get_cursor()
+        
+        # Otteniemento dei documenti
         documents = __class__.__get_documents()
         
+        # Template della query di inserimento
         insert_query = """
             INSERT INTO dataset (
                 id,
@@ -186,15 +203,17 @@ class MyPostgres(metaclass=Singleton):
 
         try:
             
+            # Definizione della barra di caricamento che viene visualizzata durante l'esecuzione
             with alive_bar(len(documents), title="Popolamento del database di PostgreSQL", spinner="waves", bar=_bar) as bar:
                 
-                insert_values = []
+                insert_values = [] # Ultimi "block_size" elementi
                 
+                # Ogni documento viene memorizzato nel database
                 for idx, doc in enumerate(documents, start=1):
                     
-                    bar() # Progressing the bar
+                    bar() # Avanza la barra
                     
-                    # Stored Types
+                    # Campi memorizzati
                     id_ = doc["Number"]
                     files = __class__.__array_to_string(doc["Files"])
                     title = __class__.__sanitize(doc["Title"])
@@ -205,7 +224,7 @@ class MyPostgres(metaclass=Singleton):
                     abstract = __class__.__sanitize(doc["Abstract"])
                     keywords = __class__.__array_to_string(doc["Keywords"])
                     
-                    # TSVector Types
+                    # Campi indicizzati
                     title_tsv = title
                     abstract_tsv = abstract
                     content_tsv = __class__.__sanitize(doc["Content"])
@@ -213,7 +232,7 @@ class MyPostgres(metaclass=Singleton):
                     
                     insert_values.append("""('{id}', {files}, E'{title}', {authors}, to_date('{date}', 'YYYY-MM'), E'{more_info}', '{status}', E'{abstract}', {keywords}, to_tsvector('english', E'{title_tsv}'), to_tsvector('english', E'{abstract_tsv}'), to_tsvector('english', E'{keywords_tsv}'), to_tsvector('english', E'{content_tsv}'))""".format(
                         
-                        # Stored Types
+                        # Campi memorizzati
                         id=id_,
                         files=files,
                         title=title,
@@ -224,33 +243,38 @@ class MyPostgres(metaclass=Singleton):
                         abstract=abstract,
                         keywords=keywords,
                         
-                        # TSVector Types
+                        # Campi indicizzati (TSector)
                         title_tsv=title_tsv,
                         abstract_tsv=abstract_tsv,
                         keywords_tsv=keywords_tsv,
                         content_tsv=content_tsv
                     ))
                     
-                    if (idx % block_size == 0) or (idx >= len(documents)): # default block size is 500
+                    # Operazione INSERT eseguita ogni block_size elementi (per motivi di efficienza).
+                    if (idx % block_size == 0) or (idx >= len(documents)): # Default block size 1000
                         
+                        # Esecuzione dell'inserizione
                         cursor.execute(insert_query.format(
                             values=', '.join(insert_values)
                         ))
                         
-                        self.conn.commit()
-                        insert_values = []
+                        self.conn.commit() # Commit
+                        insert_values = [] # Pulizia elementi inseriti
                 
                 print("Popolamento del database completato.")
                 
         except Exception as e:
-            self.conn.rollback()
+            self.conn.rollback() # Rollback
             print(f"Errore durante il popolamento del database: {e}")
             raise
     
     def _construct_indexes(self):
         """Crea gli indici sui campi specificati."""
+        
+        # Ottenimento del cursore
         cursor = self._get_cursor()
         
+        # Lista degli indici
         indexes = [
             "CREATE INDEX title_idx ON dataset USING GIN (title_tsv);",
             "CREATE INDEX abstract_idx ON dataset USING GIN (abstract_tsv);",
@@ -260,11 +284,13 @@ class MyPostgres(metaclass=Singleton):
         
         try:
             
+            # Creazione di ciascun indice
             for index in indexes:
                 cursor.execute(index)
                 print(f"Indice creato: {index}")
             
-            self.conn.commit()
+            self.conn.commit() # Commit
+            
             print(f"Tutti gli indici sono stati creati correttamente.")
             
         except Exception as e:
@@ -282,6 +308,7 @@ class MyPostgres(metaclass=Singleton):
     
     @staticmethod
     def _build_query(data: dict):
+        """Costruzione della query da presentare a PostgreSQL."""
         
         definitions, conditions, statuses, ranks = [], [], [], []
     
@@ -289,7 +316,7 @@ class MyPostgres(metaclass=Singleton):
         ## QUERY PRINCIPALE - RICERCA SUL CONTENUTO DEL DOCUMENTO ##
         ############################################################
         
-        # Inizializza la base della query
+        # Otteniamo il valore della ricerca principale
         ricerca_principale = data.get("ricerca_principale")
         
         # Crea la definizione, il rank, e la condizione per la query principale
@@ -301,8 +328,10 @@ class MyPostgres(metaclass=Singleton):
         ## RICERCA SU PIU' CAMPI - CREAZIONE DI UNA QUERY BOOLEANA COMBINATA ##
         #######################################################################
         
-        # Per ogni termine secondario...
+        # Per ciascun termine secondario
         for idx, term in enumerate(data["terms"], start=1):
+            
+            # Recupero operatore e campo
             operator = term["operator"]
             term_value = term["term"]
             field = term["field"]
@@ -310,7 +339,7 @@ class MyPostgres(metaclass=Singleton):
             # Crea la definizione
             definitions.append(f"LATERAL plainto_tsquery('english', '{term_value}') AS term{idx}")
             
-            # Chiavi e nomi dei campi
+            # Mappatura nome del campo
             field_mapping = {
                 "TITLE": "title",
                 "DESCRIPTION": "abstract",
@@ -342,7 +371,7 @@ class MyPostgres(metaclass=Singleton):
             "standard_track", "best_current_practice", "informational", "experimental", "historic"
         ])
 
-        # Se sono presenti parametri di stato, esegui la ricerca
+        # Se ci sono parametri di stato
         if run_status_search:
 
             # Mappatura tra i parametri di stato e i valori di stato
@@ -353,10 +382,10 @@ class MyPostgres(metaclass=Singleton):
                 "historic": "Historic",
             }
 
-            # Verifica e aggiungi lo stato specifico per "standard_track"
+            # Aggiungi lo stato specifico per "standard_track"
             if data["standard_track"]:
                 
-                # Estrai il valore specificato per "standard_track" e convertilo in maiuscolo
+                # Estrai il valore specificato per "standard_track"
                 value = data["standard_track_value"].strip().upper()
                 
                 # Mappatura dei valori dello "standard_track"
@@ -372,9 +401,10 @@ class MyPostgres(metaclass=Singleton):
                     standard_track = standard_track_mapping[value].lower()
                     statuses.append(f"status ILIKE \'%{standard_track}%\'")
 
-            # Aggiungi gli altri stati mappati ("Best Current Practice", "Informational", "Experimental", "Historic")
+            # Aggiungi gli altri stati mappati
+            # ("Best Current Practice", "Informational", "Experimental", "Historic")
             for key, status in status_mapping.items():
-                # Verifica che lo stato sia "checked"
+                # Verifica che lo stato sia stato selezionato
                 if data[key]:
                     # Aggiungi la query per lo stato
                     statuses.append(f"status ILIKE \'%{status}%\'")
@@ -389,29 +419,29 @@ class MyPostgres(metaclass=Singleton):
         # https://www.postgresql.org/docs/current/functions-comparison.html#FUNCTIONS-COMPARISON-OP-TABLE
         # https://www.postgresql.org/docs/current/functions-formatting.html
 
-        date_query = ""
-        
-        # Opzione di filtraggio selezionata
-        date_filter = data.get("dates", "").strip().upper()
+        date_query = "" # Valore di default per la date query
+        date_filter = data.get("dates", "").strip().upper() # Opzione selezionata
 
         # Se l'opzione selezionata è "ALL_DATES", non filtriamo per data
         if date_filter != "ALL_DATES":
             
-            # Filtro per un anno specifico (SPECIFIC_YEAR)
+            # Filtro per anno specifico (SPECIFIC_YEAR)
             if date_filter == "SPECIFIC_YEAR" and (data["date_year"]):
                 
                 specific_year_int = data.get("date_year")
 
                 if specific_year_int:
+                    # Crea la query per l'anno specifico
                     date_query = f"EXTRACT(YEAR FROM date) IS NOT DISTINCT FROM {specific_year_int}"
 
-            # Filtro per intervallo di date (DATE_RANGE)
+            # Filtro per intervallo tra date (DATE_RANGE)
             elif date_filter == "DATE_RANGE" and (data["date_from_date"] and data["date_to_date"]):
                 
-                from_date_str = data.get("date_from_date", "").strip()
-                to_date_str = data.get("date_to_date", "").strip()
+                from_date_str = data.get("date_from_date")
+                to_date_str = data.get("date_to_date")
 
                 if from_date_str and to_date_str:
+                    # Crea la query per l'intervallo di date
                     date_query = f"date BETWEEN to_date('{from_date_str}', 'YYYY-MM') AND to_date('{to_date_str}', 'YYYY-MM')"
     
         date_clause = f" AND ({date_query})" if date_query else ""
@@ -420,27 +450,28 @@ class MyPostgres(metaclass=Singleton):
         ## COSTRUZIONE DELLA QUERY FINALE - COMBINAZIONE DELLE QUERY INDIVIDUALI ##
         ###########################################################################
         
-        # Fields to retrive
+        # Stringa contenente i campi da ritirare
         select_clause = "id AS number, abstract, authors, to_char(date, 'YYYY-MM') AS date, files, keywords, more_info, status, title"
         
-        # Crea la query che sarà presentata a postgres, includendo la clausola per il ranking, le definizioni e le condizioni
+        # Crea la query che sarà presentata a postgres
         base_query = "SELECT json_agg(d) documents FROM ( SELECT {select_clause}, {rank_clause} AS rank FROM dataset, {from_clause} WHERE {where_clause}{statuses_clause}{date_clause} ORDER BY rank DESC LIMIT {size} ) d;"
         final_query = base_query.format(select_clause=select_clause, rank_clause=rank_clause, from_clause=from_clause, where_clause=where_clause, statuses_clause=statuses_clause, date_clause=date_clause, size=data["size"])
         
+        # Restituzione
         return final_query
 
     def process(self, data: dict):
         
-        # Getting the cursor
+        # Ottenimento del cursore
         cursor = self._get_cursor()
         
-        # Formatting the query
+        # Creazione eformattazione della query
         final_query = __class__._build_query(data)
         
-        # Query execution
+        # Esecuzione della query e ottenimento dei risultati
         results = cursor.execute(final_query).fetchall()
 
-        # Returning results
+        # Restituzione risultati
         return results[0][0]
 
     # #################################################################################################### #
