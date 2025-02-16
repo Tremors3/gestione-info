@@ -44,7 +44,7 @@ class MyPyLucene:
         # Controllo se il file del dataset esiste
         if not os.path.isfile(MyPyLucene.DATASET_FILE_PATH):
             print(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyPyLucene.DATASET_FILE_PATH}\'.")
-            sys.exit(1)
+            raise
         
         # Controllo se la cartella degli indici esiste
         if os.path.exists(MyPyLucene.INDEX_DIRECTORY_PATH):

@@ -1,9 +1,9 @@
 
-# Importazioni standard
+# Importazione standard
 import os, sys, json, shutil
 from datetime import datetime
 
-# Importazioni Whoosh per la gestione dell'indicizzazione e della ricerca
+# Importazione Whoosh per la gestione dell'indicizzazione e della ricerca
 from whoosh.fields import Schema, TEXT, ID, NUMERIC, STORED, KEYWORD, DATETIME
 from whoosh.qparser import QueryParser, GtLtPlugin
 from whoosh.query import Wildcard, DateRange, Term, Phrase, And, Or, Not
@@ -33,7 +33,7 @@ class MyWhoosh:
         # Controllo se il file del dataset esiste
         if not os.path.isfile(MyWhoosh.DATASET_FILE_PATH):
             logging.error(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyWhoosh.DATASET_FILE_PATH}\'.")
-            sys.exit(1)
+            raise
         
         # Controllo se la cartella degli indici esiste
         if os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
@@ -127,7 +127,7 @@ class MyWhoosh:
 
             results_list.append(result_dict)
         
-        return json.dumps(results_list)
+        return results_list
 
     @staticmethod
     def _execute_query(data: dict):

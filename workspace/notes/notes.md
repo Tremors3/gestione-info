@@ -52,8 +52,8 @@
       Ogni volta che viene ricreato il dataset devono venir ricreati anche tutti gli indici dei vari sistemi e modelli.
 
       - [x] - Indici di Whoosh Funzionanti
-      - [x] - Indici di pyLucene Funzionanti (su script separato)
-      - [ ] - Indici di Postgress Ancora da Automatizzare
+      - [x] - Indici di pyLucene Funzionanti
+      - [x] - Indici di Postgress Funzionanti
 
 ### [da_fare] I TRE SEARCH ENGINE DEVONO POTER ESEGUIRE LE QUERY CON TUTTI I DIVERSI PARAMETRI AGGIUNTIVI
 
@@ -73,10 +73,12 @@ PyLucene
 - [x] - Ricerca per Data (Supportata)
 
 Postgress
-- [ ] - Query Principale (Non Ancora Supportata)
-- [ ] - Ricerca per Termini (Non Ancora Supportata)
-- [ ] - Ricerca per Stato (Non Ancora Supportata)
-- [ ] - Ricerca per Data (Non Ancora Supportata)
+- [x] - Query Principale (Supportata)
+- [x] - Ricerca per Termini (Supportata)
+- [x] - Ricerca per Stato (Supportata)
+- [x] - Ricerca per Data (Supportata)
+
+- [ ] - Sistemare commenti.
 
 ### [da_fare] CREARE LO SCRIPT SEPARATO PER GESTIONE DI PYLUCENE [OPPURE] RINUNCIARE AGLI SCRIPT DI AVVIO E PACCHETTIZZARE L'APP PER L'INSTALLAZIONE
 

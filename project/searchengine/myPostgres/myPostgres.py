@@ -1,21 +1,19 @@
+
+# Importazione standard
 import pg8000, os, json, sys
 from typing import Optional
 from time import sleep
 
+# # Importazione barra di caricamento
 from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
-#from project.utils.metaclasses import Singleton
+# Importazione di moduli del progetto
+from project.utils.metaclasses import Singleton
 #from project.searchengine.myLogger.myLogger import bcolors, logging
 
-class Singleton(type):
-    _instances = {}
-    
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+# ################################################## #
 
 class MyPostgres(metaclass=Singleton):
      
@@ -329,7 +327,7 @@ class MyPostgres(metaclass=Singleton):
         # Unisci tutte le condizioni, i ranking 
         # calcolati e le definizioni dei remini
         where_clause = " AND ".join(conditions)
-        select_clause = ", ".join(definitions)
+        from_clause = ", ".join(definitions)
         rank_clause = " + ".join(ranks)
         
         ###########################################################################
@@ -422,12 +420,15 @@ class MyPostgres(metaclass=Singleton):
         ## COSTRUZIONE DELLA QUERY FINALE - COMBINAZIONE DELLE QUERY INDIVIDUALI ##
         ###########################################################################
         
+        # Fields to retrive
+        select_clause = "id AS number, abstract, authors, to_char(date, 'YYYY-MM') AS date, files, keywords, more_info, status, title"
+        
         # Crea la query che sarà presentata a postgres, includendo la clausola per il ranking, le definizioni e le condizioni
-        base_query = "SELECT id, {rank_clause} AS rank FROM dataset, {select_clause} WHERE {where_clause}{statuses_clause}{date_clause} ORDER BY rank DESC LIMIT {size}"
-        final_query = base_query.format(rank_clause=rank_clause, select_clause=select_clause, where_clause=where_clause, statuses_clause=statuses_clause, date_clause=date_clause, size=data["size"])
+        base_query = "SELECT json_agg(d) documents FROM ( SELECT {select_clause}, {rank_clause} AS rank FROM dataset, {from_clause} WHERE {where_clause}{statuses_clause}{date_clause} ORDER BY rank DESC LIMIT {size} ) d;"
+        final_query = base_query.format(select_clause=select_clause, rank_clause=rank_clause, from_clause=from_clause, where_clause=where_clause, statuses_clause=statuses_clause, date_clause=date_clause, size=data["size"])
         
         return final_query
-    
+
     def process(self, data: dict):
         
         # Getting the cursor
@@ -437,18 +438,17 @@ class MyPostgres(metaclass=Singleton):
         final_query = __class__._build_query(data)
         
         # Query execution
-        results = cursor.execute(final_query)
-        
-        # Results retrueval
-        return results.fetchall()
+        results = cursor.execute(final_query).fetchall()
+
+        # Returning results
+        return results[0][0]
 
     # #################################################################################################### #
 
 if __name__ == "__main__":
 
-    ## FORMATTED QUERY EXAMPLE:
     """
-    SELECT id,
+    SELECT id AS number, abstract, authors, date, files, keywords, more_info, status, title,
         ts_rank_cd(content_tsv, main) + ts_rank_cd(title_tsv, term1) + ts_rank_cd(abstract_tsv, term2) + ts_rank_cd(keywords_tsv, term3) AS rank
     FROM dataset,
         LATERAL plainto_tsquery('english', 'QUIC Protocol') AS main,
@@ -510,10 +510,10 @@ if __name__ == "__main__":
 
     def test_query_execution(postgres, data):
         results = postgres.process(data)
-        for doc in results: print(doc, '\n')
-
+        for doc in results: print('\n', doc)
+    
     def test_query_construction(data):
-        MyPostgres._build_query(data)
+        print('\n', MyPostgres._build_query(data))
     
     postgres = MyPostgres()
     #test_indexes_creation(postgres)
