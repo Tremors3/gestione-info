@@ -11,9 +11,9 @@ from typing import Callable, Any
 # Importazioni dei moduli del progetto
 from project.docker.myDocker import DockerPG
 from project.webapp.run import start as start_web_server
+from project.utils.logger import logger as logging, bcolors
 from project.searchengine.myParser.myParser import start as start_parser
-from project.searchengine.myBenchMark.createBenchMark import start as start_benchmark
-from project.searchengine.myLogger.myLogger import bcolors, logging
+from project.searchengine.myBenchmark.createBenchmark import start as start_benchmark
 
 # #################################################################################################### #
 
@@ -59,7 +59,7 @@ class Application:
     def start(self):
         """ Entry point dell'applicazione """
         if len(self.args) and not self.dispatcher(self.args[0]):
-            logging.error(f"La flag '{self.args[0]}' non è supportata.")
+            print(f"La flag '{self.args[0]}' non è supportata.")
 
     # #################################################################################################### #
     
@@ -101,7 +101,7 @@ class Application:
         print(f"{bcolors.GREEN}Costruzione degli Inverted Index ...{bcolors.RESET}")
         
         # Whoosh Indexes
-        #MyWhoosh.create_indexes()
+        MyWhoosh.create_indexes()
         
         # PyLucene Indexes
         #MyPylucene.create_indexes()
@@ -109,7 +109,8 @@ class Application:
         # Postgres Indexes
         docker_pg = DockerPG()
         docker_pg.start() # Apertura container
-        MyPostgres.create_indexes()
+        postgres = MyPostgres()
+        postgres.create_indexes()
         docker_pg.stop() # Chiusura container
     
     def web(self) -> None:

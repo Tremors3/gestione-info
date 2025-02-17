@@ -1,16 +1,16 @@
 
-# Importazioni standard
+# Importazione
 import os, sys, json, shutil
 from datetime import datetime
 
-# Importazioni Whoosh per la gestione dell'indicizzazione e della ricerca
+# Importazione Whoosh per la gestione dell'indicizzazione e della ricerca
 from whoosh.fields import Schema, TEXT, ID, NUMERIC, STORED, KEYWORD, DATETIME
 from whoosh.qparser import QueryParser, GtLtPlugin
 from whoosh.query import Wildcard, DateRange, Term, Phrase, And, Or, Not
 from whoosh import index
 
 # Importazione del logger personalizzato del progetto
-from project.searchengine.myLogger.myLogger import logger as logging, bcolors
+from project.utils.logger import logger as logging, bcolors
 
 # ################################################## #
 
@@ -33,7 +33,7 @@ class MyWhoosh:
         # Controllo se il file del dataset esiste
         if not os.path.isfile(MyWhoosh.DATASET_FILE_PATH):
             logging.error(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyWhoosh.DATASET_FILE_PATH}\'.")
-            sys.exit(1)
+            raise
         
         # Controllo se la cartella degli indici esiste
         if os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
@@ -48,11 +48,11 @@ class MyWhoosh:
     def _write_indexes():
         """ Funzione che scrive gli indici per la ricerca. """
         
-        # Apro il file del dataset in modalità lettura con codifica UTF-8
+        # Apertura file dataset
         with open(MyWhoosh.DATASET_FILE_PATH, mode="r", encoding='utf-8') as f:
-            documents = json.load(f) # Carico i documenti in formato JSON
+            documents = json.load(f) # Caricamento documenti formato JSON
 
-        # Definisco lo schema per l'indice
+        # SCHEMA DELL'INDICE
         SCHEMA = Schema(
             
             # Campi memorizzati
@@ -70,22 +70,21 @@ class MyWhoosh:
             content   = TEXT                            # Contenuto del documento
         )
 
-        # Crea un writer per aggiungere documenti all'indice
+        # Creazione writer per aggiungere documenti all'indice
         writer = index.create_in(MyWhoosh.INDEX_DIRECTORY_PATH, SCHEMA).writer()
 
-        # Ciclo sui documenti e li aggiungo all'indice
+        # Inserire documenti nell'indice
         for doc in documents:
             
-            # Provo a fare il parsing della data, se fallisce prendo la data di oggi
+            # Parsing della data (data di oggi se fallisce)
             try: date = datetime.strptime(doc["Date"], "%Y-%m")
-            except Exception:
-                date = datetime.today()
+            except Exception: date = datetime.today()
 
-            # Aggiungo un documento all'indice con i vari campi
+            # Aggiunta del documento
             writer.add_document(
                 
                 # Campi memorizzati
-                number    = doc["Number"],                 # Numero identificativo del documento
+                number    = doc["Number"],                 # Identificativo del documento
                 title     = doc["Title"],                  # Titolo
                 authors   = doc["Authors"],                # Autori
                 date      = date,                          # Data di pubblicazione
@@ -99,7 +98,7 @@ class MyWhoosh:
                 content   = doc["Content"]                 # Contenuto
             )
 
-        # Commetto i cambiamenti effettuati nel writer, rendendo permanenti gli indici
+        # Commit
         writer.commit()
 
     @staticmethod
@@ -112,7 +111,7 @@ class MyWhoosh:
 
     @staticmethod
     def _results_to_json(results):
-        """Converte i risultati di Whoosh in un formato JSON-friendly."""
+        """Converte i risultati in un formato JSON."""
         
         results_list = []
         
@@ -123,39 +122,40 @@ class MyWhoosh:
             # Converte datetime in stringhe
             for key, value in result_dict.items():
                 if isinstance(value, datetime):
-                    result_dict[key] = value.strftime('%Y-%m')  # Formatta come stringa
+                    result_dict[key] = value.strftime('%Y-%m')
 
             results_list.append(result_dict)
         
-        return json.dumps(results_list)
+        return results_list
 
     @staticmethod
     def _execute_query(data: dict):
         """ Funzione che esegue la query di ricerca. """
 
-        # ########################################################### #
-        # INIZIALIZZAZIONE PARAMETRI
-        # ########################################################### #
+        ################################
+        ## INIZIALIZZAZIONE PARAMETRI ##
+        ################################
 
-        # Verifica se la cartella degli indici esiste, altrimenti crea gli indici
+        # Verifica se la cartella degli indici esiste
         if not os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
+            # Altrimenti crea gli indici
             MyWhoosh.create_indexes()
 
         # Apertura dell'indice esistente
         ix = index.open_dir(MyWhoosh.INDEX_DIRECTORY_PATH)
 
-        # ########################################################### #
-        # QUERY PRINCIPALE - RICERCA SUL CONTENUTO DEL DOCUMENTO
-        # ########################################################### #
+        ############################################################
+        ## QUERY PRINCIPALE - RICERCA SUL CONTENUTO DEL DOCUMENTO ##
+        ############################################################
 
-        # Parsing della query principale sul campo "content" con la ricerca case-insensitive
+        # Parsing della query principale sul campo "content"
         content_query = QueryParser("content", ix.schema).parse(
-            data["ricerca_principale"].lower()
+            data["ricerca_principale"].lower() # case-insensitive
         )
 
-        # ########################################################### #
-        # RICERCA SU PIU' CAMPI - CREAZIONE DI UNA QUERY BOOLEANA COMBINATA
-        # ########################################################### #
+        ###########################################################################
+        ## RICERCA SU PIU' CAMPI - CREAZIONE DELLE QUERIES PER TERMINI SECONDARI ##
+        ###########################################################################
         
         # Inizializzazione delle liste per gli operatori logici
         and_terms, not_terms, or_terms = [], [], []
@@ -176,34 +176,35 @@ class MyWhoosh:
                 "AUTHORS": "authors"
             }
             
-            # Se il campo non è trovato, assegna "abstract" come campo di default
+            # Recupero del campo ("abstract" di default)
             field = field_mapping.get(field, "abstract")
 
-            # Mappatura tra operatori logici e liste dei termini
+            # Mappatura tra operatori e liste dei termini
             operator_mapping = {
                 "AND": and_terms,
                 "NOT": not_terms,
                 "OR": or_terms
             }
             
-            # Aggiungi il termine alla lista appropriata in base all'operatore
+            # Termine aggiunto alla lista in base all'operatore
             operator_mapping.get(operator, "AND").append(Term(field, term))
 
-        # Creazione delle query solo se le liste non sono vuote
+        # Creazione delle query se le liste non sono vuote
         and_query = And(and_terms) if and_terms else None
         not_query = Not(Or(not_terms)) if not_terms else None
         or_query = Or(or_terms) if or_terms else None
 
-        # Combina le query valide in un'unica query complessa
+        # Combina le query valide in un'unica query composta
         query_parts = [q for q in [and_query, not_query, or_query] if q]
         terms_query = And(query_parts) if query_parts else None
 
-        # ########################################################### #
-        # RICERCA PER STATO - CREAZIONE DI UNA QUERY PER LO STATO DEI DOCUMENTI
-        # ########################################################### #
+        ###########################################################################
+        ## RICERCA PER STATO - CREAZIONE DI UNA QUERY PER LO STATO DEI DOCUMENTI ##
+        ###########################################################################
 
-        status_query = None  # Valore di default per la query dello stato
-
+        # Query dello stato
+        status_query = None
+        
         # Verifica se almeno uno degli stati da cercare è stato selezionato
         should_search_for_status = any(data.get(key) for key in [
             "standard_track", "best_current_practice", "informational", "experimental", "historic"
@@ -211,9 +212,9 @@ class MyWhoosh:
 
         if should_search_for_status:
             
-            status_filters = []  # Lista per raccogliere i filtri di stato
+            # Lista degli stati
+            status_filters = []
 
-            # Mappatura tra chiavi dei dati e i relativi stati
             status_mapping = {
                 "best_current_practice": "Best",         # Best Current Practice
                 "informational": "Informational",        # Informational
@@ -223,14 +224,16 @@ class MyWhoosh:
 
             # Aggiungi filtro per "standard_track" se presente
             if data.get("standard_track"):
+                
                 standard_track_value = data.get("standard_track_value", "").strip().upper()
+                
                 standard_track_mapping = {
                     "PROPOSED_STANDARD": "Proposed",      # Proposed Standard
                     "DRAFT_STANDARD": "Draft",            # Draft Standard
                     "INTERNET_STANDARD": "Internet",      # Internet Standard
                 }
 
-                # Aggiungi il filtro per lo stato specifico se valido
+                # Aggiungi il filtro per lo stato se valido
                 if standard_track_value in standard_track_mapping:
                     status_filters.append(Wildcard('status', f"*{standard_track_mapping[standard_track_value]}*"))
 
@@ -239,24 +242,25 @@ class MyWhoosh:
                 if data.get(key):  # Verifica se lo stato è selezionato
                     status_filters.append(Wildcard('status', f"*{status}*"))
 
-            # Se ci sono filtri, crea la query combinata OR
+            # Se ci sono filtri
             if status_filters:
+                # Crea la query composta OR
                 status_query = Or(status_filters)
         
-        # ########################################################### #
-        # RICERCA PER DATA - CREAZIONE DI UNA QUERY PER IL FILTRAGGIO SULLE DATE
-        # ########################################################### #
+        ############################################################################
+        ## RICERCA PER DATA - CREAZIONE DI UNA QUERY PER IL FILTRAGGIO SULLE DATE ##
+        ############################################################################
 
-        date_query = None  # Valore di default per la query della data
+        date_query = None  # Valore di default per la date query
         date_filter = data.get("dates", "").strip().upper() # Opzione selezionata
 
-        # Se l'opzione selezionata è "ALL_DATES", non filtriamo per data
+        # Se l'opzione selezionata è "ALL_DATES", non filtriamo
         if date_filter != "ALL_DATES":
             
-            # Filtro per un anno specifico (SPECIFIC_YEAR)
+            # Filtro per anno specifico (SPECIFIC_YEAR)
             if date_filter == "SPECIFIC_YEAR" and data["date_year"]:
                 
-                specific_year_int = data.get("date_year", 2000)
+                specific_year_int = data.get("date_year")
 
                 if specific_year_int:
                     try:
@@ -266,56 +270,52 @@ class MyWhoosh:
 
                         # Crea la query per l'intervallo dell'anno specifico
                         date_query = DateRange("date", from_specific_year, to_specific_year)
-                    except ValueError:
-                        pass  # In caso di errore nel parsing, non fare nulla
+                    except ValueError: pass
 
-            # Filtro per intervallo di date (DATE_RANGE)
+            # Filtro per intervallo tra date (DATE_RANGE)
             elif date_filter == "DATE_RANGE" and data["date_from_date"] and data["date_to_date"]:
                 
-                from_date_str = data.get("date_from_date", "").strip()
-                to_date_str = data.get("date_to_date", "").strip()
+                from_date_str = data.get("date_from_date")
+                to_date_str = data.get("date_to_date")
 
                 if from_date_str and to_date_str:
                     try:
                         # Parsing delle date (mese/anno)
-                        from_date = datetime.strptime(from_date_str, "%Y-%m")
-                        to_date = datetime.strptime(to_date_str, "%Y-%m")
+                        from_date = datetime.strptime(from_date_str.strip(), "%Y-%m")
+                        to_date = datetime.strptime(to_date_str.strip(), "%Y-%m")
 
                         # Crea la query per l'intervallo di date
                         date_query = DateRange("date", from_date, to_date)
-                    except ValueError:
-                        pass  # In caso di errore nel parsing, non fare nulla
+                    except ValueError: pass
 
-        # ########################################################### #
-        # COSTRUZIONE DELLA QUERY FINALE - COMBINAZIONE DELLE QUERY INDIVIDUALI
-        # ########################################################### #
+        ###########################################################################
+        ## COSTRUZIONE DELLA QUERY FINALE - COMBINAZIONE DELLE QUERY INDIVIDUALI ##
+        ###########################################################################
 
-        # Filtra le parti della query che sono valide (non None)
+        # Filtra le parti della query che non sono valide (uguali a None)
         combined_query_parts = [q for q in [content_query, terms_query, status_query, date_query] if q]
 
-        # Combina le query valide con un operatore "AND" (e.g., tutte le condizioni devono essere soddisfatte)
+        # Combina le query valide con un operatore "AND"
         combined_query = And(combined_query_parts) if combined_query_parts else None
 
-        # ########################################################### #
-        # ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI
-        # ########################################################### #
+        #######################################################################################
+        ## ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI ##
+        #######################################################################################
 
-        # Apre un "searcher" per eseguire la ricerca sugli indici
+        # Apre il searcher
         with ix.searcher() as searcher:
             
-            # Esegue la ricerca utilizzando la query combinata e un limite sui risultati (size)
+            # Esegue la ricerca
             results = searcher.search(combined_query, limit=data.get("size"))
 
-            # Converte i risultati in formato JSON-friendly
+            # Converte i risultati in formato JSON
             results = MyWhoosh._results_to_json(results)
         
-        # ########################################################### #
-        
-        # Restituisce i risultati formattati
+        # Restituzione
         return results
-    
-    # ################################################## #
-    
+        
+        # ########################################################### #
+
     @staticmethod
     def process(query: dict):
         return MyWhoosh._execute_query(query)

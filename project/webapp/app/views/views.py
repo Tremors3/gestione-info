@@ -10,7 +10,7 @@ from datetime import date, timedelta, datetime
 # Our Imports
 from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
 #from project.searchengine.myPylucene.MyPylucene import MyPyLucene
-#from project.searchengine.myPostgress.myPostgress import myPostgress
+from project.searchengine.myPostgres.myPostgres import MyPostgres
 
 # #################################################################################################### #
 
@@ -113,19 +113,19 @@ def search():
             
             # Scelta del search engine
             if "WHOOSH" == query.get("search_engine"):
+                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyWhoosh.process(query)
-                # Salva i risultati su file per essere recuperati alla richiesta
                 save_results_to_file(response, file_path)
                 
             if "PYLUCENE" == query.get("search_engine"):
                 pass #response = MyPyLucene.process(query)
-                # Salva i risultati su file per essere recuperati alla richiesta
+                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 #save_results_to_file(response, file_path)
                 
             if "POSTGRESQL" == query.get("search_engine"):
-                pass #response = MyPostgress.process(query)
-                # Salva i risultati su file per essere recuperati alla richiesta
-                #save_results_to_file(response, file_path)
+                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
+                response = MyPostgres().process(query)
+                save_results_to_file(response, file_path)
 
             return redirect(url_for('views.results', result_id=result_id, show_abstracts=query.get('abstracts')))
 
@@ -239,7 +239,7 @@ def load_results_from_file(filename: str):
         if not os.path.isfile(filepath):
             return []
         with open(filepath, "r", encoding="utf-8") as f:
-            return json.loads(json.loads(f.read()))
+            return json.loads(f.read())
     except (IOError, json.JSONDecodeError) as e:
         print(f"Errore nella lettura del file {filepath}: {e}")
         return []
