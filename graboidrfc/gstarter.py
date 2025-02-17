@@ -10,15 +10,15 @@ from typing import Callable, Any
 
 # Importazioni dei moduli del progetto
 from core.modules.docker.myDocker import DockerPG
-from core.modules.webapp.run import start as start_web_server
+from core.modules.ui.run import start as start_web_server
 from core.modules.utils.logger import logger as logging, bcolors
-from core.modules.searchengine.myParser.myParser import start as start_parser
-from core.modules.searchengine.myBenchmark.createBenchmark import start as start_benchmark
+from core.modules.engines.myParser.myParser import start as start_parser
+from core.modules.engines.myBenchmark.createBenchmark import start as start_benchmark
 
 # #################################################################################################### #
 
-from core.modules.searchengine.myWhoosh.myWhoosh import MyWhoosh
-from core.modules.searchengine.myPostgres.myPostgres import MyPostgres
+from core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
+from core.modules.engines.myPostgres.myPostgres import MyPostgres
 #from modules.searchengine.myPylucene.myPylucene import MyPylucene
 
 # #################################################################################################### #

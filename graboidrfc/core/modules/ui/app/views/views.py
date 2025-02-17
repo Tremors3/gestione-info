@@ -8,9 +8,9 @@ from datetime import date, timedelta, datetime
 # #################################################################################################### #
 
 # Our Imports
-from core.modules.searchengine.myWhoosh.myWhoosh import MyWhoosh
-#from core.modules.searchengine.myPylucene.MyPylucene import MyPyLucene
-from core.modules.searchengine.myPostgres.myPostgres import MyPostgres
+from core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
+#from core.modules.engines.myPylucene.MyPylucene import MyPyLucene
+from core.modules.engines.myPostgres.myPostgres import MyPostgres
 
 # #################################################################################################### #
 
