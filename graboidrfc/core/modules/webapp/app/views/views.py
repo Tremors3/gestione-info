@@ -85,9 +85,10 @@ blueprint = Blueprint('views', __name__,
 
 # #################################################################################################### #
 
-# Percorsi
+# Percorsi files e cartelle
+CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
 CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
-CURRENT_TEMP_DIR_PATH = os.path.join(CURRENT_FILE_PATH, "tmp_results")
+CURRENT_TEMP_DIR_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "tmp")
 os.makedirs(CURRENT_TEMP_DIR_PATH, exist_ok=True)
 
 # #################################################################################################### #

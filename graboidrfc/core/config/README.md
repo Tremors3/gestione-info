@@ -1,0 +1,1 @@
+# Evitare di modificare le impostazioni predefinite per garantire il corretto funzionamento

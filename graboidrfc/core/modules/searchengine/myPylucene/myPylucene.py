@@ -31,7 +31,7 @@ class MyPyLucene:
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
     
     # INDEX & DATASET DIRECTORY PATHS
-    INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes_dir")
+    INDEX_DIRECTORY_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "indexes", "lucene_indexes")
     DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
 
     # LIST OF ALL FIELDS IN THE JSON FILE

@@ -26,6 +26,9 @@ class MyParser:
     # DATASET DIRECTORY PATHS
     DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
     
+    # SETTINGS FILE PATHS
+    SETTINGS_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "config", "parser.json")
+    
     # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     TOTAL_RFC_NUMBER = 9688  # Numero totale di documenti disponibili
@@ -276,21 +279,48 @@ class MyParser:
                     return row[1].get_text().replace('\n',' ').replace('\r', '').strip()
         return ""
 
+    # %%%%%% GETTING SETTINGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    @staticmethod
+    def __get_settings(fp:str=None):
+        """Funzione che legge e restutiusce le impostazioni in formato JSON."""
+        
+        # Ottenimento del percorso del file delle impostazioni
+        FILE_PATH = fp if fp else __class__.SETTINGS_FILE_PATH
+        
+        # Controllo se il file delle impostazioni esiste
+        if not os.path.isfile(FILE_PATH):
+            raise FileNotFoundError(f"Il file del dataset non è stato trovato al seguente percorso: \'{FILE_PATH}\'.")
+
+        # Lettura e restituzione delle impostazioni in formato JSON
+        with open(FILE_PATH, mode="r", encoding='utf-8') as f:
+            return json.load(f)
+
     # %%%%%% GENERATE DATASET %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     @staticmethod
-    def generate_dataset(
-        index_begin: int=1,
-        index_end: int = None,
-        output_file: str = None,
-        workers: int = 10, timeout: int = 10, delay_ms: int = 50
-    ) -> None:
-        """
-        Genera un dataset scaricando e parsificando le pagine specificate.
-        """
+    def generate_dataset(output_file: str = None) -> None:
+        """Genera un dataset scaricando e parsificando le pagine specificate."""
         
-        # Impostazione dei valori di default
-        index_end = index_end if index_end is not None else MyParser.TOTAL_RFC_NUMBER
+        # Lettura delle impostazioni
+        settings = __class__.__get_settings()
+        
+        # Impostazione primo indice
+        index_begin = settings["DOCUMENTS"]["BEGIN_INDEX"]
+        index_begin = index_begin if index_begin >= 1 and index_begin <= MyParser.TOTAL_RFC_NUMBER else 1
+        
+        # Impostazione secondo indice
+        index_end = settings["DOCUMENTS"]["END_INDEX"]
+        index_end = index_end if index_end >= 1 and index_end <= MyParser.TOTAL_RFC_NUMBER else MyParser.TOTAL_RFC_NUMBER
+        
+        # Verifica correttezza indici
+        if index_begin > index_end:
+            index_end = index_begin
+        
+        # impostazione parametri threadpool
+        workers, timeout, delay_ms = settings["DOWNLOAD"]["WORKERS"], settings["DOWNLOAD"]["TIMEOUT"], settings["DOWNLOAD"]["DELAY_MS"]
+        
+        # Impostazione output file
         output_file = output_file if output_file is not None else MyParser.DATASET_FILE_PATH
         
         # Scaricamento e parsing dei metadati
@@ -310,7 +340,7 @@ class MyParser:
         logging.info(f"dataset salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_dataset(index_begin=8000, index_end=9000)
+    MyParser.generate_dataset()
 
 # UNIT TESTING
 if __name__ == "__main__":
