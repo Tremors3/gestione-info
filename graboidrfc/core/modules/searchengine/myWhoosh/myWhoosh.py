@@ -22,7 +22,7 @@ class MyWhoosh:
     
     # INDEX & DATASET DIRECTORY PATHS
     INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes_dir")
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "modules", "searchengine", "dataset", "dataset.json")
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
     
     # ################################################## #
 

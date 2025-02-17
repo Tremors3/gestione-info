@@ -1,46 +1,36 @@
-# Altro
-from typing import Optional, Generator, List, Dict
 
-import os
-
-# For timeout between requests
-from time import sleep
-
-# Per scrivere file json
-import json
-
-# Per Rejex
-import re
-
-# Per scaricamento pagine
+# Altri Imports
 import requests
-
-# Per Parsing delle pagine web
-from bs4 import BeautifulSoup
-
-# Per ThreadPool
-import concurrent.futures
-
-# Import del logger personalizzato (colori)
-from core.modules.utils.logger import logger as logging, bcolors
+import os, re, json
+from time import sleep
+import concurrent.futures # Per ThreadPool
+from bs4 import BeautifulSoup # BeautifulSoup per parsing
+from typing import Optional, Generator, List, Dict
 
 # Per barre di caricamento
 from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
+# Import Moduli Progetto
+from core.modules.utils.logger import logger as logging, bcolors
+
 class MyParser:
 
+    # %%%%%% PATHS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    # CURRENT WORKING DIRECTORY & FILE PATHS
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
+    
+    # DATASET DIRECTORY PATHS
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
+    
     # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     TOTAL_RFC_NUMBER = 9688  # Numero totale di documenti disponibili
 
-    PATHS = {
-        
-        # Paths
-        "DEFAULT_OUTPUT_FILE" : "./core/modules/searchengine/dataset/dataset.json",
-        
-        # LINKS & URLS 
+    URL = { # LINKS & URLS 
         "URL_METADATA" : "https://www.rfc-editor.org/search/rfc_search_detail.php?page=All&pubstatus[]=Any&pub_date_type=any&abstract=abson&keywords=keyson&sortkey=Number&sorting=ASC",
         "URL_PREFIX"  : "https://www.rfc-editor.org/rfc/rfc",
         "URL_POSTFIX" : ".html"
@@ -118,7 +108,7 @@ class MyParser:
         Scarica e parsifica una pagina specificata.
         """
         # Costruzione dello URI della pagina
-        url = MyParser.PATHS["URL_PREFIX"] + meta['Number'] + MyParser.PATHS["URL_POSTFIX"]
+        url = MyParser.URL["URL_PREFIX"] + meta['Number'] + MyParser.URL["URL_POSTFIX"]
         
         # Scaricamento del contenuto della pagina
         html_content = MyParser._download_page(url, session, timeout, delay_ms)
@@ -175,7 +165,7 @@ class MyParser:
         with requests.Session() as session:
             try:
                 # Effettuazione la richiesta alla pagina
-                response = session.get(MyParser.PATHS["URL_METADATA"])
+                response = session.get(MyParser.URL["URL_METADATA"])
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 logging.error(f"Errore durante il download dei metadati: {e}")
@@ -301,7 +291,7 @@ class MyParser:
         
         # Impostazione dei valori di default
         index_end = index_end if index_end is not None else MyParser.TOTAL_RFC_NUMBER
-        output_file = output_file if output_file is not None else MyParser.PATHS["DEFAULT_OUTPUT_FILE"]
+        output_file = output_file if output_file is not None else MyParser.DATASET_FILE_PATH
         
         # Scaricamento e parsing dei metadati
         logging.debug(f"Download e Parsing dei Metadati...")

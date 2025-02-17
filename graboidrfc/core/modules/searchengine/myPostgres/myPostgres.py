@@ -22,7 +22,7 @@ class MyPostgres(metaclass=Singleton):
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
     
     # INDEX & DATASET DIRECTORY PATHS
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "modules", "searchengine", "dataset", "dataset.json")
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
     
     # ################################################## #
 
