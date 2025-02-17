@@ -1,6 +1,6 @@
 import docker
 
-from project.utils.metaclasses import Singleton
+from core.modules.utils.metaclasses import Singleton
 
 class DockerPG(metaclass=Singleton):
 

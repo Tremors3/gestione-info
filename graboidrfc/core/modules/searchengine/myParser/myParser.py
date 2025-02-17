@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 import concurrent.futures
 
 # Import del logger personalizzato (colori)
-from project.utils.logger import logger as logging, bcolors
+from core.modules.utils.logger import logger as logging, bcolors
 
 # Per barre di caricamento
 from alive_progress import alive_bar
@@ -38,7 +38,7 @@ class MyParser:
     PATHS = {
         
         # Paths
-        "DEFAULT_OUTPUT_FILE" : "./project/searchengine/dataset/dataset.json",
+        "DEFAULT_OUTPUT_FILE" : "./core/modules/searchengine/dataset/dataset.json",
         
         # LINKS & URLS 
         "URL_METADATA" : "https://www.rfc-editor.org/search/rfc_search_detail.php?page=All&pubstatus[]=Any&pub_date_type=any&abstract=abson&keywords=keyson&sortkey=Number&sorting=ASC",

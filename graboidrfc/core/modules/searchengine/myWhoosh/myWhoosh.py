@@ -10,7 +10,7 @@ from whoosh.query import Wildcard, DateRange, Term, Phrase, And, Or, Not
 from whoosh import index
 
 # Importazione del logger personalizzato del progetto
-from project.utils.logger import logger as logging, bcolors
+from core.modules.utils.logger import logger as logging, bcolors
 
 # ################################################## #
 
@@ -22,7 +22,7 @@ class MyWhoosh:
     
     # INDEX & DATASET DIRECTORY PATHS
     INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes_dir")
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "modules", "searchengine", "dataset", "dataset.json")
     
     # ################################################## #
 

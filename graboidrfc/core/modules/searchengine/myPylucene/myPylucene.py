@@ -32,7 +32,7 @@ class MyPyLucene:
     
     # INDEX & DATASET DIRECTORY PATHS
     INDEX_DIRECTORY_PATH = os.path.join(CURRENT_FILE_PATH, "indexes_dir")
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "modules", "searchengine", "dataset", "dataset.json")
 
     # LIST OF ALL FIELDS IN THE JSON FILE
     FIELDS_LIST = ["number", "files", "title", "authors", "date", "more_info", "status", "abstract", "keywords", "content"]

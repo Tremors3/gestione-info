@@ -8,9 +8,9 @@ from datetime import date, timedelta, datetime
 # #################################################################################################### #
 
 # Our Imports
-from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
-#from project.searchengine.myPylucene.MyPylucene import MyPyLucene
-from project.searchengine.myPostgres.myPostgres import MyPostgres
+from core.modules.searchengine.myWhoosh.myWhoosh import MyWhoosh
+#from core.modules.searchengine.myPylucene.MyPylucene import MyPyLucene
+from core.modules.searchengine.myPostgres.myPostgres import MyPostgres
 
 # #################################################################################################### #
 
@@ -85,8 +85,10 @@ blueprint = Blueprint('views', __name__,
 
 # #################################################################################################### #
 
-TEMP_DIR = os.path.join("project", "webapp", "app", "views", "tmp_results")
-os.makedirs(TEMP_DIR, exist_ok=True)
+# Percorsi
+CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+CURRENT_TEMP_DIR_PATH = os.path.join(CURRENT_FILE_PATH, "tmp_results")
+os.makedirs(CURRENT_TEMP_DIR_PATH, exist_ok=True)
 
 # #################################################################################################### #
 
@@ -226,7 +228,7 @@ def form_to_json(form: FlaskForm, donot: set[str]):
 def save_results_to_file(results: dict, filename: str):
     """Salva i risultati in un file JSON nel directory temporaneo."""
     try:
-        filepath = os.path.join(TEMP_DIR, filename)
+        filepath = os.path.join(CURRENT_TEMP_DIR_PATH, filename)
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(results, f, ensure_ascii=False, indent=4)
     except IOError as e:
@@ -235,7 +237,7 @@ def save_results_to_file(results: dict, filename: str):
 def load_results_from_file(filename: str):
     """Carica i risultati da un file JSON nel directory temporaneo."""
     try:
-        filepath = os.path.join(TEMP_DIR, filename)
+        filepath = os.path.join(CURRENT_TEMP_DIR_PATH, filename)
         if not os.path.isfile(filepath):
             return []
         with open(filepath, "r", encoding="utf-8") as f:
@@ -247,7 +249,7 @@ def load_results_from_file(filename: str):
 def delete_file(filename: str):
     """Cancella un file JSON nel directory temporaneo."""
     try:
-        filepath = os.path.join(TEMP_DIR, filename)
+        filepath = os.path.join(CURRENT_TEMP_DIR_PATH, filename)
         if os.path.exists(filepath):
             os.remove(filepath)
     except IOError as e:

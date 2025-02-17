@@ -10,8 +10,8 @@ from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
 # Importazione di moduli del progetto
-from project.utils.metaclasses import Singleton
-from project.utils.logger import logger as logging, bcolors
+from core.modules.utils.metaclasses import Singleton
+from core.modules.utils.logger import logger as logging, bcolors
 
 # ################################################## #
 
@@ -22,7 +22,7 @@ class MyPostgres(metaclass=Singleton):
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
     
     # INDEX & DATASET DIRECTORY PATHS
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "modules", "searchengine", "dataset", "dataset.json")
     
     # ################################################## #
 
@@ -32,7 +32,7 @@ class MyPostgres(metaclass=Singleton):
             db_name:str="graboid_rfc", 
             address:str="127.0.0.1",
             port:int=55432,
-            reconnect_attempts:int = 5,
+            reconnect_attempts:int = 10,
             reconnect_interval:int = 0.5):
         """Inizializza la connessione al database."""
         
