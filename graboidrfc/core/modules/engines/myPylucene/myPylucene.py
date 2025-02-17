@@ -22,17 +22,21 @@ from org.apache.lucene.index import DirectoryReader, Term
 from org.apache.lucene.queryparser.classic import QueryParser
 from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause, TermQuery, TermRangeQuery
 
+# Import moduli di progetto
+from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
+
 # #################################################################################################### #
 
 class MyPyLucene:
     
     # CURRENT WORKING DIRECTORY & FILE PATHS
-    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
     
     # INDEX & DATASET DIRECTORY PATHS
-    INDEX_DIRECTORY_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "indexes", "lucene_indexes")
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
+    INDEX_DIRECTORY_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "indexes", "lucene_indexes")
+    DATASET_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "dataset", "dataset.json")
 
     # LIST OF ALL FIELDS IN THE JSON FILE
     FIELDS_LIST = ["number", "files", "title", "authors", "date", "more_info", "status", "abstract", "keywords", "content"]

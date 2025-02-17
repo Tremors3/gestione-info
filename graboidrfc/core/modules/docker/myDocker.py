@@ -1,15 +1,17 @@
 import docker, json, os
 
-from core.modules.utils.metaclasses import Singleton
+from graboidrfc.core.modules.utils.metaclasses import Singleton
+from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 class DockerPG(metaclass=Singleton):
 
     # CURRENT WORKING DIRECTORY & FILE PATHS
-    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
     
     # SETTINGS FILE PATHS
-    SETTINGS_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "config", "docker.json")
+    SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "docker.json")
 
     def __init__(self):
         
@@ -61,7 +63,7 @@ class DockerPG(metaclass=Singleton):
         
         # Controllo se il file delle impostazioni esiste
         if not os.path.isfile(FILE_PATH):
-            raise FileNotFoundError(f"Il file del dataset non è stato trovato al seguente percorso: \'{FILE_PATH}\'.")
+            raise FileNotFoundError(f"Il file di configurazione di docker non è stato trovato al seguente percorso: \'{FILE_PATH}\'.")
 
         # Lettura e restituzione delle impostazioni in formato JSON
         with open(FILE_PATH, mode="r", encoding='utf-8') as f:

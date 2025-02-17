@@ -1,11 +1,17 @@
-from .app import create_app
+# Altri import
 import webbrowser, os
+from .app import create_app
+
+# Import moduli di progetto
+from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 def start():
     
-    # CURRENT WORKING DIRECTORY & SETTINGS FILE PATH
+    # PACKAGE DYNAMIC FOLDER & SETTING FILE PATH
+    DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
-    SETTINGS_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "config", "webapp.json")
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "webapp.json")
     
     # Creating the app
     app = create_app(config_file=SETTINGS_FILE_PATH)

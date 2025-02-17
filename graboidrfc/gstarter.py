@@ -9,17 +9,17 @@ from typing import Callable, Any
 # #################################################################################################### #
 
 # Importazioni dei moduli del progetto
-from core.modules.docker.myDocker import DockerPG
-from core.modules.ui.run import start as start_web_server
-from core.modules.utils.logger import logger as logging, bcolors
-from core.modules.engines.myParser.myParser import start as start_parser
-from core.modules.engines.myBenchmark.createBenchmark import start as start_benchmark
+from graboidrfc.core.modules.docker.myDocker import DockerPG
+from graboidrfc.core.modules.ui.run import start as start_web_server
+from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
+from graboidrfc.core.modules.engines.myParser.myParser import start as start_parser
+from graboidrfc.core.modules.engines.myBenchmark.createBenchmark import start as start_benchmark
 
 # #################################################################################################### #
 
-from core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
-from core.modules.engines.myPostgres.myPostgres import MyPostgres
-#from modules.searchengine.myPylucene.myPylucene import MyPylucene
+from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
+from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
+#from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPylucene
 
 # #################################################################################################### #
 
@@ -83,7 +83,7 @@ class Application:
         DockerPG().start()
 
     def docker_remove(self) -> None:
-        """Costruzione ed avvio del container docker per postgres."""
+        """Costruzione e rimozione del container docker per postgres."""
         print(f"{bcolors.GREEN}Cancellazione container docker ...{bcolors.RESET}")
         DockerPG().delete()
 
