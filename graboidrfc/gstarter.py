@@ -9,17 +9,17 @@ from typing import Callable, Any
 # #################################################################################################### #
 
 # Importazioni dei moduli del progetto
-from project.docker.myDocker import DockerPG
-from project.webapp.run import start as start_web_server
-from project.utils.logger import logger as logging, bcolors
-from project.searchengine.myParser.myParser import start as start_parser
-from project.searchengine.myBenchmark.createBenchmark import start as start_benchmark
+from core.modules.docker.myDocker import DockerPG
+from core.modules.ui.run import start as start_web_server
+from core.modules.utils.logger import logger as logging, bcolors
+from core.modules.engines.myParser.myParser import start as start_parser
+from core.modules.engines.myBenchmark.createBenchmark import start as start_benchmark
 
 # #################################################################################################### #
 
-from project.searchengine.myWhoosh.myWhoosh import MyWhoosh
-from project.searchengine.myPostgres.myPostgres import MyPostgres
-#from project.searchengine.myPylucene.myPylucene import MyPylucene
+from core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
+from core.modules.engines.myPostgres.myPostgres import MyPostgres
+#from modules.searchengine.myPylucene.myPylucene import MyPylucene
 
 # #################################################################################################### #
 

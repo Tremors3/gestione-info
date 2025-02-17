@@ -1,46 +1,39 @@
-# Altro
-from typing import Optional, Generator, List, Dict
 
-import os
-
-# For timeout between requests
-from time import sleep
-
-# Per scrivere file json
-import json
-
-# Per Rejex
-import re
-
-# Per scaricamento pagine
+# Altri Imports
 import requests
-
-# Per Parsing delle pagine web
-from bs4 import BeautifulSoup
-
-# Per ThreadPool
-import concurrent.futures
-
-# Import del logger personalizzato (colori)
-from project.utils.logger import logger as logging, bcolors
+import os, re, json
+from time import sleep
+import concurrent.futures # Per ThreadPool
+from bs4 import BeautifulSoup # BeautifulSoup per parsing
+from typing import Optional, Generator, List, Dict
 
 # Per barre di caricamento
 from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
+# Import Moduli Progetto
+from core.modules.utils.logger import logger as logging, bcolors
+
 class MyParser:
 
+    # %%%%%% PATHS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    # CURRENT WORKING DIRECTORY & FILE PATHS
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
+    
+    # DATASET DIRECTORY PATHS
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
+    
+    # SETTINGS FILE PATHS
+    SETTINGS_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "config", "parser.json")
+    
     # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     TOTAL_RFC_NUMBER = 9688  # Numero totale di documenti disponibili
 
-    PATHS = {
-        
-        # Paths
-        "DEFAULT_OUTPUT_FILE" : "./project/searchengine/dataset/dataset.json",
-        
-        # LINKS & URLS 
+    URL = { # LINKS & URLS 
         "URL_METADATA" : "https://www.rfc-editor.org/search/rfc_search_detail.php?page=All&pubstatus[]=Any&pub_date_type=any&abstract=abson&keywords=keyson&sortkey=Number&sorting=ASC",
         "URL_PREFIX"  : "https://www.rfc-editor.org/rfc/rfc",
         "URL_POSTFIX" : ".html"
@@ -118,7 +111,7 @@ class MyParser:
         Scarica e parsifica una pagina specificata.
         """
         # Costruzione dello URI della pagina
-        url = MyParser.PATHS["URL_PREFIX"] + meta['Number'] + MyParser.PATHS["URL_POSTFIX"]
+        url = MyParser.URL["URL_PREFIX"] + meta['Number'] + MyParser.URL["URL_POSTFIX"]
         
         # Scaricamento del contenuto della pagina
         html_content = MyParser._download_page(url, session, timeout, delay_ms)
@@ -175,7 +168,7 @@ class MyParser:
         with requests.Session() as session:
             try:
                 # Effettuazione la richiesta alla pagina
-                response = session.get(MyParser.PATHS["URL_METADATA"])
+                response = session.get(MyParser.URL["URL_METADATA"])
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 logging.error(f"Errore durante il download dei metadati: {e}")
@@ -286,22 +279,49 @@ class MyParser:
                     return row[1].get_text().replace('\n',' ').replace('\r', '').strip()
         return ""
 
+    # %%%%%% GETTING SETTINGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    @staticmethod
+    def __get_settings(fp:str=None):
+        """Funzione che legge e restutiusce le impostazioni in formato JSON."""
+        
+        # Ottenimento del percorso del file delle impostazioni
+        FILE_PATH = fp if fp else __class__.SETTINGS_FILE_PATH
+        
+        # Controllo se il file delle impostazioni esiste
+        if not os.path.isfile(FILE_PATH):
+            raise FileNotFoundError(f"Il file del dataset non è stato trovato al seguente percorso: \'{FILE_PATH}\'.")
+
+        # Lettura e restituzione delle impostazioni in formato JSON
+        with open(FILE_PATH, mode="r", encoding='utf-8') as f:
+            return json.load(f)
+
     # %%%%%% GENERATE DATASET %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     @staticmethod
-    def generate_dataset(
-        index_begin: int=1,
-        index_end: int = None,
-        output_file: str = None,
-        workers: int = 10, timeout: int = 10, delay_ms: int = 50
-    ) -> None:
-        """
-        Genera un dataset scaricando e parsificando le pagine specificate.
-        """
+    def generate_dataset(output_file: str = None) -> None:
+        """Genera un dataset scaricando e parsificando le pagine specificate."""
         
-        # Impostazione dei valori di default
-        index_end = index_end if index_end is not None else MyParser.TOTAL_RFC_NUMBER
-        output_file = output_file if output_file is not None else MyParser.PATHS["DEFAULT_OUTPUT_FILE"]
+        # Lettura delle impostazioni
+        settings = __class__.__get_settings()
+        
+        # Impostazione primo indice
+        index_begin = settings["DOCUMENTS"]["BEGIN_INDEX"]
+        index_begin = index_begin if index_begin >= 1 and index_begin <= MyParser.TOTAL_RFC_NUMBER else 1
+        
+        # Impostazione secondo indice
+        index_end = settings["DOCUMENTS"]["END_INDEX"]
+        index_end = index_end if index_end >= 1 and index_end <= MyParser.TOTAL_RFC_NUMBER else MyParser.TOTAL_RFC_NUMBER
+        
+        # Verifica correttezza indici
+        if index_begin > index_end:
+            index_end = index_begin
+        
+        # impostazione parametri threadpool
+        workers, timeout, delay_ms = settings["DOWNLOAD"]["WORKERS"], settings["DOWNLOAD"]["TIMEOUT"], settings["DOWNLOAD"]["DELAY_MS"]
+        
+        # Impostazione output file
+        output_file = output_file if output_file is not None else MyParser.DATASET_FILE_PATH
         
         # Scaricamento e parsing dei metadati
         logging.debug(f"Download e Parsing dei Metadati...")
@@ -320,7 +340,7 @@ class MyParser:
         logging.info(f"dataset salvato in \"{output_file}\".")
 
 def start():
-    MyParser.generate_dataset(index_begin=8000, index_end=9000)
+    MyParser.generate_dataset()
 
 # UNIT TESTING
 if __name__ == "__main__":

@@ -10,8 +10,8 @@ from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
 # Importazione di moduli del progetto
-from project.utils.metaclasses import Singleton
-from project.utils.logger import logger as logging, bcolors
+from core.modules.utils.metaclasses import Singleton
+from core.modules.utils.logger import logger as logging, bcolors
 
 # ################################################## #
 
@@ -22,34 +22,62 @@ class MyPostgres(metaclass=Singleton):
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
     
     # INDEX & DATASET DIRECTORY PATHS
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "project", "searchengine", "dataset", "dataset.json")
+    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
+    
+    # SETTINGS FILE PATHS
+    SETTINGS_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "config", "postgres.json")
     
     # ################################################## #
 
-    def __init__(self, 
-            db_user:str="postgres", 
-            db_password:str="postgres", 
-            db_name:str="graboid_rfc", 
-            address:str="127.0.0.1",
-            port:int=55432,
-            reconnect_attempts:int = 5,
-            reconnect_interval:int = 0.5):
+    def __init__(self):
         """Inizializza la connessione al database."""
         
-        # Database Parameters
-        self.db_password = db_password
-        self.db_user = db_user
-        self.db_name = db_name
-        self.address = address
-        self.port = port
-
-        # Reconnection Parameters
-        self.reconnect_attempts = reconnect_attempts
-        self.reconnect_interval = reconnect_interval
+        # Lettura delle impostazioni
+        settings = __class__.__get_settings()
+        
+        # Mapping impostazioni a parametri d'istanza
+        self.__remap_settings(settings)
         
         # Connecting to the database
         self.conn: Optional[pg8000.Connection] = None
         self._connect()
+    
+    # #################################################################################################### #
+    
+    def __remap_settings(self, settings):
+        """Funzione che mappa le impostazioni a variabili d'istanza."""
+        try:
+        
+            # Network Settings
+            self.port = settings["NETWORK_SETTINGS"]["PORT_NUMBER"]
+            self.address = settings["NETWORK_SETTINGS"]["IP_ADDRESS"]
+            
+            # Reconnection Settings
+            self.reconnect_attempts = settings["NETWORK_SETTINGS"]["RECONNECT_ATTEMPTS"]
+            self.reconnect_interval = settings["NETWORK_SETTINGS"]["RECONNECT_INTERVAL"]
+            
+            # Database Settings
+            self.db_password = settings["DATABASE_SETTINGS"]["DB_PASSWORD"]
+            self.db_user = settings["DATABASE_SETTINGS"]["DB_USER"]
+            self.db_name = settings["DATABASE_SETTINGS"]["DB_NAME"]
+
+        except Exception as e:
+            raise ValueError(f"Impossibile leggere il file di impostazione \'{__class__.SETTINGS_FILE_PATH}\': {e}")
+    
+    @staticmethod
+    def __get_settings(fp:str=None):
+        """Funzione che legge e restutiusce le impostazioni in formato JSON."""
+        
+        # Ottenimento del percorso del file delle impostazioni
+        FILE_PATH = fp if fp else __class__.SETTINGS_FILE_PATH
+        
+        # Controllo se il file delle impostazioni esiste
+        if not os.path.isfile(FILE_PATH):
+            raise FileNotFoundError(f"Il file del dataset non è stato trovato al seguente percorso: \'{FILE_PATH}\'.")
+
+        # Lettura e restituzione delle impostazioni in formato JSON
+        with open(FILE_PATH, mode="r", encoding='utf-8') as f:
+            return json.load(f)
     
     # #################################################################################################### #
     

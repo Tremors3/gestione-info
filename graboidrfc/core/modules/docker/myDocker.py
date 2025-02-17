@@ -1,30 +1,26 @@
-import docker
+import docker, json, os
 
-from project.utils.metaclasses import Singleton
+from core.modules.utils.metaclasses import Singleton
 
 class DockerPG(metaclass=Singleton):
 
-    def __init__(self,
-            container_name:str="graboid_rfc", 
-            db_user:str="postgres", 
-            db_password:str="postgres", 
-            db_name:str="graboid_rfc", 
-            local_port:int=55432):
+    # CURRENT WORKING DIRECTORY & FILE PATHS
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
+    
+    # SETTINGS FILE PATHS
+    SETTINGS_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "config", "docker.json")
+
+    def __init__(self):
         
         # Client from env
         self.client = docker.from_env()
         
-        # Container parameters
-        self.container_name = container_name
-        self.db_password = db_password
-        self.local_port = local_port
-        self.db_user = db_user
-        self.db_name = db_name
+        # Lettura delle impostazioni
+        settings = __class__.__get_settings()
         
-        # Container variables
-        self.image = 'postgres'
-        self.local_address = '127.0.0.1'
-        self.port = 5432
+        # Mapping impostazioni a parametri d'istanza
+        self.__remap_settings(settings)
         
         try:
             # Getting the container
@@ -34,6 +30,42 @@ class DockerPG(metaclass=Singleton):
             self.container = self.__get_new_container()
     
     # PRIVATE METHODS
+    
+    def __remap_settings(self, settings):
+        """Funzione che mappa le impostazioni a variabili d'istanza."""
+        try:
+        
+            # Network Settings
+            self.local_port = settings["NETWORK_SETTINGS"]["PORT_NUMBER"]
+            self.local_address = settings["NETWORK_SETTINGS"]["IP_ADDRESS"]
+            
+            # Container Settings
+            self.image = settings["CONTAINER_OPTIONS"]["IMAGE"]
+            self.port = settings["CONTAINER_OPTIONS"]["INTERNAL_PORT_NUMBER"]
+            self.container_name = settings["CONTAINER_OPTIONS"]["CONTAINER_NAME"]
+            
+            # Database Settings
+            self.db_password = settings["DATABASE_SETTINGS"]["DB_PASSWORD"]
+            self.db_user = settings["DATABASE_SETTINGS"]["DB_USER"]
+            self.db_name = settings["DATABASE_SETTINGS"]["DB_NAME"]
+
+        except Exception as e:
+            raise ValueError(f"Impossibile leggere il file di impostazione \'{__class__.SETTINGS_FILE_PATH}\': {e}")
+    
+    @staticmethod
+    def __get_settings(fp:str=None):
+        """Funzione che legge e restutiusce le impostazioni in formato JSON."""
+        
+        # Ottenimento del percorso del file delle impostazioni
+        FILE_PATH = fp if fp else __class__.SETTINGS_FILE_PATH
+        
+        # Controllo se il file delle impostazioni esiste
+        if not os.path.isfile(FILE_PATH):
+            raise FileNotFoundError(f"Il file del dataset non è stato trovato al seguente percorso: \'{FILE_PATH}\'.")
+
+        # Lettura e restituzione delle impostazioni in formato JSON
+        with open(FILE_PATH, mode="r", encoding='utf-8') as f:
+            return json.load(f)
     
     def __get_new_container(self):
         """Crea e ritorna un nuovo container."""

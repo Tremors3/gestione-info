@@ -11,7 +11,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # #################################################################################################### #
 
-from project.utils.logger import logger as logging, bcolors
+from core.modules.utils.logger import logger as logging, bcolors
 
 # #################################################################################################### #
 
@@ -33,14 +33,14 @@ class Graboid:
         self.EXPECTED_WORKING_DIRECTORY_PATH = os.path.dirname(os.path.realpath(__file__))
 
         # VIRTUAL ENVIROMENT PATHS & FILES
-        self.PYTHON_REQUIREMENTS_FILE = "requirements.txt"
+        self.PYTHON_REQUIREMENTS_FILE = "../requirements.txt"
         PYTHON_EXECUTABLE_EXTENSION = ".exe" if platform == "win32" else ""
         PYTHON_EXECUTABLE_FILE = f"python{PYTHON_EXECUTABLE_EXTENSION}"
         PYTHON_VENV_SUBDIRECTORY = "Scripts" if platform == "win32" else "bin"
         self.PYTHON_EXECUTABLE_FILE_PATH = str("venv" / Path(PYTHON_VENV_SUBDIRECTORY) / Path(PYTHON_EXECUTABLE_FILE))
         
         # APPLICATION SCRIPT FILE
-        self.APPLICATION_SCRIPT_FILE_PATH = "starter.py"
+        self.APPLICATION_SCRIPT_FILE_PATH = "gstarter.py"
 
     def initialize_argparser(self):
         
