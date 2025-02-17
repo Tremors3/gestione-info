@@ -11,7 +11,8 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # #################################################################################################### #
 
-from core.modules.utils.logger import logger as logging, bcolors
+from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
+from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 # #################################################################################################### #
 
@@ -29,6 +30,7 @@ class Graboid:
     def initialize_paths(self):
         
         # CURRENT & EXPECTED WORKING DIRECTORY PATHS
+        self.DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
         self.CURRENT_WORKING_DIRECTORY_PATH = os.path.abspath(os.getcwd())
         self.EXPECTED_WORKING_DIRECTORY_PATH = os.path.dirname(os.path.realpath(__file__))
 

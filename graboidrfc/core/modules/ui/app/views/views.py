@@ -8,9 +8,10 @@ from datetime import date, timedelta, datetime
 # #################################################################################################### #
 
 # Our Imports
-from core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
-#from core.modules.engines.myPylucene.MyPylucene import MyPyLucene
-from core.modules.engines.myPostgres.myPostgres import MyPostgres
+from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
+from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
+#from graboidrfc.core.modules.engines.myPylucene.MyPylucene import MyPyLucene
+from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 # #################################################################################################### #
 
@@ -86,9 +87,11 @@ blueprint = Blueprint('views', __name__,
 # #################################################################################################### #
 
 # Percorsi files e cartelle
+DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
 CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
 CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
-CURRENT_TEMP_DIR_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "tmp")
+CURRENT_TEMP_DIR_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "tmp")
+
 os.makedirs(CURRENT_TEMP_DIR_PATH, exist_ok=True)
 
 # #################################################################################################### #

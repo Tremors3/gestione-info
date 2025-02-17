@@ -9,20 +9,22 @@ from whoosh.qparser import QueryParser, GtLtPlugin
 from whoosh.query import Wildcard, DateRange, Term, Phrase, And, Or, Not
 from whoosh import index
 
-# Importazione del logger personalizzato del progetto
-from core.modules.utils.logger import logger as logging, bcolors
+# Importazione moduli di progetto
+from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
+from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 # ################################################## #
 
 class MyWhoosh:
     
     # CURRENT WORKING DIRECTORY & FILE PATHS
-    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
     
     # INDEX & DATASET DIRECTORY PATHS
-    INDEX_DIRECTORY_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "indexes", "whoosh_indexes")
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
+    INDEX_DIRECTORY_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "indexes", "whoosh_indexes")
+    DATASET_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "dataset", "dataset.json")
     
     # ################################################## #
 

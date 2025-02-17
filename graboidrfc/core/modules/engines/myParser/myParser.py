@@ -13,21 +13,23 @@ from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
 # Import Moduli Progetto
-from core.modules.utils.logger import logger as logging, bcolors
+from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
+from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 class MyParser:
 
     # %%%%%% PATHS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     # CURRENT WORKING DIRECTORY & FILE PATHS
-    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
+    DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
     CURRENT_WORKING_DIRECTORY = os.path.abspath(os.getcwd())
+    CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
     
     # DATASET DIRECTORY PATHS
-    DATASET_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "data", "dataset", "dataset.json")
+    DATASET_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "dataset", "dataset.json")
     
     # SETTINGS FILE PATHS
-    SETTINGS_FILE_PATH = os.path.join(CURRENT_WORKING_DIRECTORY, "core", "config", "parser.json")
+    SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "parser.json")
     
     # %%%%%% CLASS VARS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
