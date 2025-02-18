@@ -10,7 +10,7 @@ from datetime import date, timedelta, datetime
 # Our Imports
 from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
 from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
-#from graboidrfc.core.modules.engines.myPylucene.MyPylucene import MyPyLucene
+#from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 # #################################################################################################### #
@@ -96,6 +96,12 @@ os.makedirs(CURRENT_TEMP_DIR_PATH, exist_ok=True)
 
 # #################################################################################################### #
 
+@blueprint.before_request
+def before_request():
+    #MyPyLucene.init_lucene_vm()
+    #MyPyLucene.attach_lucene_to_thread()
+    pass
+
 # Route principale
 @blueprint.route('/', methods=['POST', 'GET'])
 @blueprint.route('/search', methods=['POST', 'GET'])
@@ -124,10 +130,11 @@ def search():
                 save_results_to_file(response, file_path)
                 
             if "PYLUCENE" == query.get("search_engine"):
-                pass #response = MyPyLucene.process(query)
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
+                #response = MyPyLucene.process(query)
                 #save_results_to_file(response, file_path)
-                
+                pass
+            
             if "POSTGRESQL" == query.get("search_engine"):
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPostgres().process(query)

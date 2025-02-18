@@ -17,7 +17,7 @@ from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 # Moduli dei tre motori di ricerca
 from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
 from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
-#from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPylucene
+#from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
 
 # ################################################## #
 
@@ -126,7 +126,7 @@ class Application:
         """Costruisce gli Indici Invertiti."""
         print(f"{bcolors.GREEN}Costruzione degli Indici...{bcolors.RESET}")
         MyWhoosh.create_indexes() # Creazione indici Whoosh
-        #MyPylucene.create_indexes() # Creazione indici PyLucene
+        #MyPyLucene.create_indexes() # Creazione indici PyLucene
         docker_pg = DockerPG()
         docker_pg.start()
         postgres = MyPostgres()
