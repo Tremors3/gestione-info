@@ -10,7 +10,7 @@ from datetime import date, timedelta, datetime
 # Our Imports
 from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
 from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
-#from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
+from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 # #################################################################################################### #
@@ -98,8 +98,8 @@ os.makedirs(CURRENT_TEMP_DIR_PATH, exist_ok=True)
 
 @blueprint.before_request
 def before_request():
-    #MyPyLucene.init_lucene_vm()
-    #MyPyLucene.attach_lucene_to_thread()
+    MyPyLucene.init_lucene_vm()
+    MyPyLucene.attach_lucene_to_thread()
     pass
 
 # Route principale
@@ -131,9 +131,8 @@ def search():
                 
             if "PYLUCENE" == query.get("search_engine"):
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
-                #response = MyPyLucene.process(query)
-                #save_results_to_file(response, file_path)
-                pass
+                response = MyPyLucene.process(query)
+                save_results_to_file(response, file_path)
             
             if "POSTGRESQL" == query.get("search_engine"):
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
@@ -179,20 +178,20 @@ def results():
             if request.args.get('show_abstracts', "True") == "False":
                 del result["abstract"]
 
-        # risultati = [
-        #     {
-        #         "link":"https://rfc-editor.org/rfc/rfc9000",
-        #         "link_title":"RFC 9000",
-        #         "title":"Qualcosa qualcosa 1",
-        #         "formats":["pdf","html","txt"],
-        #         "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
-        #         "date": "1111/11/11",
-        #         "comment": "commento",
-        #         "abstract":"Estratto della pagina dell'rfc 9000"
-        #     }
-        # ]
-
         return render_template('results.html', risultati=results, num_result=len(results), max_words=250)
+
+# risultati = [
+#     {
+#         "link":"https://rfc-editor.org/rfc/rfc9000",
+#         "link_title":"RFC 9000",
+#         "title":"Qualcosa qualcosa 1",
+#         "formats":["pdf","html","txt"],
+#         "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
+#         "date": "1111/11/11",
+#         "comment": "commento",
+#         "abstract":"Estratto della pagina dell'rfc 9000"
+#     }
+# ]
 
 # #################################################################################################### #
 

@@ -17,7 +17,7 @@ from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 # Moduli dei tre motori di ricerca
 from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
 from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
-#from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
+from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
 
 # ################################################## #
 
@@ -139,7 +139,7 @@ class Application:
         
         MyWhoosh.create_indexes() # Creazione indici Whoosh
         
-        #MyPyLucene.create_indexes() # Creazione indici PyLucene
+        MyPyLucene.create_indexes() # Creazione indici PyLucene
 
         self.docker_start()
         postgres = MyPostgres(use_docker=self.use_docker)
