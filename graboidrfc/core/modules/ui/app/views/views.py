@@ -16,7 +16,7 @@ from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 # #################################################################################################### #
 
 # Flask Utils for redirecting, blueprients, exc...
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, current_app
 
 # Flask Forms
 from flask_wtf import FlaskForm
@@ -137,7 +137,7 @@ def search():
             
             if "POSTGRESQL" == query.get("search_engine"):
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
-                response = MyPostgres().process(query)
+                response = MyPostgres(use_docker_port=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, file_path)
 
             return redirect(url_for('views.results', result_id=result_id, show_abstracts=query.get('abstracts')))

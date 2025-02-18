@@ -5,7 +5,7 @@ from .app import create_app
 # Import moduli di progetto
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
-def start():
+def start(use_docker: bool = False):
     
     # PACKAGE DYNAMIC FOLDER & SETTING FILE PATH
     DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
@@ -14,7 +14,7 @@ def start():
     SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "webapp.json")
     
     # Creating the app
-    app = create_app(config_file=SETTINGS_FILE_PATH)
+    app = create_app(config_file=SETTINGS_FILE_PATH, use_docker=use_docker)
     
     # Running
     app.run(
