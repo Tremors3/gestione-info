@@ -65,14 +65,14 @@ Per la corretta installazione e il funzionamento del pacchetto, è necessario in
 <!--- **[🔧 Docker](#docker)** $\rightarrow$ Per la gestione del container (PostgreSQL).
     - **qemu, libvirt, ovmf, etc.** $\rightarrow$ Necessari per abilitare la virtualizzazione. -->
 
-1. **[🔧 PostgreSQL](#👉-installazione-postgresql-e-setup-del-database)** $\rightarrow$ Uno dei tre sistemi che utilizziamo per effettuare Full-Text Search.
+1. **[🔧 PostgreSQL](#-installazione-postgresql-e-setup-del-database)** $\rightarrow$ Uno dei tre sistemi che utilizziamo per effettuare Full-Text Search.
     - Creazione di database ed utente e selezione della porta.
 
-2. **[🔧 Anaconda](#👉-installazione-conda)** $\rightarrow$ Per la gestione dell'ambiente Python.
+2. **[🔧 Anaconda](#-installazione-conda)** $\rightarrow$ Per la gestione dell'ambiente Python.
     - **python** $\rightarrow$ ($\geq$ **3.10**, consigliata: **3.12.7**) Fondamentale per eseguire il nostro pacchetto.
     - **pip** $\rightarrow$ Per l'installazione dei pacchetti Python.
 
-3. **[🔧 PyLucene](#👉-installazione-pylucene)** $\rightarrow$ ($\geq$ **9.4.1**) Uno dei tre sistemi che utilizziamo per effettuare Full-Text Search.
+3. **[🔧 PyLucene](#-installazione-pylucene)** $\rightarrow$ ($\geq$ **9.4.1**) Uno dei tre sistemi che utilizziamo per effettuare Full-Text Search.
     - **Java 17 (JDK)** $\rightarrow$ Necessario per l'uso di PyLucene.
     - **JCC** $\rightarrow$ Necessario per l'uso di PyLucene.
     - **Make** $\rightarrow$ Necessario per l'installazione di PyLucene.
@@ -80,7 +80,7 @@ Per la corretta installazione e il funzionamento del pacchetto, è necessario in
 
 4. **🔧 git** $\rightarrow$ Per clonare il repository.
 
-Soddisfatte tutte le dipendenze sarà possibile [installare il nostro pacchetto](#👉-installazione-pacchetto), seguendo la procedura.
+Soddisfatte tutte le dipendenze sarà possibile [installare il nostro pacchetto](#-installazione-pacchetto), seguendo la procedura.
 
 <br />
 
