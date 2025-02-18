@@ -146,7 +146,7 @@ class Application:
         
         postgres.create_indexes() # Creazione indici Postgres
         
-        del postgres
+        postgres._close_connection()
         self.docker_stop()
 
     def benchmark(self) -> None:
@@ -158,22 +158,22 @@ class Application:
 
     def docker_start(self) -> None:
         """Costruzione e Avvio del container docker per postgres."""
-        print(f"{bcolors.GREEN}Creazione e Avvio container docker ...{bcolors.RESET}")
         if self.use_docker and not self.dockerpg:
+            print(f"{bcolors.GREEN}Creazione e Avvio container docker ...{bcolors.RESET}")
             self.dockerpg = DockerPG()
             self.dockerpg.start()
 
     def docker_stop(self) -> None:
         """Spegnimento del container docker."""
-        print(f"{bcolors.GREEN}Spegnimento container docker ...{bcolors.RESET}")
         if self.use_docker and self.dockerpg:
+            print(f"{bcolors.GREEN}Spegnimento container docker ...{bcolors.RESET}")
             self.dockerpg.stop()
             self.dockerpg = None
 
     def docker_remove(self) -> None:
         """Rimozione del container docker."""
-        print(f"{bcolors.GREEN}Rimozione container docker ...{bcolors.RESET}")
         if self.use_docker and self.dockerpg:
+            print(f"{bcolors.GREEN}Rimozione container docker ...{bcolors.RESET}")
             self.dockerpg.delete()
             self.dockerpg = None
 

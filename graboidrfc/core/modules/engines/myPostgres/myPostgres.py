@@ -132,7 +132,7 @@ class MyPostgres(metaclass=Singleton):
     
     def __del__(self):
         """La connessione viene chiusa quando l'oggetto viene distrutto."""
-        self._close_connection()
+        pass #self._close_connection()
     
     # #################################################################################################### #
     

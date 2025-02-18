@@ -68,7 +68,7 @@ Per la corretta installazione e il funzionamento del pacchetto, è necessario in
 1. **[🔧 PostgreSQL](#-installazione-postgresql-e-setup-del-database)** $\rightarrow$ Uno dei tre sistemi che utilizziamo per effettuare Full-Text Search.
     - Creazione di database ed utente e selezione della porta.
 
-2. **[🔧 Anaconda](#-installazione-conda)** $\rightarrow$ Per la gestione dell'ambiente Python.
+2. **[🔧 Anaconda](#-installazione-anaconda)** $\rightarrow$ Per la gestione dell'ambiente Python.
     - **python** $\rightarrow$ ($\geq$ **3.10**, consigliata: **3.12.7**) Fondamentale per eseguire il nostro pacchetto.
     - **pip** $\rightarrow$ Per l'installazione dei pacchetti Python.
 
@@ -145,6 +145,18 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
     sudo systemctl enable postgresql.service # abilita il servizio ad ogni riavvio
     ```
     
+    Imposta una password per l'utente postgres eseguendo il seguente comando:
+
+    ```bash
+    sudo -u postgres psql
+    ```
+
+    Una volta dentro la console di PostgreSQL, imposta la password con il comando:
+
+    ```sql
+    ALTER USER postgres WITH PASSWORD 'postgres';
+    ```
+
     **Nota**: La password predefinita per l'utente predefinito `postgres` è `postgres`. Sarà richiesta nelle fasi successive.
 
 - **📌 Creazione del database e dell'utente**

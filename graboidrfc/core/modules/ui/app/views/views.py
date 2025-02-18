@@ -136,7 +136,7 @@ def search():
             
             if "POSTGRESQL" == query.get("search_engine"):
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
-                response = MyPostgres(use_docker_port=current_app.config.get("USE_DOCKER", False)).process(query)
+                response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, file_path)
 
             return redirect(url_for('views.results', result_id=result_id, show_abstracts=query.get('abstracts')))
