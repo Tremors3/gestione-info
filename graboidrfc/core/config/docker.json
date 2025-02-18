@@ -7,10 +7,5 @@
         "IMAGE": "postgres",
         "CONTAINER_NAME": "graboid_rfc",
         "INTERNAL_PORT_NUMBER": 5432
-    },
-    "DATABASE_SETTINGS": {
-        "DB_USER": "postgres",
-        "DB_PASSWORD": "postgres",
-        "DB_NAME": "graboid_rfc"
     }
 }

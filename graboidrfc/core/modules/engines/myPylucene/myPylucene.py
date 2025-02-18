@@ -27,6 +27,11 @@ from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 # #################################################################################################### #
 
+# Tracciare inizializzazione VM
+is_vm_initialized = False
+
+# #################################################################################################### #
+
 class MyPyLucene:
     
     # CURRENT WORKING DIRECTORY & FILE PATHS
@@ -38,10 +43,29 @@ class MyPyLucene:
     INDEX_DIRECTORY_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "indexes", "lucene_indexes")
     DATASET_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "dataset", "dataset.json")
 
-    # LIST OF ALL FIELDS IN THE JSON FILE
-    FIELDS_LIST = ["number", "files", "title", "authors", "date", "more_info", "status", "abstract", "keywords", "content"]
-
     # ################################################## #
+
+    @staticmethod
+    def init_lucene_vm():
+        """ Funzione che inizializza la VM di PyLucene. """
+        global is_vm_initialized
+        if not is_vm_initialized:
+            try:
+                # Inizializzazione di Lucene
+                lucene.initVM(vmargs=['-Djava.awt.headless=True']) # senza header (ui)
+                is_vm_initialized = True
+            except Exception as ignored: pass
+
+    @staticmethod
+    def attach_lucene_to_thread():
+        """
+        Attacca il thread corrente alla JVM di Lucene.
+        Deve essere chiamato prima di gestire ogni richiesta che utilizza lucene.
+        """
+        try:
+            # Attacca il thread corrente alla JVM di Lucene
+            lucene.getVMEnv().attachCurrentThread()
+        except Exception as ignored: pass
 
     @staticmethod
     def _prepare_folders_and_files():
@@ -49,8 +73,7 @@ class MyPyLucene:
         
         # Controllo se il file del dataset esiste
         if not os.path.isfile(MyPyLucene.DATASET_FILE_PATH):
-            print(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyPyLucene.DATASET_FILE_PATH}\'.")
-            raise
+            raise FileExistsError(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyPyLucene.DATASET_FILE_PATH}\'.")
         
         # Controllo se la cartella degli indici esiste
         if os.path.exists(MyPyLucene.INDEX_DIRECTORY_PATH):
@@ -66,7 +89,7 @@ class MyPyLucene:
         """ Funzione che scrive gli indici per la ricerca. """    
         
         # Inizializzazione di Lucene
-        lucene.initVM(vmargs=['-Djava.awt.headless=True']) # senza header (ui)
+        MyPyLucene.init_lucene_vm()
 
         # Apertura della directory dell'indice
         directory = NIOFSDirectory(Paths.get(MyPyLucene.INDEX_DIRECTORY_PATH))
@@ -130,9 +153,12 @@ class MyPyLucene:
             result = {}
             
             # Per ciascun campo da estrarre
-            for field_name in ["number", "files", "title", "authors", "date", "more_info", "status", "abstract"]:
+            for field_name in ["number", "files", "title", "authors", "date", "more_info", "status", "abstract", "keywords"]:
                 
                 field_value = doc.get(field_name)
+                
+                if field_name in ["files", "authors", "keywords"]:
+                    field_value = str(field_value).split(sep=' ')
                 
                 if field_value: result[field_name] = field_value
 
@@ -203,7 +229,7 @@ class MyPyLucene:
             MyPyLucene.create_indexes()
         
         # Inizializzazione di Lucene
-        lucene.initVM(vmargs=['-Djava.awt.headless=True'])
+        MyPyLucene.init_lucene_vm()
         
         # Apertura directory
         fsDir = NIOFSDirectory(Paths.get(MyPyLucene.INDEX_DIRECTORY_PATH))
@@ -377,8 +403,6 @@ class MyPyLucene:
 
         # Esegue la ricerca con la query finale costruita e limita il numero di risultati
         scoreDocs = searcher.search(final_query_builder.build(), data.get("size", 25)).scoreDocs
-
-        print(f"Numero di risultati trovati: {len(scoreDocs)}")  
 
         # Converte i risultati in formato JSON
         results = MyPyLucene._results_to_json(searcher, scoreDocs)

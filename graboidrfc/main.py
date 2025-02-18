@@ -17,7 +17,7 @@ from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 # Moduli dei tre motori di ricerca
 from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
 from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
-#from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPylucene
+from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
 
 # ################################################## #
 
@@ -35,6 +35,10 @@ class Application:
         
     def initialize_argparser(self):
         
+        # Variabili Utili
+        self.dockerpg = None
+        self.use_docker = False
+        
         # INIZIALIZE ARGUMENT PARSER
         self.argparser = ArgumentParser(
             prog='graboidrfc',
@@ -42,6 +46,9 @@ class Application:
             epilog='Esempio di utilizzo: graboidrfc --start',
             formatter_class=ArgumentDefaultsHelpFormatter
         )
+        
+        # Utilizza Container Docker
+        self.argparser.add_argument('-d', '--docker', action='store_true', help='Abilita l\'utilizzo del container docker per postgresql.')
         
         # Gruppo Auto-esclusivo
         exclusive_group = self.argparser.add_mutually_exclusive_group(required=True)
@@ -51,9 +58,10 @@ class Application:
         exclusive_group.add_argument('-s', '--start', action='store_true', help='Avvia l\'applicazione.')
         exclusive_group.add_argument('-c', '--cleanup', action='store_true', help='Rimuove tutti i file creati durante la fase di inizializzazione.')
         
-        # Docker Arguments
-        exclusive_group.add_argument('-dc', '--docker-create', action='store_true', help='Crea e avvia il container docker di Postgres.')
-        exclusive_group.add_argument('-dr', '--docker-remove', action='store_true', help='Rimuove il container docker di Postgres.')
+        # Argomenti utili per Debugging
+        exclusive_group.add_argument('-p', '--parser', action='store_true', help='Esegue il parser.')
+        exclusive_group.add_argument('-x', '--indexes', action='store_true', help='Costruisce gli Inverted Index.')
+        exclusive_group.add_argument('-b', '--benchmark', action='store_true', help='Calcola e mostra il benchmark.')
 
     # #################################################################################################### #
 
@@ -64,9 +72,9 @@ class Application:
         return callback
 
     @staticmethod
-    def _extract_methods(args, blacklist: list[str]) -> list[str]:
-        """Funzione per preparare gli argomenti per il dispacher"""
-        return [ f'{key}'.replace('-', '_').strip() for key, value in args.__dict__.items() if key.strip() not in blacklist and value ]
+    def _extract_methods(args, blacklist: set[str]) -> set[str]:
+        """Funzione per preparare gli argomenti per il dispatcher"""
+        return set( f'{key}'.replace('-', '_').strip() for key, value in args.__dict__.items() if key.strip() not in blacklist and value )
 
     def main(self):
         """ Entry point dell'applicazione """
@@ -74,22 +82,25 @@ class Application:
         # Parsing degli argomenti
         parsed_args = self.argparser.parse_args()
         
-        # Estrazione del nome del metodo da passare al dispacher
-        method = __class__._extract_methods(parsed_args, blacklist=[]).pop()
+        # Estrazione del nome del metodo da passare al dispatcher
+        methods = __class__._extract_methods(parsed_args, blacklist=set())
 
+        # Controllo se si vuole utilizzare Docker
+        self.use_docker = 'docker' in methods
+        methods.discard('docker')
+        
         # Esecuzione del metodo associato all'argomento
-        if not self.dispatcher(method):
+        if methods and not self.dispatcher(methods.pop()):
             raise ValueError(f"Argomeno inserito non riconosciuto.")
     
     # ################################################## #
 
-    # CALLBACKS
+    # CALLBACKS METHODS
 
     def init(self) -> None:
         """Inizializza l'ambiente di produzione."""
         print(f"{bcolors.GREEN}Inizializzazione dell'applicazione...{bcolors.RESET}")
-
-        self.docker_create() # Creazione container
+        
         self.parser() # Costruzione del Dataset
         self.indexes() # Creazione degli Indici
 
@@ -97,14 +108,17 @@ class Application:
         """Avvia l'applicazione."""
         print(f"{bcolors.GREEN}Avvio dell'Applicazione...{bcolors.RESET}")
         
+        self.docker_start()
         self.web() # Procedura di avvio server web
+        self.docker_stop()
 
     def cleanup(self) -> None:
         """Pulisce l'ambiente di sviluppo."""
         print(f"{bcolors.GREEN}Pulizia dell'ambiente di produzione completata.{bcolors.RESET}\n"
               f"È necessario inizializzare nuovamente per eseguire il programma.")
         
-        self.docker_remove() # Cancellazione Container Docker
+        # Cancellazione Container Docker
+        self.docker_remove()
         
     # ################################################## #
     
@@ -112,10 +126,7 @@ class Application:
     
     def web(self) -> None:
         """Avvia il web server del progetto."""
-        docker_pg = DockerPG()
-        docker_pg.start()
-        start_web_server() # Avvio Web Server
-        docker_pg.stop()
+        start_web_server(use_docker=self.use_docker) # Avvio Web Server
     
     def parser(self) -> None:
         """Costruzione del dataset apportata dal parser."""
@@ -125,24 +136,46 @@ class Application:
     def indexes(self) -> None:
         """Costruisce gli Indici Invertiti."""
         print(f"{bcolors.GREEN}Costruzione degli Indici...{bcolors.RESET}")
+        
         MyWhoosh.create_indexes() # Creazione indici Whoosh
-        #MyPylucene.create_indexes() # Creazione indici PyLucene
-        docker_pg = DockerPG()
-        docker_pg.start()
-        postgres = MyPostgres()
-        postgres.create_indexes() # Creazione indici Postgres
-        del postgres
-        docker_pg.stop()
+        
+        MyPyLucene.create_indexes() # Creazione indici PyLucene
 
-    def docker_create(self) -> None:
-        """Costruzione del container docker per postgres."""
-        print(f"{bcolors.GREEN}Creazione container docker ...{bcolors.RESET}")
-        DockerPG()
+        self.docker_start()
+        postgres = MyPostgres(use_docker=self.use_docker)
+        
+        postgres.create_indexes() # Creazione indici Postgres
+        
+        del postgres
+        self.docker_stop()
+
+    def benchmark(self) -> None:
+        """Avvia lo script calcola e mostra il benchmark."""
+        print(f"{bcolors.GREEN}Calcola e mostra il Benchmark ...{bcolors.RESET}")
+        start_benchmark()
+
+    # ################################################## #
+
+    def docker_start(self) -> None:
+        """Costruzione e Avvio del container docker per postgres."""
+        print(f"{bcolors.GREEN}Creazione e Avvio container docker ...{bcolors.RESET}")
+        if self.use_docker and not self.dockerpg:
+            self.dockerpg = DockerPG()
+            self.dockerpg.start()
+
+    def docker_stop(self) -> None:
+        """Spegnimento del container docker."""
+        print(f"{bcolors.GREEN}Spegnimento container docker ...{bcolors.RESET}")
+        if self.use_docker and self.dockerpg:
+            self.dockerpg.stop()
+            self.dockerpg = None
 
     def docker_remove(self) -> None:
-        """Costruzione e rimozione del container docker."""
-        print(f"{bcolors.GREEN}Cancellazione container docker ...{bcolors.RESET}")
-        DockerPG().delete()
+        """Rimozione del container docker."""
+        print(f"{bcolors.GREEN}Rimozione container docker ...{bcolors.RESET}")
+        if self.use_docker and self.dockerpg:
+            self.dockerpg.delete()
+            self.dockerpg = None
 
 def main():
     app = Application()

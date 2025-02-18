@@ -12,11 +12,12 @@ class DockerPG(metaclass=Singleton):
     
     # SETTINGS FILE PATHS
     SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "docker.json")
-
+    POSTGRES_SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "postgres.json")
+    
     def __init__(self):
         
         # Client from env
-        self.client = docker.from_env()
+        self.client = __class__.__get_client()
         
         # Lettura delle impostazioni
         settings = __class__.__get_settings()
@@ -33,6 +34,14 @@ class DockerPG(metaclass=Singleton):
     
     # PRIVATE METHODS
     
+    @staticmethod
+    def __get_client():
+        """Restituisce il connettore Docker se il servizio è attivo."""
+        try:
+            return docker.from_env()
+        except docker.errors.DockerException:
+            raise ValueError("Servizio Docker non attivo. Avviare il servizio con 'sudo systemctl start docker' e riprovare.")
+        
     def __remap_settings(self, settings):
         """Funzione che mappa le impostazioni a variabili d'istanza."""
         try:
@@ -55,19 +64,40 @@ class DockerPG(metaclass=Singleton):
             raise ValueError(f"Impossibile leggere il file di impostazione \'{__class__.SETTINGS_FILE_PATH}\': {e}")
     
     @staticmethod
-    def __get_settings(fp:str=None):
-        """Funzione che legge e restutiusce le impostazioni in formato JSON."""
+    def __get_settings(fp:str=None, dbfp:str=None):
+        """Funzione che legge e restituisce le impostazioni in formato JSON."""
         
         # Ottenimento del percorso del file delle impostazioni
-        FILE_PATH = fp if fp else __class__.SETTINGS_FILE_PATH
+        DOCKER_FILE_PATH = fp if fp else __class__.SETTINGS_FILE_PATH
+        POSTGRES_FILE_PATH = dbfp if dbfp else __class__.POSTGRES_SETTINGS_FILE_PATH
         
-        # Controllo se il file delle impostazioni esiste
-        if not os.path.isfile(FILE_PATH):
-            raise FileNotFoundError(f"Il file di configurazione di docker non è stato trovato al seguente percorso: \'{FILE_PATH}\'.")
+        # Controllo se i file esistono
+        if not os.path.isfile(DOCKER_FILE_PATH):
+            raise FileNotFoundError(f"Il file di configurazione di docker non è stato trovato al seguente percorso: \'{DOCKER_FILE_PATH}\'.")
 
-        # Lettura e restituzione delle impostazioni in formato JSON
-        with open(FILE_PATH, mode="r", encoding='utf-8') as f:
-            return json.load(f)
+        # Controllo se il file delle impostazioni esiste
+        if not os.path.isfile(POSTGRES_FILE_PATH):
+            raise FileNotFoundError(f"Il file di configurazione di postgres non è stato trovato al seguente percorso: \'{POSTGRES_FILE_PATH}\'.")
+
+        try:
+
+            # Lettura delle impostazioni di docker
+            with open(DOCKER_FILE_PATH, mode="r", encoding='utf-8') as f:
+                docker_settings = json.load(f)
+        
+            # Lettura delle impostazioni di postgres
+            with open(POSTGRES_FILE_PATH, mode="r", encoding='utf-8') as f:
+                postgres_settings = json.load(f)
+
+        except json.JSONDecodeError:
+            raise ValueError("Errore nella lettura dei file Json. Verifica che i file siano formattati correttamente.")
+
+        # Aggiunta delle impostazioni del database a quelle di Docker
+        if "DATABASE_SETTINGS" in postgres_settings:
+            docker_settings["DATABASE_SETTINGS"] = postgres_settings["DATABASE_SETTINGS"]
+        else: raise KeyError("Il file di configurazione di PostgreSQL non contiene 'DATABASE_SETTINGS'.")
+
+        return docker_settings
     
     def __get_new_container(self):
         """Crea e ritorna un nuovo container."""

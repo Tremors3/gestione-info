@@ -31,14 +31,14 @@ class MyPostgres(metaclass=Singleton):
     
     # ################################################## #
 
-    def __init__(self):
+    def __init__(self, use_docker: bool = False):
         """Inizializza la connessione al database."""
         
         # Lettura delle impostazioni
         settings = __class__.__get_settings()
         
         # Mapping impostazioni a parametri d'istanza
-        self.__remap_settings(settings)
+        self.__remap_settings(settings, use_docker)
         
         # Connecting to the database
         self.conn: Optional[pg8000.Connection] = None
@@ -46,12 +46,12 @@ class MyPostgres(metaclass=Singleton):
     
     # #################################################################################################### #
     
-    def __remap_settings(self, settings):
+    def __remap_settings(self, settings, use_docker_port):
         """Funzione che mappa le impostazioni a variabili d'istanza."""
         try:
         
             # Network Settings
-            self.port = settings["NETWORK_SETTINGS"]["PORT_NUMBER"]
+            self.port = settings["NETWORK_SETTINGS"]["PORT_NUMBER"] if not use_docker_port else settings["NETWORK_SETTINGS"]["DOCKER_PORT_NUMBER"]
             self.address = settings["NETWORK_SETTINGS"]["IP_ADDRESS"]
             
             # Reconnection Settings
@@ -108,7 +108,7 @@ class MyPostgres(metaclass=Singleton):
                 sleep(self.reconnect_interval)
                 attempt += 1
         
-        raise ConnectionError("Impossibile connettersi al database.")
+        raise ConnectionError(f"Impossibile connettersi al database \'{self.db_name}\'. Controllare che il servizio di PostgreSQL sia attivo.")
 
     def _reconnect(self):
         """Sovrascrive la connessione esistente con una nuova connessione."""
