@@ -14,7 +14,7 @@ Le principali tecnologie utilizzate nello sviluppo del progetto sono:
 - **PyLucene** $\rightarrow$ Implementazione Python di Apache Lucene, motore di ricerca ad alte prestazioni.
 
 - **Whoosh** $\rightarrow$ Libreria Python per la gestione di motori di ricerca testuali.
- 
+
 ### Struttura del Progetto 
 
 Lo schema seguente mostra l'organizzazione generale di file e cartelle nella gerarchia del progetto, evidenziando le componenti che potrebbero interessarle maggiormente.
@@ -39,6 +39,7 @@ gestione-info/
 │    │
 │    └─── docs/                 # Documentazione e Presentazione del progetto
 │
+├─── scripts/                   # Scripts di installazione delle dipendenze
 └─── setup.py
 ```
 -->
@@ -49,11 +50,13 @@ gestione-info/
 
 ## Setup
 
-### 👉 Premessa
+### 👉 Premesse
 
-Il processo di installazione del pacchetto e delle relative dipendenze è stato **adattato e testato su sistemi Ubuntu, Debian e Ubuntu su WSL2 (Windows 11)**.
+1. Il processo di installazione del pacchetto e delle relative dipendenze è stato **adattato e testato su sistemi Ubuntu, Debian e Ubuntu su WSL2 (Windows 11)**.
 
-Sconsigliamo l'utilizzo su altri sistemi operativi, poiché non sono stati testati. Nel caso in cui non si disponga di una macchina con quei sistemi operativi, si consiglia l'uso di un **hypervisor**.
+    Sconsigliamo l'utilizzo su altri sistemi operativi, poiché non sono stati testati. Nel caso in cui non si disponga di una macchina con quei sistemi operativi, si consiglia l'uso di un **hypervisor**.
+
+2. Per installare le dipendenze, è necessario eseguire alcuni script situati nella directory `./gestione-info/scripts/`.
 
 <br />
 
@@ -86,7 +89,7 @@ Soddisfatte tutte le dipendenze sarà possibile [installare il nostro pacchetto]
 
 ### 👉 Installazione Pacchetto
 
-Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'installazione all'interno di un ambiente virtuale Python, gestito ad esempio tramite **Anaconda** (lo stesso ambiente in cui è installato PyLucene).
+Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'installazione all'interno di un ambiente virtuale Python, gestito tramite **Anaconda** (lo stesso ambiente in cui è installato PyLucene).
 
 - **📌 Clonare il repository GitHub**
     
@@ -148,59 +151,18 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
     Imposta una password per l'utente postgres eseguendo il seguente comando:
 
     ```bash
-    sudo -u postgres psql
-    ```
-
-    Una volta dentro la console di PostgreSQL, imposta la password con il comando:
-
-    ```sql
-    ALTER USER postgres WITH PASSWORD 'postgres';
+    sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
     ```
 
     **Nota**: La password predefinita per l'utente predefinito `postgres` è `postgres`. Sarà richiesta nelle fasi successive.
 
 - **📌 Creazione del database e dell'utente**
 
-    Il seguente script automatizza la creazione del database e dell'utente che il nostro pacchetto utilizza, e garantisce che l'utente abbia i permessi necessari.
+    Lo script `setup_postgres.py` automatizza la creazione del database e dell'utente che il nostro pacchetto utilizza, e garantisce che l'utente abbia i permessi necessari.
 
     ```bash
-    #!/bin/bash
-    set -e
-
-    DB_NAME="graboid_rfc"
-    DB_USER="graboid"
-    DB_PASS="graboid"
-
-    # Verifica se PostgreSQL è in esecuzione
-    if ! systemctl is-active --quiet postgresql; then
-        echo "Avvia PostgreSQL prima di eseguire lo script."
-        exit 1
-    fi
-
-    # Funzione per verificare se il database esiste
-    check_db_exists() {
-        sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='$1'" | grep -q 1
-    }
-
-    # Funzione per verificare se l'utente esiste
-    check_user_exists() {
-        sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$1'" | grep -q 1
-    }
-
-    # Crea il database se non esiste
-    if ! check_db_exists $DB_NAME; then
-        echo "Creazione del database '$DB_NAME'..."
-        sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
-    fi
-
-    # Crea l'utente se non esiste
-    if ! check_user_exists $DB_USER; then
-        echo "Creazione dell'utente '$DB_USER'..."
-        sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
-        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
-    fi
-
-    echo "L'utente '$DB_USER' ha i permessi sul database '$DB_NAME'."
+    chmod +x setup_postgres.sh
+    ./setup_postgres.sh
     ```
 
 - **📌 Specificare la porta del servizio PostgreSQL**
@@ -249,8 +211,9 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
     Dopo l'installazione, attivare Anaconda ed eseguire l'inizializzazione:
 
     ```bash
-    source ~/.bashrc
+    source $HOME/anaconda3/bin/activate
     conda init
+    source $HOME/.bashrc
     ```
 
 - **📌 Creare l'ambiente dedicato a PyLucene**
@@ -267,13 +230,13 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
     conda activate lucene
     ```
 
-    Ogni volta che apri una nuova sessione della shell, dovrai riattivare l'ambiente eseguendo nuovamente questo comando.
+    **Nota**: Ogni volta che apri una nuova sessione della shell, dovrai riattivare l'ambiente eseguendo nuovamente questo comando.
 
 <br />
 
 ### 👉 Installazione PyLucene
 
-Si consiglia di eseguire i seguenti passaggi all'interno di un **ambiente Anaconda dedicato**, per garantire che tutte le dipendenze siano correttamente gestite.
+Si consiglia di eseguire i seguenti passaggi all'interno dell'**ambiente Anaconda dedicato** creato al punto precedente, per garantire che tutte le dipendenze siano correttamente gestite.
 
 - **📌 Installazione dei pacchetti necessari alla build**
 
@@ -281,103 +244,38 @@ Si consiglia di eseguire i seguenti passaggi all'interno di un **ambiente Anacon
 
     ```bash
     sudo apt update
-    sudo apt install openjdk-17-jdk python3 python3-pip python3-setuptools ant gcc make
+    sudo apt install openjdk-17-jdk python3 python3-pip python3-setuptools ant gcc g++ make
     ```
 
 - **📌 Build e Installazione di PyLucene**
 
-    Questo script automatizza il processo di **installazione di PyLucene**.
+    Lo script `setup_pylucene.sh` automatizza il processo di **installazione di PyLucene**.
 
     ```bash
-    #!/bin/bash
-    set -e
-
-    # Verifica che Java sia installato
-    if ! command -v java &> /dev/null; then
-        echo "Java non è installato. Installalo prima di procedere."
-        exit 1
-    fi
-
-    # Configurazione delle variabili di ambiente per Java
-    JAVA_BIN=$(which java)
-    JAVA_HOME=$(dirname $(dirname $(readlink -f $JAVA_BIN)))
-    export JCC_JDK=$JAVA_HOME
-    export JCC_INCLUDES="$JAVA_HOME/include:$JAVA_HOME/include/linux"
-    export JCC_LFLAGS="-L$JAVA_HOME/lib/server -ljvm"
-
-    # Verifica che Python sia installato
-    if ! command -v python3 &> /dev/null; then
-        echo "Python3 non è installato. Installalo prima di procedere."
-        exit 1
-    fi
-
-    # Configurazione delle variabili di ambiente per Python
-    PYTHON_BIN=$(which python3)
-    PREFIX_PYTHON=$(dirname $(dirname $(readlink -f $PYTHON_BIN)))
-    export PYTHON="${PREFIX_PYTHON}/bin/python3"
-    export JCC="${PYTHON} -m jcc"
-    export NUM_FILES=16
-
-    export LD_LIBRARY_PATH="$JAVA_HOME/lib/server:$LD_LIBRARY_PATH"
-
-    # Scaricare e installare PyLucene
-    echo "Scaricando PyLucene..."
-    curl -s https://downloads.apache.org/lucene/pylucene/pylucene-9.4.1-src.tar.gz | tar -xz
-
-    cd pylucene-9.4.1
-
-    echo "Compilando JCC..."
-    cd jcc
-    $PYTHON setup.py build
-    $PYTHON setup.py install
-    cd ..
-
-    echo "Compilando PyLucene..."
-    make
-
-    echo "Installando PyLucene..."
-    make install
-
-    echo "Installazione completata con successo!"
+    chmod +x setup_pylucene.sh
+    ./setup_pylucene.sh
     ```
 
 - **📌 Rendere Permanenti le Variabili d'Ambiente**
 
-    Una volta completata l'installazione, potrebbe essere utile **rendere permanenti le variabili d'ambiente** aggiungendole automaticamente al file `.bashrc`. Il seguente script automatizza questo processo.
+    Una volta completata l'installazione, è necessario **rendere permanenti le variabili d'ambiente** aggiungendole al file `.bashrc`. Lo script `setup_variables` automatizza questo processo.
 
     ```bash
-    #!/bin/bash
-
-    ENV_VARS="
-    
-    # Variabili per Java
-    export JAVA_BIN=\$(which java)
-    export JAVA_HOME=\$(dirname \$(dirname \$(readlink -f \$JAVA_BIN)))
-    export JCC_JDK=\$JAVA_HOME
-    export JCC_INCLUDES=\$JAVA_HOME/include:\$JAVA_HOME/include/linux
-    export JCC_LFLAGS=\"-L\$JAVA_HOME/lib/server -ljvm\"
-
-    # Variabili per Python
-    export PYTHON_BIN=\$(which python3)
-    export PREFIX_PYTHON=\$(dirname \$(dirname \$(readlink -f \$PYTHON_BIN)))
-    export PYTHON=\$PREFIX_PYTHON/bin/python3
-    export JCC=\"\$PYTHON -m jcc\"
-
-    # Percorso delle librerie Java
-    export LD_LIBRARY_PATH=\"\$JAVA_HOME/lib/server:\$LD_LIBRARY_PATH\"
-    "
-
-    BASHRC_FILE="$HOME/.bashrc"
-
-    # Verifica se le variabili sono già presenti nel file
-    if ! grep -Fxq "$ENV_VARS" "$BASHRC_FILE"; then
-        echo -e "$ENV_VARS" >> "$BASHRC_FILE"
-    fi
-
-    source "$BASHRC_FILE"
+    chmod +x setup_variables.sh
+    ./setup_variables.sh
     ```
 
-- **📌 Verifica dell'installazione**
+- **📌 Rientrare nell'ambiente Conda di PyLucene**
+    
+    Dopo aver eseguito lo script, le variabili d'ambiente vengono caricate e il file `.bashrc` viene riavviato. Tuttavia, questo può riportarti all'ambiente di default di Anaconda (`base`).
+
+    Per continuare a lavorare con PyLucene, è necessario riattivare l'ambiente corretto:
+
+    ```bash
+    conda activate lucene
+    ```
+
+- **📌 Verifica dell'Installazione**
 
     Per verificare che l'installazione di PyLucene sia andata a buon fine, esegui il seguente comando. Se non ci sono errori, l'installazione è stata completata correttamente:
 
