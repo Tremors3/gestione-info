@@ -7,11 +7,12 @@ from datetime import date, timedelta, datetime
 
 # #################################################################################################### #
 
-# Our Imports
+# Importazione moduli di progetto
 from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
 from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
 from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
+from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 
 # #################################################################################################### #
 
@@ -242,7 +243,7 @@ def save_results_to_file(results: dict, filename: str):
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(results, f, ensure_ascii=False, indent=4)
     except IOError as e:
-        print(f"Errore nel salvataggio del file {filepath}: {e}")
+        raise IOError(f"Errore nel salvataggio del file {filepath}: {e}")
 
 def load_results_from_file(filename: str):
     """Carica i risultati da un file JSON nel directory temporaneo."""
@@ -253,7 +254,7 @@ def load_results_from_file(filename: str):
         with open(filepath, "r", encoding="utf-8") as f:
             return json.loads(f.read())
     except (IOError, json.JSONDecodeError) as e:
-        print(f"Errore nella lettura del file {filepath}: {e}")
+        logging.error(f"Errore nella lettura del file {filepath}: {e}")
         return []
 
 def delete_file(filename: str):
@@ -263,7 +264,7 @@ def delete_file(filename: str):
         if os.path.exists(filepath):
             os.remove(filepath)
     except IOError as e:
-        print(f"Errore nella cancellazione del file {filepath}: {e}")
+        logging.error(f"Errore nella cancellazione del file {filepath}: {e}")
 
 # #################################################################################################### #
 

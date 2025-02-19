@@ -3,6 +3,11 @@
 import os, sys, json, shutil
 from datetime import datetime
 
+# Importazione barra di caricamento
+from alive_progress import alive_bar
+from alive_progress.animations import bar_factory
+_bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
+
 # Importazione Whoosh per la gestione dell'indicizzazione e della ricerca
 from whoosh.fields import Schema, TEXT, ID, NUMERIC, STORED, KEYWORD, DATETIME
 from whoosh.qparser import QueryParser, GtLtPlugin
@@ -34,8 +39,7 @@ class MyWhoosh:
         
         # Controllo se il file del dataset esiste
         if not os.path.isfile(MyWhoosh.DATASET_FILE_PATH):
-            logging.error(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyWhoosh.DATASET_FILE_PATH}\'.")
-            raise
+            raise FileNotFoundError(f"Il file del dataset non è stato trovato al seguente percorso: \'{MyWhoosh.DATASET_FILE_PATH}\'.")
         
         # Controllo se la cartella degli indici esiste
         if os.path.exists(MyWhoosh.INDEX_DIRECTORY_PATH):
@@ -75,30 +79,35 @@ class MyWhoosh:
         # Creazione writer per aggiungere documenti all'indice
         writer = index.create_in(MyWhoosh.INDEX_DIRECTORY_PATH, SCHEMA).writer()
 
-        # Inserire documenti nell'indice
-        for doc in documents:
+        # Definizione della barra di caricamento che viene visualizzata durante l'esecuzione
+        with alive_bar(len(documents), title="Indicizzazione dei documenti con Whoosh", spinner="waves", bar=_bar) as bar:
             
-            # Parsing della data (data di oggi se fallisce)
-            try: date = datetime.strptime(doc["Date"], "%Y-%m")
-            except Exception: date = datetime.today()
+            # Inserire documenti nell'indice
+            for doc in documents:
+                
+                bar() # Avanza la barra
+                
+                # Parsing della data (data di oggi se fallisce)
+                try: date = datetime.strptime(doc["Date"], "%Y-%m")
+                except Exception: date = datetime.today()
 
-            # Aggiunta del documento
-            writer.add_document(
-                
-                # Campi memorizzati
-                number    = doc["Number"],                 # Identificativo del documento
-                title     = doc["Title"],                  # Titolo
-                authors   = doc["Authors"],                # Autori
-                date      = date,                          # Data di pubblicazione
-                status    = doc["Status"],                 # Stato
-                abstract  = doc["Abstract"],               # Abstract
-                keywords  = doc["Keywords"],               # Parole chiave
-                more_info = doc["More Info"],              # Altre informazioni
-                files     = doc["Files"],                  # Files
-                
-                # Campi non memorizzati
-                content   = doc["Content"]                 # Contenuto
-            )
+                # Aggiunta del documento
+                writer.add_document(
+                    
+                    # Campi memorizzati
+                    number    = doc["Number"],                 # Identificativo del documento
+                    title     = doc["Title"],                  # Titolo
+                    authors   = doc["Authors"],                # Autori
+                    date      = date,                          # Data di pubblicazione
+                    status    = doc["Status"],                 # Stato
+                    abstract  = doc["Abstract"],               # Abstract
+                    keywords  = doc["Keywords"],               # Parole chiave
+                    more_info = doc["More Info"],              # Altre informazioni
+                    files     = doc["Files"],                  # Files
+                    
+                    # Campi non memorizzati
+                    content   = doc["Content"]                 # Contenuto
+                )
 
         # Commit
         writer.commit()
@@ -106,6 +115,7 @@ class MyWhoosh:
     @staticmethod
     def create_indexes():
         """ Funzione che crea gli indici per la ricerca. """
+        logging.debug("Whoosh: Indicizzazione dei documenti...")
         MyWhoosh._prepare_folders_and_files()
         MyWhoosh._write_indexes()
 

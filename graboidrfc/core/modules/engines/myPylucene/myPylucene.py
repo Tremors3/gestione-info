@@ -5,6 +5,11 @@
 import os, sys, json, shutil
 from datetime import datetime
 
+# Importazione barra di caricamento
+from alive_progress import alive_bar
+from alive_progress.animations import bar_factory
+_bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
+
 # Importazione di Lucene e Paths
 import lucene
 from java.nio.file import Paths
@@ -24,6 +29,7 @@ from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause,
 
 # Import moduli di progetto
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
+from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 
 # #################################################################################################### #
 
@@ -54,7 +60,7 @@ class MyPyLucene:
                 # Inizializzazione di Lucene
                 lucene.initVM(vmargs=['-Djava.awt.headless=True']) # senza header (ui)
                 is_vm_initialized = True
-            except Exception as ignored: pass
+            except Exception: pass
 
     @staticmethod
     def attach_lucene_to_thread():
@@ -65,7 +71,7 @@ class MyPyLucene:
         try:
             # Attacca il thread corrente alla JVM di Lucene
             lucene.getVMEnv().attachCurrentThread()
-        except Exception as ignored: pass
+        except Exception: pass
 
     @staticmethod
     def _prepare_folders_and_files():
@@ -107,27 +113,32 @@ class MyPyLucene:
         with open(MyPyLucene.DATASET_FILE_PATH, mode="r", encoding='utf-8') as f:
             documents = json.load(f)
 
-        # Per ciascun documento
-        for jdoc in documents:
+        # Definizione della barra di caricamento che viene visualizzata durante l'esecuzione
+        with alive_bar(len(documents), title="Indicizzazione dei documenti con PyLucene", spinner="waves", bar=_bar) as bar:
 
-            doc = Document() # nuovo documento
-            
-            # Aggiunta dei campi memorizzati al documento
-            doc.add(Field("number",    jdoc["Number"],              StringField.TYPE_STORED))
-            doc.add(Field("title",     jdoc["Title"],               TextField.TYPE_STORED))
-            doc.add(Field("authors",   " ".join(jdoc["Authors"]),   TextField.TYPE_STORED))
-            doc.add(Field("date",      jdoc["Date"],                TextField.TYPE_STORED))
-            doc.add(Field("status",    jdoc["Status"],              StringField.TYPE_STORED))
-            doc.add(Field("abstract",  jdoc["Abstract"],            TextField.TYPE_STORED))
-            doc.add(Field("keywords",  " ".join(jdoc["Keywords"]),  TextField.TYPE_STORED))
-            doc.add(Field("more_info", jdoc["More Info"],           StringField.TYPE_STORED))
-            doc.add(Field("files",     " ".join(jdoc["Files"]),     TextField.TYPE_STORED))
-            
-            # Aggiunta di campi non memorizzati (contenuto)
-            doc.add(Field("content",   jdoc["Content"],             TextField.TYPE_NOT_STORED))
-            
-            # Aggiunta del documento all'indice
-            writer.addDocument(doc)
+            # Per ciascun documento
+            for jdoc in documents:
+
+                bar() # Avanza la barra
+
+                doc = Document() # nuovo documento
+                
+                # Aggiunta dei campi memorizzati al documento
+                doc.add(Field("number",    jdoc["Number"],              StringField.TYPE_STORED))
+                doc.add(Field("title",     jdoc["Title"],               TextField.TYPE_STORED))
+                doc.add(Field("authors",   " ".join(jdoc["Authors"]),   TextField.TYPE_STORED))
+                doc.add(Field("date",      jdoc["Date"],                TextField.TYPE_STORED))
+                doc.add(Field("status",    jdoc["Status"],              StringField.TYPE_STORED))
+                doc.add(Field("abstract",  jdoc["Abstract"],            TextField.TYPE_STORED))
+                doc.add(Field("keywords",  " ".join(jdoc["Keywords"]),  TextField.TYPE_STORED))
+                doc.add(Field("more_info", jdoc["More Info"],           StringField.TYPE_STORED))
+                doc.add(Field("files",     " ".join(jdoc["Files"]),     TextField.TYPE_STORED))
+                
+                # Aggiunta di campi non memorizzati (contenuto)
+                doc.add(Field("content",   jdoc["Content"],             TextField.TYPE_NOT_STORED))
+                
+                # Aggiunta del documento all'indice
+                writer.addDocument(doc)
 
         writer.commit() # Commit
         writer.close()  # Chiusura writer
@@ -135,6 +146,7 @@ class MyPyLucene:
     @staticmethod
     def create_indexes():
         """ Funzione che crea gli indici per la ricerca. """
+        logging.debug("PyLucene: Indicizzazione dei documenti...")
         MyPyLucene._prepare_folders_and_files()
         MyPyLucene._write_indexes()
 

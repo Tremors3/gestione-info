@@ -100,34 +100,34 @@ class MyPostgres(metaclass=Singleton):
                     host=self.address,
                     port=self.port
                 )
-                print(f"Connessione al database \'{self.db_name}\' stabilita.")
+                logging.info(f"Connessione al database \'{self.db_name}\' su \'{self.address}:{self.port}\' riuscita con successo.")
                 return
         
-            except Exception as e:
-                print(f"Connessione al database \'{self.db_name}\' non riuscita. Tentativo {attempt + 1}/{self.reconnect_attempts}.")
+            except Exception:
+                logging.warning(f"Connessione al database \'{self.db_name}\' su \'{self.address}:{self.port}\' non riuscita. Tentativo {attempt + 1}/{self.reconnect_attempts}.")
                 sleep(self.reconnect_interval)
                 attempt += 1
         
-        raise ConnectionError(f"Impossibile connettersi al database \'{self.db_name}\'. Controllare che il servizio di PostgreSQL sia attivo.")
+        raise ConnectionError(f"Impossibile connettersi al database \'{self.db_name}\' su \'{self.address}:{self.port}\'. Controllare che il servizio di PostgreSQL sia attivo.")
 
     def _reconnect(self):
         """Sovrascrive la connessione esistente con una nuova connessione."""
-        print("Riconnessione al database...")
+        logging.info("Riconnessione al database...")
         self._connect()
     
     def _close_connection(self):
         """Chiude la connessione al database."""
         if self.conn:
             self.conn.close()
-            print("Connessione al database chiusa.")
+            logging.info("Connessione al database chiusa.")
         else:
-            print("Nessuna connessione attiva da chiudere.")
+            logging.info("Nessuna connessione attiva da chiudere.")
     
     def _get_cursor(self) -> Optional[pg8000.Cursor]:
         """Restituisce un cursore legato alla connessione."""
         if self.conn:
             return self.conn.cursor()
-        print("Connessione non disponibile.")
+        logging.info("Connessione non disponibile.")
         return None
     
     def __del__(self):
@@ -170,12 +170,9 @@ class MyPostgres(metaclass=Singleton):
             # Commit
             self.conn.commit()
 
-            print("Creazione della tabella completata.")
-
         except Exception as e:
             self.conn.rollback() # Rollback
-            print(f"Errore durante la creazione della tabella: {e}")
-            raise
+            raise Exception(f"Errore durante la creazione della tabella: {e}")
     
     @staticmethod
     def __sanitize(s: str) -> str:
@@ -290,13 +287,10 @@ class MyPostgres(metaclass=Singleton):
                         
                         self.conn.commit() # Commit
                         insert_values = [] # Pulizia elementi inseriti
-                
-                print("Popolamento del database completato.")
-                
+
         except Exception as e:
             self.conn.rollback() # Rollback
-            print(f"Errore durante il popolamento del database: {e}")
-            raise
+            raise Exception(f"Errore durante il popolamento del database: {e}")
     
     def _construct_indexes(self):
         """Crea gli indici sui campi specificati."""
@@ -317,23 +311,21 @@ class MyPostgres(metaclass=Singleton):
             # Creazione di ciascun indice
             for index in indexes:
                 cursor.execute(index)
-                print(f"Indice creato: {index}")
             
             self.conn.commit() # Commit
-            
-            print(f"Tutti gli indici sono stati creati correttamente.")
-            
+
         except Exception as e:
             self.conn.rollback()
-            print(f"Errore durante la creazione degli indici: {e}")
-            raise
+            raise Exception(f"Errore durante la creazione degli indici: {e}")
     
     # #################################################################################################### #
     
     def create_indexes(self):
         """Pipeline di creazione degli indici."""
+        logging.debug("PostgreSQL: Inizializzazione della tabella e popolamento del database...")
         self._initialize_table()
         self._populate_table()
+        logging.debug("PostgreSQL: Creazione degli indici sui campi...")
         self._construct_indexes()
     
     @staticmethod

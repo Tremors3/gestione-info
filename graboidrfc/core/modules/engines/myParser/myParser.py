@@ -157,7 +157,6 @@ class MyParser:
                             yield page
                     except Exception as e:
                         logging.warning(f"Errore durante l'elaborazione di un task: {e}")
-                
 
     # %%%%%% METADATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

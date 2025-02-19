@@ -2,7 +2,7 @@
 
 **Graboid-RFC** è un progetto orientato allo sviluppo di un sistema per l'indicizzazione e la ricerca efficace di **documenti RFC** (Request for Comments); documenti tecnici di fondamentale importanza nel campo delle telecomunicazioni e dell'informatica.
 
-L'obiettivo principale è sviluppare e **confrontare le prestazioni** di tre diversi motori di ricerca (PostgreSQL, PyLucene, Whoosh) applicati al alla collezione di document RFC.
+L'obiettivo principale è sviluppare e **confrontare le prestazioni** di tre diversi motori di ricerca (PostgreSQL, PyLucene, Whoosh) applicati al alla collezione di documenti RFC.
 
 <!--
 ### Tecnologie Utilizzate
@@ -48,7 +48,7 @@ gestione-info/
 
 <br />
 
-## Setup
+## Setup (Febbraio 2025)
 
 ### 👉 Premesse
 
@@ -56,7 +56,7 @@ gestione-info/
 
     Sconsigliamo l'utilizzo su altri sistemi operativi, poiché non sono stati testati. Nel caso in cui non si disponga di una macchina con quei sistemi operativi, si consiglia l'uso di un **hypervisor**.
 
-2. Per installare le dipendenze, è necessario eseguire alcuni script situati nella directory `./gestione-info/scripts/`.
+2. Durante l'installazione delle dipendenze, potrebbe essere necessario eseguire occasionalmente degli script situati nella directory  `./gestione-info/scripts/`.
 
 <br />
 
@@ -89,7 +89,7 @@ Soddisfatte tutte le dipendenze sarà possibile [installare il nostro pacchetto]
 
 ### 👉 Installazione Pacchetto
 
-Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'installazione all'interno di un ambiente virtuale Python, gestito tramite **Anaconda** (lo stesso ambiente in cui è installato PyLucene).
+Una volta soddisfatte le dipendenze, sarà possibile procedere con l'installazione del pacchetto utilizzando `pip`. Si consiglia di eseguire l'installazione all'interno di un **ambiente virtuale** Python gestito tramite Anaconda, lo stesso ambiente in cui è installato PyLucene.
 
 - **📌 Clonare il repository GitHub**
     
@@ -131,9 +131,11 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
 
 ### 👉 Installazione PostgreSQL e Setup del Database
 
+L'obiettivo di questa fase è assicurarsi che il servizio PostgreSQL sia attivo sul sistema e creare il database e l'utente necessari per il pacchetto.
+
 - **📌 Installazione e attivazione del servizio PostgreSQL**
 
-    Procedi con l'installazione di PostgreSQL:
+    Aggiorna i pacchetti e installa PostgresSQL insieme ai pacchetti aggiuntivi:
 
     ```bash
     sudo apt update
@@ -148,13 +150,13 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
     sudo systemctl enable postgresql.service # abilita il servizio ad ogni riavvio
     ```
     
-    Imposta una password per l'utente postgres eseguendo il seguente comando:
+    Imposta una password per l'utente `postgres` eseguendo il seguente comando:
 
     ```bash
     sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
     ```
 
-    **Nota**: La password predefinita per l'utente predefinito `postgres` è `postgres`. Sarà richiesta nelle fasi successive.
+    **Nota**: La password predefinita per l'utente predefinito `postgres` è "postgres". Potrebbe essere richiesta nelle fasi successive.
 
 - **📌 Creazione del database e dell'utente**
 
@@ -167,7 +169,7 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
 
 - **📌 Specificare la porta del servizio PostgreSQL**
 
-    Se il servizio PostgreSQL non sta usando la porta predefinita `5432`, dovrai aggiornare il file di configurazione del progetto.
+    Se il servizio PostgreSQL non sta usando la porta predefinita `5432`, dovrai aggiornare il file di configurazione del progetto prima della sua installazione.
 
     **Modifica della porta:**
 
@@ -178,6 +180,8 @@ Per installare il pacchetto, utilizzeremo `pip`. È consigliabile eseguire l'ins
 <br />
 
 ### 👉 Installazione Anaconda 
+
+L'obiettivo di questa fase è creare un ambiente virtuale isolato in cui poter installare PyLucene. L'installazione di PyLucene può essere particolarmente complessa e, dopo aver esplorato diverse opzioni, l'unico metodo che ho trovato è eseguire l'installazione all'interno di un ambiente virtuale gestito da **Anaconda**. 
 
 - **📌 Scaricare e installare Anaconda**
 
@@ -240,7 +244,7 @@ Si consiglia di eseguire i seguenti passaggi all'interno dell'**ambiente Anacond
 
 - **📌 Installazione dei pacchetti necessari alla build**
 
-    Per costruire PyLucene, è necessario installare alcuni pacchetti:
+    Per buildare PyLucene, è necessario installare alcuni pacchetti:
 
     ```bash
     sudo apt update
