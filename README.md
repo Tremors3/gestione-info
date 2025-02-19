@@ -173,7 +173,7 @@ L'obiettivo di questa fase è assicurarsi che il servizio PostgreSQL sia attivo 
 
     **Modifica della porta:**
 
-    1. [Clona](#👉-installazione-pacchetto) il nostro repository, ma non installarlo.
+    1. [Clona](#-installazione-pacchetto) il nostro repository, ma non installarlo.
     2. Apri il file `./gestione-info/graboidrfc/core/config/postgres.json`.
     3. Modifica il campo `PORT_NUMBER` con il numero di porta corretto a cui PostgreSQL è in ascolto.
 
@@ -253,7 +253,7 @@ Si consiglia di eseguire i seguenti passaggi all'interno dell'**ambiente Anacond
 
 - **📌 Build e Installazione di PyLucene**
 
-    Lo script `setup_pylucene.sh` automatizza il processo di **installazione di PyLucene**.
+    Lo script `setup_pylucene.sh` automatizza il processo di **installazione di PyLucene**:
 
     ```bash
     chmod +x setup_pylucene.sh
@@ -262,18 +262,20 @@ Si consiglia di eseguire i seguenti passaggi all'interno dell'**ambiente Anacond
 
 - **📌 Rendere Permanenti le Variabili d'Ambiente**
 
-    Una volta completata l'installazione, è necessario **rendere permanenti le variabili d'ambiente** aggiungendole al file `.bashrc`. Lo script `setup_variables` automatizza questo processo.
+    Una volta completata l'installazione, è necessario **rendere permanenti le variabili d'ambiente** aggiungendole al file `.bashrc`. Lo script `setup_variables` automatizza questo processo:
 
     ```bash
     chmod +x setup_variables.sh
     ./setup_variables.sh
     ```
 
-- **📌 Rientrare nell'ambiente Conda di PyLucene**
-    
-    Dopo aver eseguito lo script, le variabili d'ambiente vengono caricate e il file `.bashrc` viene riavviato. Tuttavia, questo può riportarti all'ambiente di default di Anaconda (`base`).
+    Dopo aver eseguito lo script, è necessario riavviare il terminale oppure rieseguire il file per aggiornare l'ambiente della sessione corrente con le nuove variabili:
 
-    Per continuare a lavorare con PyLucene, è necessario riattivare l'ambiente corretto:
+    ```bash
+    source $HOME/.bashrc
+    ```
+
+    Tuttavia, questo può riportarti all'ambiente di default di Anaconda (`base`). Per lavorare con PyLucene, è necessario riattivare l'ambiente corretto:
 
     ```bash
     conda activate lucene
@@ -281,7 +283,7 @@ Si consiglia di eseguire i seguenti passaggi all'interno dell'**ambiente Anacond
 
 - **📌 Verifica dell'Installazione**
 
-    Per verificare che l'installazione di PyLucene sia andata a buon fine, esegui il seguente comando. Se non ci sono errori, l'installazione è stata completata correttamente:
+    Per verificare che l'installazione di PyLucene sia stata completata correttamente, esegui il seguente comando. Se non ci sono errori, l'installazione è stata completata con successo.
 
     ```bash
     python -c "import lucene; lucene.initVM()"
