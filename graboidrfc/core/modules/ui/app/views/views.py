@@ -181,18 +181,18 @@ def results():
 
         return render_template('results.html', risultati=results, num_result=len(results), max_words=250)
 
-# risultati = [
-#     {
-#         "link":"https://rfc-editor.org/rfc/rfc9000",
-#         "link_title":"RFC 9000",
-#         "title":"Qualcosa qualcosa 1",
-#         "formats":["pdf","html","txt"],
-#         "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
-#         "date": "1111/11/11",
-#         "comment": "commento",
-#         "abstract":"Estratto della pagina dell'rfc 9000"
-#     }
-# ]
+    # risultati = [
+    #     {
+    #         "link":"https://rfc-editor.org/rfc/rfc9000",
+    #         "link_title":"RFC 9000",
+    #         "title":"Qualcosa qualcosa 1",
+    #         "formats":["pdf","html","txt"],
+    #         "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
+    #         "date": "1111/11/11",
+    #         "comment": "commento",
+    #         "abstract":"Estratto della pagina dell'rfc 9000"
+    #     }
+    # ]
 
 # #################################################################################################### #
 
@@ -265,11 +265,3 @@ def delete_file(filename: str):
             os.remove(filepath)
     except IOError as e:
         logging.error(f"Errore nella cancellazione del file {filepath}: {e}")
-
-# #################################################################################################### #
-
-# Funzione per castare in modo sicuro
-def safecast(value, to_type, default=None):
-    try: return to_type(value)
-    except (ValueError, TypeError):
-        return default

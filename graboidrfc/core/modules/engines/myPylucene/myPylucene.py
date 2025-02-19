@@ -30,6 +30,7 @@ from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause,
 # Import moduli di progetto
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
+from graboidrfc.core.modules.utils.miscellaneous import safecast
 
 # #################################################################################################### #
 
@@ -199,11 +200,14 @@ class MyPyLucene:
             # Filtro per anno specifico (SPECIFIC_YEAR)
             if date_value == "SPECIFIC_YEAR" and data.get("date_year"):
                 
-                specific_year = data.get("date_year")
-                document_year = doc.get("date", "").split('-')[0] if doc.get("date") else None
+                specific_year_int = data.get("date_year")
+                document_year_str = doc.get("date").split('-')[0] if doc.get("date") else None
+                
+                # Conversione dell'anno ad intero
+                document_year_int = safecast(document_year_str, int, None)
                 
                 # Verifica che l'anno del documento corrisponda all'anno specificato nel filtro
-                if specific_year and document_year and specific_year == document_year:
+                if specific_year_int and document_year_int and (specific_year_int == document_year_int):
                     results.append(doc)
 
             # Filtro per intervallo tra date (DATE_RANGE)
@@ -304,7 +308,7 @@ class MyPyLucene:
                 }
 
                 # Imposta l'operatore di ricerca
-                op = operator_mapping.get(operator, BooleanClause.Occur.SHOULD)  # Default è SHOULD
+                op = operator_mapping.get(operator, BooleanClause.Occur.MUST)
 
                 # Mappatura tra chiavi e nomi dei campi
                 field_mapping = {
@@ -314,7 +318,7 @@ class MyPyLucene:
                 }
 
                 # Imposta il campo di ricerca
-                field = field_mapping.get(field, "abstract") # Default è "abstract"
+                field = field_mapping.get(field, "abstract")
 
                 # Crea il parser per il campo specificato
                 parser = QueryParser(field, analyzer)
@@ -456,7 +460,7 @@ if __name__ == "__main__":
             "experimental":False,
             "historic":False,
             "standard_track_value":"PROPOSED_STANDARD",
-            "date_year":"2021",
+            "date_year":2021,
             "date_from_date":"2021-04",
             "date_to_date":"2021-06",
             "dates":"DATE_RANGE",
