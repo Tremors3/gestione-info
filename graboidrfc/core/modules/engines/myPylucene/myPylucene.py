@@ -25,7 +25,7 @@ from org.apache.lucene.store import NIOFSDirectory
 # Classi per lettura dell'indice e ricerca
 from org.apache.lucene.index import DirectoryReader, Term
 from org.apache.lucene.queryparser.classic import QueryParser
-from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause, TermQuery, TermRangeQuery
+from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause, TermQuery, TermRangeQuery, MatchAllDocsQuery
 
 # Import moduli di progetto
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
@@ -278,10 +278,12 @@ class MyPyLucene:
         
         ## Enum BooleanClause.Occur.
         ## https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/search/BooleanClause.Occur.html
-        # FILTER - Like MUST except that these clauses do not participate in scoring.
-        # MUST - Use this operator for clauses that must appear in the matching documents.
-        # MUST_NOT - Use this operator for clauses that must not appear in the matching documents.
-        # SHOULD - Use this operator for clauses that should appear in the matching documents.
+        # --> FILTER    - Like MUST except that these clauses do not participate in scoring.
+        # --> MUST      - Use this operator for clauses that must appear in the matching documents.
+        # --> MUST_NOT  - Use this operator for clauses that must not appear in the matching documents.
+        # --> SHOULD    - Use this operator for clauses that should appear in the matching documents.
+        ## IMPORTANTE: Le MUST_NOT non funzionano da sole, necessitano per forza di una MUST/SHOULD.
+        ## Per questo motivo ci viene in soccorso la "MatchAllDocsQuery()" settata come MUST.
 
         # Termini di ricerca secondari
         run_terms_search = data["terms"]
@@ -291,6 +293,7 @@ class MyPyLucene:
             
             # Inizializzazione di un costruttore per la query booleana
             terms_query_builder = BooleanQuery.Builder()
+            must_present = False
 
             # Itera attraverso ogni termine di ricerca
             for term_data in data["terms"]:
@@ -309,6 +312,10 @@ class MyPyLucene:
 
                 # Imposta l'operatore di ricerca
                 op = operator_mapping.get(operator, BooleanClause.Occur.MUST)
+                
+                # Controlla se c'è almeno una query NUST/SHOULD
+                if op in (BooleanClause.Occur.MUST, BooleanClause.Occur.SHOULD):
+                    must_present = True
 
                 # Mappatura tra chiavi e nomi dei campi
                 field_mapping = {
@@ -328,6 +335,11 @@ class MyPyLucene:
                 
                 # Aggiungi la query con l'operatore specificato
                 terms_query_builder.add(query, op)
+
+            # Se non ci sono termini MUST/SHOULD
+            if not must_present:
+                # Allora aggiungi una MatchAllDocsQuery, necessaria per le MUST_NOT
+                terms_query_builder.add(MatchAllDocsQuery(), BooleanClause.Occur.MUST)
 
             # Completamento costruzione query booleana
             terms_query = terms_query_builder.build()
