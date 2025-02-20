@@ -1,0 +1,27 @@
+{
+    "engines": [
+        {
+            "name": "google",
+            "params": {
+                "no_cache": true,
+                "num": 50,
+                "start": 0
+            }
+        },
+        {
+            "name": "duckduckgo",
+            "params": {
+                "no_cache": true,
+                "start": 1
+            }
+        },
+        {
+            "name": "bing",
+            "params": {
+                "no_cache": true,
+                "count": 50,
+                "first": 2
+            }
+        }
+    ]
+}

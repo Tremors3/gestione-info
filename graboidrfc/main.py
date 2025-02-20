@@ -8,9 +8,10 @@ import sys, re, os
 
 # Importazioni dei moduli del progetto
 from graboidrfc.core.modules.docker.myDocker import DockerPG
-from graboidrfc.core.modules.ui.run import start as start_web_server
+from graboidrfc.core.modules.web.run import start as start_web_server
 from graboidrfc.core.modules.engines.myParser.myParser import start as start_parser
-from graboidrfc.core.modules.engines.myBenchmark.createBenchmark import start as start_benchmark
+from graboidrfc.core.modules.engines.myBenchmark.benchmark import BenchmarkConstructor
+from graboidrfc.core.modules.engines.myBenchmark.extractor import ExtractorManager
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
@@ -61,7 +62,10 @@ class Application:
         # Argomenti utili per Debugging
         exclusive_group.add_argument('-p', '--parser', action='store_true', help='Esegue il parser.')
         exclusive_group.add_argument('-x', '--indexes', action='store_true', help='Costruisce gli Inverted Index.')
-        exclusive_group.add_argument('-b', '--benchmark', action='store_true', help='Calcola e mostra il benchmark.')
+        
+        # Argomenti per la costruzione del Benchmark
+        exclusive_group.add_argument('-e', '--extractor', action='store_true', help='Ottiene i risultati necessari alla costruzione del benchmark.')
+        exclusive_group.add_argument('-b', '--benchmark', action='store_true', help='Costruisce e salva il benchmark.')
 
     # #################################################################################################### #
 
@@ -149,10 +153,15 @@ class Application:
         postgres._close_connection()
         self.docker_stop()
 
+    def extractor(self) -> None:
+        """Avvia lo script che ottiene i risultati necessari alla costruzione del banchamrk."""
+        print(f"{bcolors.GREEN}Estrazione dei risultati necessari alla costruzione del Banchmark ...{bcolors.RESET}")
+        ExtractorManager.start()
+    
     def benchmark(self) -> None:
         """Avvia lo script calcola e mostra il benchmark."""
-        print(f"{bcolors.GREEN}Calcola e mostra il Benchmark ...{bcolors.RESET}")
-        start_benchmark()
+        print(f"{bcolors.GREEN}Costruzione e restituzione del Benchmark ...{bcolors.RESET}")
+        BenchmarkConstructor.start()
 
     # ################################################## #
 

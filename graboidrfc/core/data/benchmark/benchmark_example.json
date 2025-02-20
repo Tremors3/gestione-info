@@ -1,0 +1,67 @@
+[
+    {
+        "query": "Quic protocol site:www.rfc-editor.org",
+        "relevance_values": [
+            {
+                "document_id": "9000",
+                "relevance": 12.0,
+                "normalized": 3.0,
+                "rounded": 3
+            },
+            {
+                "document_id": "9308",
+                "relevance": 6.071130243223997,
+                "normalized": 1.9596594205154498,
+                "rounded": 2
+            },
+            {
+                "document_id": "9312",
+                "relevance": 5.445412464587145,
+                "normalized": 1.849864531586261,
+                "rounded": 2
+            },
+            {
+                "document_id": "9114",
+                "relevance": 5.270117461231739,
+                "normalized": 1.8191054640315918,
+                "rounded": 2
+            },
+            {
+                "document_id": "8999",
+                "relevance": 4.305573310703588,
+                "normalized": 1.6498566085727484,
+                "rounded": 2
+            },
+            {
+                "document_id": "9001",
+                "relevance": 4.020021588908337,
+                "normalized": 1.5997507610989081,
+                "rounded": 2
+            },
+            {
+                "document_id": "9002",
+                "relevance": 3.785578521428745,
+                "normalized": 1.5586129647425109,
+                "rounded": 2
+            },
+            {
+                "document_id": "9369",
+                "relevance": 0.7124143742160444,
+                "normalized": 1.0193639171296076,
+                "rounded": 1
+            },
+            {
+                "document_id": "9221",
+                "relevance": 0.6666666666666666,
+                "normalized": 1.0113365529717737,
+                "rounded": 1
+            },
+            {
+                "document_id": "9250",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.0,
+                "rounded": 1
+            }
+        ]
+    }
+]

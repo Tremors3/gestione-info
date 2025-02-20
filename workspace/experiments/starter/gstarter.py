@@ -10,10 +10,10 @@ from typing import Callable, Any
 
 # Importazioni dei moduli del progetto
 from graboidrfc.core.modules.docker.myDocker import DockerPG
-from graboidrfc.core.modules.ui.run import start as start_web_server
+from graboidrfc.core.modules.web.run import start as start_web_server
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.engines.myParser.myParser import start as start_parser
-from graboidrfc.core.modules.engines.myBenchmark.createBenchmark import start as start_benchmark
+from graboidrfc.core.modules.engines.myBenchmark.benchmark import BenchmarkConstructor
 
 # #################################################################################################### #
 
@@ -125,7 +125,7 @@ class Application:
     def benchmark(self) -> None:
         """Avvia lo script che crea il benchmark."""
         print(f"{bcolors.GREEN}Creazione del Benchmark ...{bcolors.RESET}")
-        start_benchmark()
+        BenchmarkConstructor.start()
 
 # #################################################################################################### #
 
