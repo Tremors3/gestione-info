@@ -64,15 +64,14 @@ gestione-info/
 
 Per la corretta installazione e il funzionamento del pacchetto, è necessario installare le seguenti dipendenze nel caso non fossero già soddisfatte:
 
-
 <!--- **[🔧 Docker](#docker)** $\rightarrow$ Per la gestione del container (PostgreSQL).
     - **qemu, libvirt, ovmf, etc.** $\rightarrow$ Necessari per abilitare la virtualizzazione. -->
 
 1. **[🔧 PostgreSQL](#-installazione-postgresql-e-setup-del-database)** $\rightarrow$ Uno dei tre sistemi che utilizziamo per effettuare Full-Text Search.
-    - Creazione di database ed utente e selezione della porta.
+    - Creazione e setup del database e attribuzione permessi all'utente.
 
 2. **[🔧 Anaconda](#-installazione-anaconda)** $\rightarrow$ Per la gestione dell'ambiente Python.
-    - **python** $\rightarrow$ ($\geq$ **3.10**, consigliata: **3.12.7**) Fondamentale per eseguire il nostro pacchetto.
+    - **python** $\rightarrow$ ($\geq$ **3.10**, consigliata: **3.12.7**) Per eseguire il nostro pacchetto.
     - **pip** $\rightarrow$ Per l'installazione dei pacchetti Python.
 
 3. **[🔧 PyLucene](#-installazione-pylucene)** $\rightarrow$ ($\geq$ **9.4.1**) Uno dei tre sistemi che utilizziamo per effettuare Full-Text Search.
@@ -295,9 +294,9 @@ Si consiglia di eseguire i seguenti passaggi all'interno dell'**ambiente Anacond
 
 **Matteo Menozzi** $-$ (*Tremors3*) vedi [pagina](https://github.com/Tremors3) GitHub.
 
-**Gabriele Turci** $-$ (*HerryTS*) vedi [pagina](https://github.com/HerryTS) GitHub.
+**Enrico Turci Sologni** $-$ (*HerryTS*) vedi [pagina](https://github.com/HerryTS) GitHub.
 
-**Enrico Turci Sologni** $-$ (*Gabeee88*) vedi [pagina](https://github.com/Gabeee88) GitHub.
+**Gabriele Turci** $-$ (*Gabeee88*) vedi [pagina](https://github.com/Gabeee88) GitHub.
 
 **Andrei Dobrovolski** $-$ (*ADobrovolski*) vedi [pagina](https://github.com/ADobrovolski) GitHub.
 
