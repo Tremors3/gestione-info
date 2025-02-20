@@ -33,7 +33,6 @@ with ix.searcher() as searcher:
 
 #print("Query: ", query)
 
-
 def test():
     #analyzer = RegexTokenizer()
 
@@ -42,12 +41,6 @@ def test():
     #title_str = title_str.split()
     #term2 = Phrase("title", normalized_terms)
     #query = QueryParser("Content", ix.schema).parse("consensus")
-
-
-
-
-
-
 
     title_parser = QueryParser("title", ix.schema)
     title_str = "Content Delivery Network Interconnection (CDNI) Metadata"
@@ -89,6 +82,5 @@ def test():
         print(len(results), "risultato/i")
         for r in results:
             print(r["number"])
-
 
 test()

@@ -221,7 +221,7 @@ class ExtractorManager():
         # Recupero della Chiave API
         api_key = os.getenv('API_KEY')
         if not api_key:
-            raise RuntimeError(f"Chiave API non trovata. Assicurati che sia configurata nel '{env_file}'.")
+            raise RuntimeError(f"Chiave API non trovata. Assicurati che sia configurata in '{env_file}'.")
 
         # Definizione dei File di Configurazione
         config_file = ExtractorManager.EXTRACTOR_CONFIG_FILE

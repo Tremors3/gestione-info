@@ -1,13 +1,9 @@
 # DIPENDENZE DA SEGNALARE ALLA PROF
 
-python > 3.10
+python > 3.10 (consigliata 3.12.7)
 
-pylucene 10.0.0
+pylucene > 9.0.0 (consigliata 9.4.1)
 
-java 17 or greather
+java jdk 17 (necessaria)
 
-docker (https://docs.docker.com/desktop/setup/install/linux/) (https://docs.docker.com/desktop/setup/install/linux/debian)
-
-docker-compose
-
-(Windows) Microsoft Visual C++ 14.0 or greater is required
+postgresql (necessaria)
