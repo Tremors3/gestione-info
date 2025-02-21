@@ -29,11 +29,21 @@ export NUM_FILES=16
 
 export LD_LIBRARY_PATH="$JAVA_HOME/lib/server:$LD_LIBRARY_PATH"
 
+# Versione PyLucene
+PYLUCENE_VERSION="9.4.1"
+PYLUCENE="pylucene-${PYLUCENE_VERSION}"
+
+# Verifica se curl è installato
+if ! command -v curl &> /dev/null; then
+    echo "curl non è installato. Installalo prima di procedere."
+    exit 1
+fi
+
 # Scaricare e installare PyLucene
 echo "Scaricamento PyLucene..."
-curl -s https://downloads.apache.org/lucene/pylucene/pylucene-9.4.1-src.tar.gz | tar -xz
+curl -s https://downloads.apache.org/lucene/pylucene/${PYLUCENE}-src.tar.gz | tar -xz
 
-cd pylucene-9.4.1
+cd "${PYLUCENE}"
 
 echo "Compilazione JCC..."
 cd jcc
@@ -46,5 +56,10 @@ make
 
 echo "Installazione PyLucene..."
 make install
+
+echo "Pulizia File della Build..."
+if [ -d "${PYLUCENE}" ]; then
+    rm -rf "${PYLUCENE}"
+fi
 
 echo "Installazione completata con successo!"

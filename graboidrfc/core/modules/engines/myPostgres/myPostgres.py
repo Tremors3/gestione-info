@@ -493,8 +493,11 @@ class MyPostgres(metaclass=Singleton):
         # Esecuzione della query e ottenimento dei risultati
         results = cursor.execute(final_query).fetchall()
 
+        # Pulizia dei risultati
+        results = results[0][0] or []
+        
         # Restituzione risultati
-        return results[0][0]
+        return results
 
     # #################################################################################################### #
 

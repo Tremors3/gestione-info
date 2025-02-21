@@ -100,8 +100,8 @@ class RFCExtractor:
             # Caricamento delle Configurazioni
             with open(queries_file, 'r') as file:
                 queries = json.load(file)
-                self._load_queries(queries.get("queries", []))
-            
+                self._load_queries(queries or [])
+
         except FileNotFoundError:
             logging.error(f"File di configurazione '{config_file}' e '{queries_file}' non trovati.")
         except json.JSONDecodeError:
@@ -181,7 +181,7 @@ class ExtractorManager():
     # SETTINGS & DIRECTORY PATHS
     EXTRACTOR_ENV_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", ".env")
     EXTRACTOR_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "extractor.json")
-    QUERIES_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "queries.json")
+    QUERIES_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "queries.json")
     OUTPUT_RESULTS_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "extracted.json")
 
     @staticmethod
