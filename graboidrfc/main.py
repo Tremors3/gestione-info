@@ -141,10 +141,6 @@ class Application:
         """Costruisce gli Indici Invertiti."""
         print(f"{bcolors.GREEN}Costruzione degli Indici...{bcolors.RESET}")
         
-        MyWhoosh.create_indexes() # Creazione indici Whoosh
-        
-        MyPyLucene.create_indexes() # Creazione indici PyLucene
-
         self.docker_start()
         postgres = MyPostgres(use_docker=self.use_docker)
         
@@ -152,6 +148,10 @@ class Application:
         
         postgres._close_connection()
         self.docker_stop()
+        
+        MyPyLucene.create_indexes() # Creazione indici PyLucene
+        
+        MyWhoosh.create_indexes() # Creazione indici Whoosh
 
     def extractor(self) -> None:
         """Avvia lo script che ottiene i risultati necessari alla costruzione del banchamrk."""
