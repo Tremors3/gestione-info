@@ -57,6 +57,10 @@ header h1{
     }
   }
 
+.colonne.container_se{
+  display: flex;
+}
+
 .sinistra{
     display: block;
     flex-basis: 0;
@@ -473,12 +477,9 @@ header h1{
   margin-top: .5rem;
 }
 
-
-
-
-
-
-
+#whooshCheck{display: block;}
+#pyluceneCheck{display: none;}
+#postgresqlCheck{display: none;}
 
 
 

@@ -46,15 +46,63 @@
 
                 </div>
               </div>
-              <div class="search_engine">
-                <div class="control">
-                  <div class="radio">
-
-                    {{ context["form"].search_engine }}
-
+              <div class="colonne container_se">
+                <div class="sinistra">
+                  <div class="search_engine">
+                    <div class="control">
+                      <div class="radio">
+    
+                        {{ context["form"].search_engine }}
+    
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="destra">
+                  <div class="search_engine">
+                    <div class="control">
+                      <div class="radio">
+                        <div id="whooshCheck">
+                          {{ context["form"].whoosh_ranking}}
+                        </div>
+                        <div id="pyluceneCheck">
+                          {{ context["form"].pylucene_ranking}}
+                        </div>
+                        <div id="postgresqlCheck">
+                          {{ context["form"].postgresql_ranking}}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+              <script type="text/javascript">
+                var whoosh = document.querySelector("input[id=search_engine-0]");
+                var pylucene = document.querySelector("input[id=search_engine-1]");
+                var postgresql = document.querySelector("input[id=search_engine-2]");
+
+                whoosh.addEventListener('change', function() {
+                  if (this.checked) {
+                    document.getElementById('whooshCheck').style.display = 'block';
+                    document.getElementById('pyluceneCheck').style.display = 'none';
+                    document.getElementById('postgresqlCheck').style.display = 'none';
+                }});
+                  
+                pylucene.addEventListener('change', function() {
+                  if (this.checked) {
+                    document.getElementById('whooshCheck').style.display = 'none';
+                    document.getElementById('pyluceneCheck').style.display = 'block';
+                    document.getElementById('postgresqlCheck').style.display = 'none';
+                }});
+                    
+                postgresql.addEventListener('change', function() {
+                  if (this.checked) {
+                    document.getElementById('whooshCheck').style.display = 'none';
+                    document.getElementById('pyluceneCheck').style.display = 'none';
+                    document.getElementById('postgresqlCheck').style.display = 'block';
+                }});
+              </script>
+                
             </fieldset>
             <!-- FIELDSET RICERCA -->
 
