@@ -53,7 +53,7 @@ gestione-info/
 1. Il processo di installazione del pacchetto e delle relative dipendenze è stato adattato e testato su sistemi:
 
     - **Ubuntu**
-    - **Debian** 
+    - **Debian**
     - **Ubuntu su WSL2 (Windows 11)**
 
     Sconsigliamo l'utilizzo su altri sistemi operativi, perchè non sono stati testati. Nel caso in cui non si disponga di una macchina con quei sistemi operativi, si consiglia l'uso di un **hypervisor**.
@@ -111,7 +111,7 @@ L'obiettivo di questa fase è assicurarsi che il servizio PostgreSQL sia attivo 
     sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
     ```
 
-    > [!NOTE] Nota 
+    > [!NOTE]
     > La password predefinita per l'utente predefinito `postgres` è "postgres". Potrebbe essere richiesta nelle fasi successive.
 
 - **Creazione del database e dell'utente**
@@ -185,12 +185,12 @@ L'obiettivo di questa fase è creare un ambiente virtuale isolato in cui poter i
     ```
 
     Attivare l'ambiente:
-
+ 
     ```bash
     conda activate lucene
     ```
 
-    > [!NOTE] Nota 
+    > [!NOTE]
     > Ogni volta che apri una nuova sessione della shell, dovrai riattivare l'ambiente eseguendo nuovamente questo comando.
 
 ---
