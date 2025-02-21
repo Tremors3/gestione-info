@@ -54,10 +54,10 @@ class SearchForm(FlaskForm):
     spelling_correction   = BooleanField(label='Spelling Correction', validators=[], render_kw={"id":"spelling_correction",})
     synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"id":"synonims"})
     ######################################################## Selettore del searchengine ########################################################
-    search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL"),("TUTTI","Tutti")])
-    whoosh_ranking        = SelectField(default="RankingWhoosh_1", coerce=str, choices=[("RankingWhoosh_1", "RankingWhoosh1"),("RankingWhoosh_2", "RankingWhoosh2"),])
-    pylucene_ranking      = SelectField(default="RankingPyLucene_1", coerce=str, choices=[("RankingPyLucene_1", "RankingPyLucene1"),("RankingPyLucene_2", "RankingPyLucene2"),])
-    postgresql_ranking    = SelectField(default="RankingPostgreSQL_1", coerce=str, choices=[("RankingPostgreSQL_1", "RankingPostgreSQL1"),("RankingPostgreSQL_2", "RankingPostgreSQL2"),])
+    search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL")])
+    whoosh_ranking        = RadioField(default="RankingWhoosh_1", coerce=str, choices=[("RankingWhoosh_1", "RankingWhoosh1"),("RankingWhoosh_2", "RankingWhoosh2"),])
+    pylucene_ranking      = RadioField(default="RankingPyLucene_1", coerce=str, choices=[("RankingPyLucene_1", "RankingPyLucene1"),("RankingPyLucene_2", "RankingPyLucene2"),])
+    postgresql_ranking    = RadioField(default="RankingPostgreSQL_1", coerce=str, choices=[("RankingPostgreSQL_1", "RankingPostgreSQL1"),("RankingPostgreSQL_2", "RankingPostgreSQL2"),])
     ############################################################## Stato dell'RFC ##############################################################
     standard_track        = BooleanField('Standard', render_kw={"id":"standard_track"})
     best_current_practice = BooleanField(label='Best current practice', render_kw={"id":"best_current_practice"})
@@ -127,8 +127,6 @@ def search():
             result_id = str(uuid.uuid4())
             file_path = f"{result_id}.json"
             
-            tutti = False # Usa tutti i Search Engine
-
             # Scelta del search engine
             if "WHOOSH" == query.get("search_engine"):
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
@@ -145,19 +143,7 @@ def search():
                 response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, file_path)
 
-            if "TUTTI" == query.get("search_engine"):
-                tutti = True
-                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
-                response = MyWhoosh.process(query)
-                save_results_to_file(response, f"WHOOSH{file_path}")
-                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
-                response = MyPyLucene.process(query)
-                save_results_to_file(response, f"PYLUCENE{file_path}")
-                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
-                response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
-                save_results_to_file(response, f"POSTGRESQL{file_path}")
-
-            return redirect(url_for('views.results', result_id=result_id, tutti=tutti, show_abstracts=query.get('abstracts')))
+            return redirect(url_for('views.results', result_id=result_id, show_abstracts=query.get('abstracts')))
 
         return redirect(url_for('views.results', result_id=None, show_abstracts=None))
 
@@ -176,71 +162,19 @@ def results():
         
         # Valori per il recupero
         result_id = request.args.get('result_id', None)
-        tutti = True if request.args.get('tutti', False) == "True" else False
-
+        
         # Recupero dei risultati
         if result_id:
-            if tutti:
-                # Nomi del file temporanei
-                whoosh_file_path     = f"WHOOSH{result_id}.json"
-                pylucene_file_path   = f"PYLUCENE{result_id}.json"
-                postgresql_file_path = f"POSTGRESQL{result_id}.json"
-                
-                # Ritiro dei risultati
-                whoosh_results = load_results_from_file(whoosh_file_path)
-                pylucene_results = load_results_from_file(pylucene_file_path)
-                postgresql_results = load_results_from_file(postgresql_file_path)
-                
-                # Cancellazione dei file dopo il recupero
-                delete_file(whoosh_file_path)
-                delete_file(pylucene_file_path)
-                delete_file(postgresql_file_path)
-            else: 
-                # Nome del file temporaneo
-                file_path = f"{result_id}.json"
-                # Ritiro dei risultati
-                results = load_results_from_file(file_path)
-                # Cancellazione del file dopo il recupero
-                delete_file(file_path)
+            # Nome del file temporaneo
+            file_path = f"{result_id}.json"
+            # Ritiro dei risultati
+            results = load_results_from_file(file_path)
+            # Cancellazione del file dopo il recupero
+            delete_file(file_path)
         
-        if tutti:
-            # Aggiunta/Rimozione di ulteriori campi
-            for result in whoosh_results:
-                # Aggiunta Link
-                result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-                #Aggiunta Titolo
-                result["link_title"] = f"RFC {result.get('number')}"
-                # Eventuale rimozione degli abstracts
-                if request.args.get('show_abstracts', "True") == "False":
-                    del result["abstract"]
-
-            for result in pylucene_results:
-                # Aggiunta Link
-                result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-                #Aggiunta Titolo
-                result["link_title"] = f"RFC {result.get('number')}"
-                # Eventuale rimozione degli abstracts
-                if request.args.get('show_abstracts', "True") == "False":
-                    del result["abstract"]
-
-            for result in postgresql_results:
-                # Aggiunta Link
-                result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-                #Aggiunta Titolo
-                result["link_title"] = f"RFC {result.get('number')}"
-                # Eventuale rimozione degli abstracts
-                if request.args.get('show_abstracts', "True") == "False":
-                    del result["abstract"]
-
-            return render_template('results_tutti.html', 
-                                    whoosh_risultati=whoosh_results,         whoosh_num_result=len(whoosh_results), 
-                                    pylucene_risultati=pylucene_results,     pylucene_num_result=len(pylucene_results), 
-                                    postgresql_risultati=postgresql_results, postgresql_num_result=len(postgresql_results), 
-                                    max_words=250)            
-
-        # Aggiunta/Rimozione di ulteriori campi
+        # Aggiunta di ulteriori campi
         for result in results:
-            # Aggiunta Link
+            # Aggiunga Link
             result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
             #Aggiunta Titolo
             result["link_title"] = f"RFC {result.get('number')}"
