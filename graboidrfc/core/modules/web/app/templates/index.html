@@ -61,14 +61,15 @@
                 <div class="destra">
                   <div class="search_engine">
                     <div class="control">
+                    <div style="padding-bottom: .5em; padding-top: .5em;"> Modello di ranking </div>
                       <div class="radio">
-                        <div id="whooshCheck">
+                        <div id="whooshCheck" class="select">
                           {{ context["form"].whoosh_ranking}}
                         </div>
-                        <div id="pyluceneCheck">
+                        <div id="pyluceneCheck" class="select">
                           {{ context["form"].pylucene_ranking}}
                         </div>
-                        <div id="postgresqlCheck">
+                        <div id="postgresqlCheck" class="select">
                           {{ context["form"].postgresql_ranking}}
                         </div>
                       </div>

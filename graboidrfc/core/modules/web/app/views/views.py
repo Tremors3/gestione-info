@@ -55,9 +55,9 @@ class SearchForm(FlaskForm):
     synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"id":"synonims"})
     ######################################################## Selettore del searchengine ########################################################
     search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL")])
-    whoosh_ranking        = RadioField(default="RankingWhoosh_1", coerce=str, choices=[("RankingWhoosh_1", "RankingWhoosh1"),("RankingWhoosh_2", "RankingWhoosh2"),])
-    pylucene_ranking      = RadioField(default="RankingPyLucene_1", coerce=str, choices=[("RankingPyLucene_1", "RankingPyLucene1"),("RankingPyLucene_2", "RankingPyLucene2"),])
-    postgresql_ranking    = RadioField(default="RankingPostgreSQL_1", coerce=str, choices=[("RankingPostgreSQL_1", "RankingPostgreSQL1"),("RankingPostgreSQL_2", "RankingPostgreSQL2"),])
+    whoosh_ranking        = SelectField(default="RankingWhoosh_1", coerce=str, choices=[("RankingWhoosh_1", "RankingWhoosh1"),("RankingWhoosh_2", "RankingWhoosh2"),])
+    pylucene_ranking      = SelectField(default="RankingPyLucene_1", coerce=str, choices=[("RankingPyLucene_1", "RankingPyLucene1"),("RankingPyLucene_2", "RankingPyLucene2"),])
+    postgresql_ranking    = SelectField(default="RankingPostgreSQL_1", coerce=str, choices=[("RankingPostgreSQL_1", "RankingPostgreSQL1"),("RankingPostgreSQL_2", "RankingPostgreSQL2"),])
     ############################################################## Stato dell'RFC ##############################################################
     standard_track        = BooleanField('Standard', render_kw={"id":"standard_track"})
     best_current_practice = BooleanField(label='Best current practice', render_kw={"id":"best_current_practice"})
