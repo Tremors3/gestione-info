@@ -61,15 +61,14 @@
                 <div class="destra">
                   <div class="search_engine">
                     <div class="control">
-                    <div id="tuttiCheck" style="padding-bottom: .5em; padding-top: .5em;"> Modello di ranking </div>
                       <div class="radio">
-                        <div id="whooshCheck" class="select">
+                        <div id="whooshCheck">
                           {{ context["form"].whoosh_ranking}}
                         </div>
-                        <div id="pyluceneCheck" class="select">
+                        <div id="pyluceneCheck">
                           {{ context["form"].pylucene_ranking}}
                         </div>
-                        <div id="postgresqlCheck" class="select">
+                        <div id="postgresqlCheck">
                           {{ context["form"].postgresql_ranking}}
                         </div>
                       </div>
@@ -81,11 +80,9 @@
                 var whoosh = document.querySelector("input[id=search_engine-0]");
                 var pylucene = document.querySelector("input[id=search_engine-1]");
                 var postgresql = document.querySelector("input[id=search_engine-2]");
-                var tutti = document.querySelector("input[id=search_engine-3]");
 
                 whoosh.addEventListener('change', function() {
                   if (this.checked) {
-                    document.getElementById('tuttiCheck').style.display = 'block';
                     document.getElementById('whooshCheck').style.display = 'block';
                     document.getElementById('pyluceneCheck').style.display = 'none';
                     document.getElementById('postgresqlCheck').style.display = 'none';
@@ -93,7 +90,6 @@
                   
                 pylucene.addEventListener('change', function() {
                   if (this.checked) {
-                    document.getElementById('tuttiCheck').style.display = 'block';
                     document.getElementById('whooshCheck').style.display = 'none';
                     document.getElementById('pyluceneCheck').style.display = 'block';
                     document.getElementById('postgresqlCheck').style.display = 'none';
@@ -101,18 +97,9 @@
                     
                 postgresql.addEventListener('change', function() {
                   if (this.checked) {
-                    document.getElementById('tuttiCheck').style.display = 'block';
                     document.getElementById('whooshCheck').style.display = 'none';
                     document.getElementById('pyluceneCheck').style.display = 'none';
                     document.getElementById('postgresqlCheck').style.display = 'block';
-                }});
-                    
-                tutti.addEventListener('change', function() {
-                  if (this.checked) {
-                    document.getElementById('whooshCheck').style.display = 'none';
-                    document.getElementById('pyluceneCheck').style.display = 'none';
-                    document.getElementById('postgresqlCheck').style.display = 'none';
-                    document.getElementById('tuttiCheck').style.display = 'none';
                 }});
               </script>
                 
