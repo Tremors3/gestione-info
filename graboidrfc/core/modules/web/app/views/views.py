@@ -127,7 +127,7 @@ def search():
             result_id = str(uuid.uuid4())
             file_path = f"{result_id}.json"
             
-            tutti = False
+            tutti = False # Usa tutti i Search Engine
 
             # Scelta del search engine
             if "WHOOSH" == query.get("search_engine"):
@@ -147,13 +147,13 @@ def search():
 
             if "TUTTI" == query.get("search_engine"):
                 tutti = True
-
+                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyWhoosh.process(query)
                 save_results_to_file(response, f"WHOOSH{file_path}")
-
+                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPyLucene.process(query)
                 save_results_to_file(response, f"PYLUCENE{file_path}")
-
+                # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, f"POSTGRESQL{file_path}")
 
