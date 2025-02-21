@@ -181,7 +181,7 @@ class ExtractorManager():
     # SETTINGS & DIRECTORY PATHS
     EXTRACTOR_ENV_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", ".env")
     EXTRACTOR_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "extractor.json")
-    QUERIES_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "queries.json")
+    QUERIES_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "queries.json")
     OUTPUT_RESULTS_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "extracted.json")
 
     @staticmethod

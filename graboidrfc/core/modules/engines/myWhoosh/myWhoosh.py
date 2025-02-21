@@ -199,7 +199,10 @@ class MyWhoosh:
             }
             
             # Termine aggiunto alla lista in base all'operatore
-            operator_mapping.get(operator, "AND").append(Term(field, term))
+            #operator_mapping.get(operator, "AND").append(Term(field, term))
+            operator_mapping.get(operator, "AND").append(
+                QueryParser(field, ix.schema).parse(term)
+            )
 
         # Creazione delle query se le liste non sono vuote
         and_query = And(and_terms) if and_terms else None

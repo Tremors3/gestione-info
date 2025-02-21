@@ -1,0 +1,52 @@
+[
+    {
+        "uin": "L'utente vuole trovare informazioni dettagliate su TCP Fast Open, un'estensione di TCP che riduce la latenza della connessione iniziale.",
+        "why": "Questa query testa la capacità del motore di ricerca di recuperare documenti che trattano un'estensione specifica di un protocollo ben noto. La difficoltà sta nel fatto che TCP è molto generico e potrebbe portare a molti risultati irrilevanti.",
+        "query": "TCP Fast Open"
+    },
+    {
+        "uin": "L'utente vuole trovare informazioni sulle implementazioni dei protocolli di autenticazione EAP e RADIUS in reti Wi-Fi sicure.",
+        "why": "Questa query stressa il motore perché richiede di trovare documenti che trattano EAP e RADIUS specificamente nel contesto delle reti Wi-Fi, filtrando documenti generici sulla sicurezza di rete.",
+        "query": "EAP RADIUS Wi-Fi security"
+    },
+    {
+        "uin": "L'utente cerca informazioni dettagliate sulla sicurezza di TLS 1.3 e sulle principali differenze rispetto a TLS 1.2.",
+        "why": "Query specifica che richiede distinzione tra più versioni di un protocollo, valutando la gestione di documenti con termini simili.",
+        "query": "TLS 1.3 security differences from TLS 1.2"
+    },
+    {
+        "uin": "L'utente vuole un elenco di tutti gli RFC che trattano autenticazione e crittografia nei protocolli di posta elettronica come SMTP, POP3 e IMAP.",
+        "why": "Questa query stressa il motore di ricerca perché deve collegare concetti di sicurezza (autenticazione e crittografia) con protocolli email specifici. Inoltre, diversi RFC trattano ciascun protocollo separatamente.",
+        "query": "SMTP POP3 IMAP authentication encryption"
+    },
+    {
+        "uin": "L'utente vuole esplorare la relazione tra sicurezza nei protocolli di routing e il protocollo BGP, cercando RFC che trattino entrambi i temi.",
+        "why": "Questa query combina due concetti correlati ma trattati in RFC separati. Stressa il motore di ricerca nel riconoscere documenti che parlano di sicurezza nel routing senza escludere BGP.",
+        "query": "BGP security routing"
+    },
+    {
+        "uin": "L'utente vuole confrontare IPv4 e IPv6 in termini di gestione della frammentazione dei pacchetti.",
+        "why": "La query sfida il motore nel trovare documenti che menzionano sia IPv4 che IPv6, ma in un contesto specifico come la frammentazione, evitando documenti che parlano di IPv6 in generale.",
+        "query": "IPv4 IPv6 fragmentation"
+    },
+    {
+        "uin": "L'utente vuole capire come i protocolli di controllo della congestione hanno influenzato lo sviluppo di QUIC.",
+        "why": "La query è difficile perché lega concetti di performance e ottimizzazione della rete con QUIC, richiedendo di trovare documenti che parlano di controllo della congestione e del loro impatto su QUIC.",
+        "query": "QUIC congestion control impact"
+    },
+    {
+        "uin": "L'utente vuole approfondire il funzionamento del protocollo TCP con particolare attenzione ai meccanismi di controllo della congestione utilizzati per ottimizzare le prestazioni di rete.",
+        "why": "Query multi-campo che testa la capacità del motore di identificare documenti specifici sul controllo della congestione in TCP. Il motore deve bilanciare la rilevanza tra contenuto, titolo e abstract.",
+        "query": "TCP protocol and congestion control title:TCP abstract:Congestion Control"
+    },
+    {
+        "uin": "L'utente è interessato alla gestione degli indirizzi IPv6 e alla sua evoluzione rispetto alle versioni precedenti del protocollo IP, con particolare riferimento agli RFC.",
+        "why": "Query multi-campo che valuta la capacità del motore di recuperare documenti focalizzati sia sulla gestione degli indirizzi IPv6 che sulla sua evoluzione nel tempo. Il campo abstract fornisce un contesto più generale sulla rete.",
+        "query": "IPv6 address management and evolution title:IPv6 abstract:network"
+    },
+    {
+        "uin": "L'utente vuole analizzare le diverse versioni del protocollo TLS, le differenze tra loro e il livello di sicurezza offerto da ciascuna.",
+        "why": "Query multi-campo che verifica la capacità del motore di classificare documenti sulle versioni di TLS e i loro miglioramenti in termini di sicurezza, sfruttando il campo delle keyword per migliorare la pertinenza dei risultati.",
+        "query": "TLS protocol versions and security keywords:security"
+    }
+]
