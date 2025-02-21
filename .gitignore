@@ -161,12 +161,24 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Custom
+
+
+## Custom
+#
+# General
 ignore
 corpus.json
+dataset.json
 query.json
-exp-venv
-
+exp-venv/
+tmp_results/
+index_dir/
+indexes_dir/
+lucene_indexes/
+whoosh_indexes/
+db/
+init.sql/
+#
 # Secrets
 Secrets/
 secrets

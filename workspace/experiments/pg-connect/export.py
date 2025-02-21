@@ -19,6 +19,3 @@ with open('data.sql', 'w') as sql_file:
         sql_file.write(f"INSERT INTO Fruits (name, origin, season) VALUES ('{entry['name']}', '{entry['origin']}', '{entry['season']}');\n")
 
 print("Data has been exported to data.sql")
-
-
-

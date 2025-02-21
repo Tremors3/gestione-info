@@ -1,0 +1,11 @@
+{
+    "DOCUMENTS": {
+        "BEGIN_INDEX": 8500,
+        "END_INDEX": 9000
+    },
+    "DOWNLOAD": {
+        "WORKERS": 10,
+        "TIMEOUT": 10,
+        "DELAY_MS": 50
+    }
+}
