@@ -100,8 +100,8 @@ class RFCExtractor:
             # Caricamento delle Configurazioni
             with open(queries_file, 'r') as file:
                 queries = json.load(file)
-                self._load_queries(queries.get("queries", []))
-            
+                self._load_queries(queries or [])
+
         except FileNotFoundError:
             logging.error(f"File di configurazione '{config_file}' e '{queries_file}' non trovati.")
         except json.JSONDecodeError:

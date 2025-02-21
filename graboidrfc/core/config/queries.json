@@ -1,7 +1,52 @@
-{
-    "queries": [
-        {
-            "query": "Quic protocol"
-        }
-    ]
-}
+[
+    {
+        "uin": "L'utente vuole comprendere il funzionamento dettagliato del protocollo BGP, incluse le sue estensioni per il supporto di più protocolli.",
+        "why": "Query generica ma articolata, per valutare la capacità di recuperare documenti su un protocollo complesso con molte varianti.",
+        "query": "BGP protocol and multiprotocol extensions"
+    },
+    {
+        "uin": "L'utente cerca informazioni dettagliate sulla sicurezza di TLS 1.3 e sulle principali differenze rispetto a TLS 1.2.",
+        "why": "Query specifica che richiede distinzione tra più versioni di un protocollo, valutando la gestione di documenti con termini simili.",
+        "query": "TLS 1.3 security differences from TLS 1.2"
+    },
+    {
+        "uin": "L'utente vuole trovare documenti sugli algoritmi di congestione di TCP, come CUBIC e Reno.",
+        "why": "Query che testa la capacità di recuperare informazioni su concetti specifici all'interno di un protocollo molto documentato.",
+        "query": "TCP congestion control algorithms CUBIC Reno"
+    },
+    {
+        "uin": "L'utente vuole sapere quali RFC trattano l'uso di IPv6 nei sistemi embedded e le loro ottimizzazioni.",
+        "why": "Query specifica che testa la capacità del sistema di trovare documenti su un sottogruppo particolare di un argomento più ampio.",
+        "query": "IPv6 embedded systems optimizations"
+    },
+    {
+        "uin": "L'utente cerca documenti che descrivano l'implementazione di QUIC e il suo confronto con HTTP/2.",
+        "why": "Query che combina due argomenti correlati ma distinti, utile per valutare la gestione delle relazioni tra concetti interconnessi.",
+        "query": "QUIC protocol implementation HTTP/2 comparison"
+    },
+    {
+        "uin": "L'utente vuole conoscere il funzionamento di DNSSEC e il ruolo delle chiavi crittografiche nella protezione delle query DNS.",
+        "why": "Query tecnica che richiede un sistema in grado di distinguere documenti relativi a DNSSEC da quelli sul DNS generico.",
+        "query": "DNSSEC cryptographic keys DNS security"
+    },
+    {
+        "uin": "L'utente è interessato a capire come SIP venga utilizzato per la comunicazione in tempo reale su reti LTE e 5G.",
+        "why": "Query che combina due concetti correlati ma con una distinzione tecnologica importante.",
+        "query": "SIP real-time communication LTE 5G"
+    },
+    {
+        "uin": "L'utente vuole trovare documenti sulla qualità del servizio (QoS) in reti MPLS, con particolare attenzione ai meccanismi di priorità dei pacchetti.",
+        "why": "Query specifica che valuta la capacità di recupero di documenti tecnici su un'architettura complessa.",
+        "query": "QoS in MPLS networks packet prioritization"
+    },
+    {
+        "uin": "L'utente vuole capire come vengono gestite le traduzioni NAT per il protocollo IPv6, inclusi gli standard più recenti.",
+        "why": "Query che valuta la capacità del motore di distinguere documenti su un tema classico (NAT) rispetto alla sua implementazione in IPv6.",
+        "query": "IPv6 NAT translation latest standards"
+    },
+    {
+        "uin": "L'utente cerca documenti che trattino la sicurezza nelle reti IoT utilizzando protocolli come CoAP e DTLS.",
+        "why": "Query che unisce due concetti tecnici (IoT security e protocolli specifici) per valutare la capacità del sistema di trovare documenti pertinenti.",
+        "query": "IoT security CoAP DTLS"
+    }
+]
