@@ -32,14 +32,6 @@ header h1{
     /* rimane 30 e 30 per il contenuto */
 }
 
-.main-div.tutti{
-    background-color: #ffffff;
-    margin-top: 1%;
-    margin-left: 5vw;
-    margin-right: 5vw;
-    /* rimane 30 e 30 per il contenuto */
-}
-
 .main-div .titolo h2{
     padding: 0;
     padding-top: 0.75rem;
@@ -472,10 +464,6 @@ header h1{
     margin-top: 2%;
 }
 
-.results.whoosh, .results.pylucene, .results.postgresql{
-  max-width: 33%;
-}
-
 /* .search_engine{
   margin-top: 1%;
 } */
@@ -485,13 +473,22 @@ header h1{
   margin-bottom: 0;
 }
 
-input[id^="search_engine-"]{
+#search_engine-0, #search_engine-1, #search_engine-2 {
   margin-top: .5rem;
 }
 
 #whooshCheck{display: block;}
 #pyluceneCheck{display: none;}
 #postgresqlCheck{display: none;}
+
+input[id^="whoosh_ranking"], input[id^="pylucene_ranking"], input[id^="postgresql_ranking"]{
+  margin-top: .5rem;
+}
+
+
+
+
+
 
 
 
