@@ -179,6 +179,10 @@ whoosh_indexes/
 db/
 init.sql/
 #
+# Benchmarks (temporary)
+#benchmark.json
+#benchmark_revisited.json
+#
 # Secrets
 Secrets/
 secrets
