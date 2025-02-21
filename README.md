@@ -111,8 +111,7 @@ L'obiettivo di questa fase è assicurarsi che il servizio PostgreSQL sia attivo 
     sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
     ```
 
-    > [!NOTE]
-    > La password predefinita per l'utente predefinito `postgres` è "postgres". Potrebbe essere richiesta nelle fasi successive.
+    > **Nota** La password predefinita per l'utente predefinito `postgres` è "postgres". Potrebbe essere richiesta nelle fasi successive.
 
 - **Creazione del database e dell'utente**
 
@@ -190,8 +189,7 @@ L'obiettivo di questa fase è creare un ambiente virtuale isolato in cui poter i
     conda activate lucene
     ```
 
-    > [!NOTE]
-    > Ogni volta che apri una nuova sessione della shell, dovrai riattivare l'ambiente eseguendo nuovamente questo comando.
+    > **Nota** Ogni volta che apri una nuova sessione della shell, dovrai riattivare l'ambiente eseguendo nuovamente questo comando.
 
 ---
 
