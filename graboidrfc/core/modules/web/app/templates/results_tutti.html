@@ -14,7 +14,7 @@
       <!-- CONTAINER DI SINISTRA -->
       <div class="results whoosh">
         <div class="titolo">
-          <h2>{{ whoosh_num_result }} Risultati whoosh</h2>
+          <h2>{{ whoosh_num_result }} Risultati whoosh {{ ranking_models["whoosh"] }}</h2>
         </div>
         <ol>
           {% if whoosh_risultati %}
@@ -33,7 +33,7 @@
       </div> <!-- END sinistra -->
       <div class="results pylucene">
         <div class="titolo">
-          <h2>{{ pylucene_num_result }} Risultati pylucene</h2>
+          <h2>{{ pylucene_num_result }} Risultati pylucene {{ ranking_models["pylucene"] }}</h2>
         </div>
         <ol>
           {% if pylucene_risultati %}
@@ -52,7 +52,7 @@
       </div> <!-- END sinistra -->
       <div class="results postgresql">
         <div class="titolo">
-          <h2>{{ postgresql_num_result }} Risultati postgresql</h2>
+          <h2>{{ postgresql_num_result }} Risultati postgresql {{ ranking_models["postgresql"] }}</h2>
         </div>
         <ol>
           {% if postgresql_risultati %}

@@ -1,6 +1,6 @@
 
 # imports
-import os, uuid, json
+import os, uuid, json, ast
 
 # datetime
 from datetime import date, timedelta, datetime
@@ -127,25 +127,35 @@ def search():
             result_id = str(uuid.uuid4())
             file_path = f"{result_id}.json"
             
-            tutti = False # Usa tutti i Search Engine
+            # Quale search engine utilizzare
+            choosen_se = query.get("search_engine") 
+            # Usa tutti i Search Engine
+            tutti = False 
+            
+            # Modello di ranking scelto per ogni S.E.
+            ranking_models = {
+                "whoosh": query.get("whoosh_ranking"),
+                "pylucene": query.get("pylucene_ranking"),
+                "postgresql": query.get("postgresql_ranking"),
+            }
 
             # Scelta del search engine
-            if "WHOOSH" == query.get("search_engine"):
+            if "WHOOSH" == choosen_se:
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyWhoosh.process(query)
                 save_results_to_file(response, file_path)
                 
-            if "PYLUCENE" == query.get("search_engine"):
+            if "PYLUCENE" == choosen_se:
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPyLucene.process(query)
                 save_results_to_file(response, file_path)
             
-            if "POSTGRESQL" == query.get("search_engine"):
+            if "POSTGRESQL" == choosen_se:
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, file_path)
 
-            if "TUTTI" == query.get("search_engine"):
+            if "TUTTI" == choosen_se:
                 tutti = True
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyWhoosh.process(query)
@@ -156,8 +166,8 @@ def search():
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, f"POSTGRESQL{file_path}")
-
-            return redirect(url_for('views.results', result_id=result_id, tutti=tutti, show_abstracts=query.get('abstracts')))
+            
+            return redirect(url_for('views.results', result_id=result_id, choosen_se=choosen_se, tutti=tutti, ranking_models=ranking_models, show_abstracts=query.get('abstracts')))
 
         return redirect(url_for('views.results', result_id=None, show_abstracts=None))
 
@@ -177,7 +187,8 @@ def results():
         # Valori per il recupero
         result_id = request.args.get('result_id', None)
         tutti = True if request.args.get('tutti', False) == "True" else False
-
+        ranking_models = ast.literal_eval(request.args.get("ranking_models"))
+        
         # Recupero dei risultati
         if result_id:
             if tutti:
@@ -232,10 +243,12 @@ def results():
                 if request.args.get('show_abstracts', "True") == "False":
                     del result["abstract"]
 
+
             return render_template('results_tutti.html', 
                                     whoosh_risultati=whoosh_results,         whoosh_num_result=len(whoosh_results), 
                                     pylucene_risultati=pylucene_results,     pylucene_num_result=len(pylucene_results), 
-                                    postgresql_risultati=postgresql_results, postgresql_num_result=len(postgresql_results), 
+                                    postgresql_risultati=postgresql_results, postgresql_num_result=len(postgresql_results),
+                                    ranking_models=ranking_models,
                                     max_words=250)            
 
         # Aggiunta/Rimozione di ulteriori campi
@@ -248,7 +261,10 @@ def results():
             if request.args.get('show_abstracts', "True") == "False":
                 del result["abstract"]
 
-        return render_template('results.html', risultati=results, num_result=len(results), max_words=250)
+        # Search engine utilizzato
+        choosen_se = request.args.get("choosen_se").lower()
+
+        return render_template('results.html', risultati=results, choosen_se=choosen_se, ranking_models=ranking_models, num_result=len(results), max_words=250)
 
     # risultati = [
     #     {
