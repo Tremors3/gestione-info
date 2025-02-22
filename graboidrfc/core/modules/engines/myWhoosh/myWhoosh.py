@@ -12,11 +12,13 @@ _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|
 from whoosh.fields import Schema, TEXT, ID, NUMERIC, STORED, KEYWORD, DATETIME
 from whoosh.qparser import QueryParser, GtLtPlugin
 from whoosh.query import Wildcard, DateRange, Term, Phrase, And, Or, Not
+from whoosh.scoring import BM25F, TF_IDF, PL2, DFree
 from whoosh import index
 
 # Importazione moduli di progetto
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
+from graboidrfc.core.modules.engines.myWhoosh.custom_scorer import TF_IDF_FF # Custom Scorer
 
 # ################################################## #
 
@@ -63,21 +65,21 @@ class MyWhoosh:
             
             # Campi memorizzati
             number    = ID(stored=True, unique=True),   # Numero identificativo del documento
-            title     = TEXT(stored=True),              # Titolo del documento
+            title     = TEXT(stored=True, vector=True), # Titolo del documento
             authors   = KEYWORD(stored=True),           # Autori del documento
             date      = DATETIME(stored=True),          # Data di pubblicazione
             status    = KEYWORD(stored=True),           # Stato del documento
-            abstract  = TEXT(stored=True),              # Abstract del documento
-            keywords  = TEXT(stored=True),              # Parole chiave del documento
+            abstract  = TEXT(stored=True, vector=True), # Abstract del documento
+            keywords  = TEXT(stored=True, vector=True), # Parole chiave del documento
             more_info = STORED,                         # Altre informazioni memorizzabili
             files     = STORED,                         # Files associati al documento
             
             # Campi non memorizzati
-            content   = TEXT                            # Contenuto del documento
+            content   = TEXT(vector=True)               # Contenuto del documento
         )
 
         # Creazione writer per aggiungere documenti all'indice
-        writer = index.create_in(MyWhoosh.INDEX_DIRECTORY_PATH, SCHEMA).writer()
+        writer = index.create_in(MyWhoosh.INDEX_DIRECTORY_PATH, SCHEMA).writer(procs=4, multisegment=True)
 
         # Definizione della barra di caricamento che viene visualizzata durante l'esecuzione
         with alive_bar(len(documents), title="Indicizzazione dei documenti con Whoosh", spinner="waves", bar=_bar) as bar:
@@ -312,13 +314,27 @@ class MyWhoosh:
 
         # Combina le query valide con un operatore "AND"
         combined_query = And(combined_query_parts) if combined_query_parts else None
+        
+        #############################################################################
+        ## FUNZIONI DI RANKING - SELEZIONE DELLA FUNZIONE DI RANKING DA UTILIZZARE ##
+        #############################################################################
+
+        # Selezione della funzione di ranking
+        weight_function_mapping = {
+            "BM25F": BM25F,
+            "BM25F_CUSTOM": BM25F(B=0.75, content_B=1.0, K1=1.2),
+            "CUSTOM_SCORER": TF_IDF_FF(lambda_freshness=0.1),
+            "TF_IDF": TF_IDF,
+            "PL2": PL2,
+            #"DFREE": DFree
+        }; weight_function = weight_function_mapping.get(data.get("whoosh_ranking"), BM25F)
 
         #######################################################################################
         ## ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI ##
         #######################################################################################
-
+        
         # Apre il searcher
-        with ix.searcher() as searcher:
+        with ix.searcher(weighting=weight_function) as searcher:
             
             # Esegue la ricerca
             results = searcher.search(combined_query, limit=data.get("size"))

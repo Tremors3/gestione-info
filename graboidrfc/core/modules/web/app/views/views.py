@@ -47,8 +47,11 @@ class RankingOption:
     FUNCTIONS = {
         
         "whoosh": {
-            "RankingWhoosh_1": "RankingWhoosh1",
-            "RankingWhoosh_2": "RankingWhoosh2",
+            "BM25F": "BM25F Okapi",
+            "BM25F_CUSTOM": "BM25F Custom",
+            "CUSTOM_SCORER": "Custom Scorer",
+            "TF_IDF": "TF-IDF",
+            "PL2": "PL2",
         },
         
         "pylucene": {
@@ -79,7 +82,7 @@ class SearchForm(FlaskForm):
     synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"id":"synonims"})
     ######################################################## Selettore del searchengine ########################################################
     search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL"),("TUTTI","Tutti")])
-    whoosh_ranking        = SelectField(default="RankingWhoosh_1", coerce=str, choices=RankingOption.get_choices("whoosh"))
+    whoosh_ranking        = SelectField(default="BM25F", coerce=str, choices=RankingOption.get_choices("whoosh"))
     pylucene_ranking      = SelectField(default="RankingPyLucene_1", coerce=str, choices=RankingOption.get_choices("pylucene"))
     postgresql_ranking    = SelectField(default="RankingPostgreSQL_1", coerce=str, choices=RankingOption.get_choices("postgresql"))
     ############################################################## Stato dell'RFC ##############################################################
