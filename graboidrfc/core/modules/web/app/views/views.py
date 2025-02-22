@@ -42,6 +42,30 @@ def validate_date_format_year(form, field):
 
 # #################################################################################################### #
 
+class RankingOption:
+
+    FUNCTIONS = {
+        
+        "whoosh": {
+            "RankingWhoosh_1": "RankingWhoosh1",
+            "RankingWhoosh_2": "RankingWhoosh2",
+        },
+        
+        "pylucene": {
+            "RankingPyLucene_1": "RankingPyLucene1",
+            "RankingPyLucene_2": "RankingPyLucene2",
+        },
+        
+        "postgresql": {
+            "RankingPostgreSQL_1": "RankingPostgreSQL1",
+            "RankingPostgreSQL_2": "RankingPostgreSQL2",
+        },
+    }
+    
+    @staticmethod
+    def get_choices(engine: str):
+        return [(field, value) for field, value in __class__.FUNCTIONS.get(engine, {}).items()]
+    
 class TermForm(FlaskForm):
     operator = SelectField('Operator', default='AND', choices=[('AND', 'AND'), ('OR', 'OR'), ('NOT', 'NOT')], render_kw={"id":"terms-operator"})
     term     = StringField('Term', validators=[], render_kw={"class":"input", "placeholder":"Search terms"})
@@ -55,9 +79,9 @@ class SearchForm(FlaskForm):
     synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"id":"synonims"})
     ######################################################## Selettore del searchengine ########################################################
     search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL"),("TUTTI","Tutti")])
-    whoosh_ranking        = SelectField(default="RankingWhoosh_1", coerce=str, choices=[("RankingWhoosh_1", "RankingWhoosh1"),("RankingWhoosh_2", "RankingWhoosh2"),])
-    pylucene_ranking      = SelectField(default="RankingPyLucene_1", coerce=str, choices=[("RankingPyLucene_1", "RankingPyLucene1"),("RankingPyLucene_2", "RankingPyLucene2"),])
-    postgresql_ranking    = SelectField(default="RankingPostgreSQL_1", coerce=str, choices=[("RankingPostgreSQL_1", "RankingPostgreSQL1"),("RankingPostgreSQL_2", "RankingPostgreSQL2"),])
+    whoosh_ranking        = SelectField(default="RankingWhoosh_1", coerce=str, choices=RankingOption.get_choices("whoosh"))
+    pylucene_ranking      = SelectField(default="RankingPyLucene_1", coerce=str, choices=RankingOption.get_choices("pylucene"))
+    postgresql_ranking    = SelectField(default="RankingPostgreSQL_1", coerce=str, choices=RankingOption.get_choices("postgresql"))
     ############################################################## Stato dell'RFC ##############################################################
     standard_track        = BooleanField('Standard', render_kw={"id":"standard_track"})
     best_current_practice = BooleanField(label='Best current practice', render_kw={"id":"best_current_practice"})
@@ -128,7 +152,8 @@ def search():
             file_path = f"{result_id}.json"
             
             # Quale search engine utilizzare
-            choosen_se = query.get("search_engine") 
+            chosen_se = query.get("search_engine") 
+            
             # Usa tutti i Search Engine
             tutti = False 
             
@@ -140,22 +165,22 @@ def search():
             }
 
             # Scelta del search engine
-            if "WHOOSH" == choosen_se:
+            if "WHOOSH" == chosen_se:
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyWhoosh.process(query)
                 save_results_to_file(response, file_path)
                 
-            if "PYLUCENE" == choosen_se:
+            if "PYLUCENE" == chosen_se:
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPyLucene.process(query)
                 save_results_to_file(response, file_path)
             
-            if "POSTGRESQL" == choosen_se:
+            if "POSTGRESQL" == chosen_se:
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, file_path)
 
-            if "TUTTI" == choosen_se:
+            if "TUTTI" == chosen_se:
                 tutti = True
                 # Ottiene e salva i risultati su file per essere recuperati alla richiesta
                 response = MyWhoosh.process(query)
@@ -167,7 +192,7 @@ def search():
                 response = MyPostgres(use_docker=current_app.config.get("USE_DOCKER", False)).process(query)
                 save_results_to_file(response, f"POSTGRESQL{file_path}")
             
-            return redirect(url_for('views.results', result_id=result_id, choosen_se=choosen_se, tutti=tutti, ranking_models=ranking_models, show_abstracts=query.get('abstracts')))
+            return redirect(url_for('views.results', result_id=result_id, chosen_se=chosen_se, tutti=tutti, ranking_models=ranking_models, show_abstracts=query.get('abstracts')))
 
         return redirect(url_for('views.results', result_id=None, show_abstracts=None))
 
@@ -189,95 +214,85 @@ def results():
         tutti = True if request.args.get('tutti', False) == "True" else False
         ranking_models = ast.literal_eval(request.args.get("ranking_models"))
         
-        # Recupero dei risultati
-        if result_id:
-            if tutti:
-                # Nomi del file temporanei
-                whoosh_file_path     = f"WHOOSH{result_id}.json"
-                pylucene_file_path   = f"PYLUCENE{result_id}.json"
-                postgresql_file_path = f"POSTGRESQL{result_id}.json"
+        if tutti:
+            
+            # Tre motori di ricerca
+            engines = ["whoosh", "pylucene", "postgresql"]
+            
+            # Dizionario per i risultati
+            search_engines = {}
+            
+            for engine in engines:
                 
-                # Ritiro dei risultati
-                whoosh_results = load_results_from_file(whoosh_file_path)
-                pylucene_results = load_results_from_file(pylucene_file_path)
-                postgresql_results = load_results_from_file(postgresql_file_path)
-                
-                # Cancellazione dei file dopo il recupero
-                delete_file(whoosh_file_path)
-                delete_file(pylucene_file_path)
-                delete_file(postgresql_file_path)
-            else: 
                 # Nome del file temporaneo
-                file_path = f"{result_id}.json"
+                file_path = f"{engine.upper()}{result_id}.json"
+            
                 # Ritiro dei risultati
                 results = load_results_from_file(file_path)
-                # Cancellazione del file dopo il recupero
+                
+                # Cancellazione del file temporaneo dopo il recupero
                 delete_file(file_path)
+
+                # Parsing dei risultati
+                results = results_parser(results)
+                
+                # Ottenimento del modello di ranking selezionato
+                ranking_model = RankingOption.FUNCTIONS.get(engine).get(ranking_models.get(engine))
+
+                # Aggiunta dei risultati
+                search_engines[engine] = {
+                    "results": results,
+                    "num_result": len(results),
+                    "ranking_model": ranking_model
+                }
+            
+            return render_template('results_tutti.html', max_words=250, search_engines=search_engines)
         
-        if tutti:
-            # Aggiunta/Rimozione di ulteriori campi
-            for result in whoosh_results:
-                # Aggiunta Link
-                result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-                #Aggiunta Titolo
-                result["link_title"] = f"RFC {result.get('number')}"
-                # Eventuale rimozione degli abstracts
-                if request.args.get('show_abstracts', "True") == "False":
-                    del result["abstract"]
-
-            for result in pylucene_results:
-                # Aggiunta Link
-                result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-                #Aggiunta Titolo
-                result["link_title"] = f"RFC {result.get('number')}"
-                # Eventuale rimozione degli abstracts
-                if request.args.get('show_abstracts', "True") == "False":
-                    del result["abstract"]
-
-            for result in postgresql_results:
-                # Aggiunta Link
-                result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-                #Aggiunta Titolo
-                result["link_title"] = f"RFC {result.get('number')}"
-                # Eventuale rimozione degli abstracts
-                if request.args.get('show_abstracts', "True") == "False":
-                    del result["abstract"]
-
-
-            return render_template('results_tutti.html', 
-                                    whoosh_risultati=whoosh_results,         whoosh_num_result=len(whoosh_results), 
-                                    pylucene_risultati=pylucene_results,     pylucene_num_result=len(pylucene_results), 
-                                    postgresql_risultati=postgresql_results, postgresql_num_result=len(postgresql_results),
-                                    ranking_models=ranking_models,
-                                    max_words=250)            
-
-        # Aggiunta/Rimozione di ulteriori campi
-        for result in results:
-            # Aggiunta Link
-            result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
-            #Aggiunta Titolo
-            result["link_title"] = f"RFC {result.get('number')}"
-            # Eventuale rimozione degli abstracts
-            if request.args.get('show_abstracts', "True") == "False":
-                del result["abstract"]
+        # Nome del file temporaneo
+        file_path = f"{result_id}.json"
+        
+        # Ritiro dei risultati
+        results = load_results_from_file(file_path)
+        
+        # Cancellazione del file dopo il recupero
+        delete_file(file_path)
+        
+        # Parsing rei risultati
+        results = results_parser(results)
 
         # Search engine utilizzato
-        choosen_se = request.args.get("choosen_se").lower()
+        chosen_se = request.args.get("chosen_se").lower()
 
-        return render_template('results.html', risultati=results, choosen_se=choosen_se, ranking_models=ranking_models, num_result=len(results), max_words=250)
+        # Modello di ranking selezionato
+        ranking_model = RankingOption.FUNCTIONS.get(chosen_se).get(ranking_models.get(chosen_se))
 
-    # risultati = [
-    #     {
-    #         "link":"https://rfc-editor.org/rfc/rfc9000",
-    #         "link_title":"RFC 9000",
-    #         "title":"Qualcosa qualcosa 1",
-    #         "formats":["pdf","html","txt"],
-    #         "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
-    #         "date": "1111/11/11",
-    #         "comment": "commento",
-    #         "abstract":"Estratto della pagina dell'rfc 9000"
-    #     }
-    # ]
+        return render_template('results.html', max_words=250, chosen_se=chosen_se, ranking_model=ranking_model, risultati=results, num_result=len(results))
+
+def results_parser(results: list[dict]):
+    
+    for result in results:
+        # Aggiunta Link
+        result["link"] = f"https://rfc-editor.org/rfc/rfc{result.get('number')}"
+        #Aggiunta Titolo
+        result["link_title"] = f"RFC {result.get('number')}"
+        # Eventuale rimozione degli abstracts
+        if request.args.get('show_abstracts', "True") == "False":
+            del result["abstract"]
+    
+    return results
+
+# risultati = [
+#     {
+#         "link":"https://rfc-editor.org/rfc/rfc9000",
+#         "link_title":"RFC 9000",
+#         "title":"Qualcosa qualcosa 1",
+#         "formats":["pdf","html","txt"],
+#         "authors": ["Autore 1","Autore 2","Autore 3","Autore 4"],
+#         "date": "1111/11/11",
+#         "comment": "commento",
+#         "abstract":"Estratto della pagina dell'rfc 9000"
+#     }
+# ]
 
 # #################################################################################################### #
 
