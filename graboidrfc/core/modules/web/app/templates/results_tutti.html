@@ -14,11 +14,11 @@
       <!-- CONTAINER DI SINISTRA -->
       <div class="results whoosh">
         <div class="titolo">
-          <h2>{{ whoosh_num_result }} Risultati whoosh</h2>
+          <h2>Whoosh - {{ search_engines.get("whoosh").get("num_result") }} risultati ({{ search_engines.get("whoosh").get("ranking_model") }})</h2>
         </div>
         <ol>
-          {% if whoosh_risultati %}
-            {% for i in whoosh_risultati %}
+          {% if search_engines.get("whoosh").get("results") %}
+            {% for i in search_engines.get("whoosh").get("results") %}
               <li class="res_list">
                 <div class="res_container">
                   <a class="link_title" href="{% if i.link %}{{ i.link }}{% endif %}">{% if i.link_title %}{{ i.link_title }}{% endif %}</a>
@@ -33,11 +33,11 @@
       </div> <!-- END sinistra -->
       <div class="results pylucene">
         <div class="titolo">
-          <h2>{{ pylucene_num_result }} Risultati pylucene</h2>
+          <h2>Pylucene - {{ search_engines.get("pylucene").get("num_result") }} risultati ({{ search_engines.get("pylucene").get("ranking_model") }})</h2>
         </div>
         <ol>
-          {% if pylucene_risultati %}
-            {% for i in pylucene_risultati %}
+          {% if search_engines.get("pylucene").get("results") %}
+            {% for i in search_engines.get("pylucene").get("results") %}
               <li class="res_list">
                 <div class="res_container">
                   <a class="link_title" href="{% if i.link %}{{ i.link }}{% endif %}">{% if i.link_title %}{{ i.link_title }}{% endif %}</a>
@@ -52,11 +52,11 @@
       </div> <!-- END sinistra -->
       <div class="results postgresql">
         <div class="titolo">
-          <h2>{{ postgresql_num_result }} Risultati postgresql</h2>
+          <h2>Postgresql - {{ search_engines.get("postgresql").get("num_result") }} risultati ({{ search_engines.get("postgresql").get("ranking_model") }})</h2>
         </div>
         <ol>
-          {% if postgresql_risultati %}
-            {% for i in postgresql_risultati %}
+          {% if search_engines.get("postgresql").get("results") %}
+            {% for i in search_engines.get("postgresql").get("results") %}
               <li class="res_list">
                 <div class="res_container">
                   <a class="link_title" href="{% if i.link %}{{ i.link }}{% endif %}">{% if i.link_title %}{{ i.link_title }}{% endif %}</a>
