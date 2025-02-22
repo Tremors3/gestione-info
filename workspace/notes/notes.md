@@ -107,7 +107,7 @@ Postgress
 - [x] Utilizza il Logger e migliora le stampe di tutti i moduli. Poi prova ad inizializzare in modo da vedere se sono abbastanza belle.
 
 - [x] Pare che alcune funzionalità di ricerca non eseguono correttamente su PyLucene (mentre eseguono correttamente sugli altri due motori)
-	- [ ] Clausola "NOT IN" in PyLucene non sembra funziona correttamente.
+	- [x] Clausola "NOT IN" in PyLucene non sembra funziona correttamente.
 	- [x] Clausole "SPECIFIC YEAR" in Pylucene non sembra funzionare correttamente.
 
 ### [fatto] RISTRUTTURARE GLI SCRIPT DI CREAZIONE DEL BANCHMARK:
@@ -128,109 +128,23 @@ SPELLING CORRECTION & SYNONIMS
    - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
    - [ ] Spelling Correction & Synonims (Non Ancora Supportata)
 
-### [da_fare] FINIRE DI SCEGLIERE LE QUERY + OTTENERE BENCHMARK
+### [da_fare] RIVISITA DEL BENCHMARK E SELEZIONE DEI MODELLI DI RANKING
 
-- [ ] Molte delle query non sono corrette e non vanno bene, vanno rimosse, sostituite e aggiustate.
-- [ ] Scegliere le query e farle passare per lo script automatico che trova i documenti più rilevanti e ne restituisce la rilevanza.
+- [ ] Rivisita del Benchmark. Migliorare l'ordinamento ideale dei documenti rispetto alle query (soprattutto quelle multi-valore).
 
-POSSIBILI QUERY
+- [ ] Ottenere i ranking dei nostri tre sistemi di ricerca, formattarli in json come "local_extracted.json", effettuare il benchmark di quei sistemmi "our_benchmark.json"
+	Alla fine avremo "online_extracted.json" e "local_extracted.json" e poi i rispettivi benchmark "online_benchmark.json" e "local_benchmark.json"
 
-```
-### **Query 1**
-1. **Query**: `content:"protocol"`  
-2. **Linguaggio naturale**: *"Cerca tutti i documenti che contengono la parola 'protocol' nel contenuto."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un utente potrebbe voler avere una panoramica generale sugli RFC relativi ai protocolli, senza un'idea specifica di quale cercare. È una ricerca esplorativa.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Questa query è semplice e generica, utile per verificare che il search engine gestisca correttamente ricerche di termini comuni, con un'ampia gamma di risultati.
-
----
-
-### **Query 2**
-1. **Query**: `title:"Hypertext Transfer Protocol"`  
-2. **Linguaggio naturale**: *"Trova l'RFC il cui titolo contiene la frase 'Hypertext Transfer Protocol'."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un utente potrebbe cercare l'RFC che definisce il protocollo HTTP, sapendo che il titolo esatto contiene questa frase.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Verifica la capacità del motore di gestire frasi esatte in un campo specifico, distinguendo tra ricerche esatte e parziali.
-
----
-
-### **Query 3**
-1. **Query**: `title:"Simple Mail Transfer Protocol" AND status:"Standard" AND keywords:"email"`  
-2. **Linguaggio naturale**: *"Cerca un RFC il cui titolo contenga 'Simple Mail Transfer Protocol', il cui stato sia 'Standard', e che abbia come parola chiave 'email'."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   L'utente potrebbe voler trovare un documento che definisce formalmente l'SMTP (standard ufficiale) e che sia rilevante per l'invio di email.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Testa l'abilità del motore di combinare condizioni multiple su più campi e di gestire operatori logici complessi.
-
----
-
-### **Query 4**
-1. **Query**: `authors:"Vinton Cerf"`  
-2. **Linguaggio naturale**: *"Trova tutti gli RFC scritti da Vinton Cerf."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un ricercatore potrebbe voler esaminare i contributi di Vinton Cerf, uno dei pionieri di Internet, per studiare il suo impatto.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Verifica la capacità del motore di gestire ricerche specifiche su un autore, anche in un campo con valori potenzialmente ambigui (es. nomi simili).
-
----
-
-### **Query 5**
-1. **Query**: `abstract OR keywords OR content:"networking"`  
-2. **Linguaggio naturale**: *"Cerca documenti che contengano la parola 'networking' in abstract, keywords o content."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un utente potrebbe voler esplorare tutti gli RFC che trattano il networking, senza sapere a priori dove viene menzionato.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Testa la ricerca su più campi contemporaneamente, verificando l’abilità del motore di identificare risultati pertinenti in contesti diversi.
-
----
-
-### **Query 6**
-1. **Query**: `status:"Informational"`  
-2. **Linguaggio naturale**: *"Trova tutti gli RFC il cui stato è 'Informational'."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un utente potrebbe voler consultare RFC "Informational" per ottenere linee guida, raccomandazioni o informazioni generali.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Verifica se il motore riesce a filtrare documenti basati su uno stato categoriale, utile per ricerche più mirate.
-
----
-
-### **Query 7**
-1. **Query**: `content:"data"`  
-2. **Linguaggio naturale**: *"Trova tutti i documenti che contengono la parola 'data' nel contenuto."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   L'utente potrebbe cercare informazioni sui dati in generale, esplorando come il termine viene usato in vari RFC.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Permette di valutare la gestione di query generiche e con risultati potenzialmente numerosi, mettendo alla prova il ranking della rilevanza.
-
----
-
-### **Query 8**
-1. **Query**: `keywords:"authentication" AND keywords:"encryption"`  
-2. **Linguaggio naturale**: *"Trova documenti che abbiano 'authentication' e 'encryption' tra le parole chiave."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un utente interessato alla sicurezza potrebbe voler trovare RFC che trattano entrambi gli aspetti, per approfondire argomenti correlati.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Testa la gestione di query con condizioni multiple nello stesso campo e il supporto per operatori AND.
-
----
-
-### **Query 9**
-1. **Query**: `content:"end-to-end encryption"`  
-2. **Linguaggio naturale**: *"Trova documenti che contengano la frase esatta 'end-to-end encryption' nel contenuto."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un utente potrebbe voler approfondire come gli RFC trattano la crittografia end-to-end, cercando documenti pertinenti.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Valuta la capacità del motore di distinguere tra frasi esatte e ricerche per singole parole.
-
----
-
-### **Query 10**
-1. **Query**: `content:"transport protocol" AND authors:"Jon Postel" AND status:"Historic"`  
-2. **Linguaggio naturale**: *"Trova un documento che contenga 'transport protocol' nel contenuto, scritto da Jon Postel e il cui stato sia 'Historic'."*  
-3. **Motivo per cui la query può essere utile per l'utente**:  
-   Un utente potrebbe voler studiare documenti storici sui protocolli di trasporto, scritti da una figura chiave come Jon Postel.  
-4. **Motivo per cui la query è adatta per il test**:  
-   Testa la capacità del motore di elaborare query complesse che combinano più campi e condizioni specifiche.
-```
+- [ ] Fare in modo che sia possibile selezionare i Modelli di Ranking per ciascun sistema.
+	- [x] L'interfaccia supporta la scelta della funzione di ranking.
+	- [ ] Per ciascun sistema utilizzare almeno tre modelli di ranking.
+		- Whoosh
+			- [x] Scelta dei modelli di ranking
+			- [x] Implementazione modello personalizzato (Custom)
+		- PyLucene
+			- [ ] Scelta dei modelli di ranking
+			- [ ] Implementazione modello personalizzato (Custom)
+			- [ ] Trovare il modo di creare un indice per ciascun modello
+		- PostgreSQL
+			- [ ] Scelta dei modelli di ranking
+			- [ ] Implementazione modello personalizzato (Custom)
