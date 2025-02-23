@@ -35,7 +35,7 @@ class TF_IDF_FFScorer(BaseScorer):
         current_date = date.today()
         
         # Calcolo della differenza in mesi tra la data di pubblicazione e la data corrente
-        months_diff = (current_date.year - publication_date.year) * 12 + current_date.month - publication_date.month
+        months_diff = (current_date.year - publication_date.year) * 12 + (current_date.month - publication_date.month)
         
         # Funzione esponezniale per il calcolo del fattore di freschezza
         freshness_factor = exp(-self.lambda_freshness * months_diff)

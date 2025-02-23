@@ -55,8 +55,9 @@ class RankingOption:
         },
         
         "pylucene": {
-            "RankingPyLucene_1": "RankingPyLucene1",
-            "RankingPyLucene_2": "RankingPyLucene2",
+            "BM25": "BM25F Okapi",
+            "VSM": "Vector Space Model",
+            #"CUSTOM_SCORER": "Custom Scorer"
         },
         
         "postgresql": {

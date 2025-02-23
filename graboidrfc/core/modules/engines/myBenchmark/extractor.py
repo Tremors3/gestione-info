@@ -71,7 +71,7 @@ class RFCExtractor:
     """Classe principale per gestire i motori di ricerca e le query."""
 
     def __init__(self, api_key, config_file, queries_file, 
-                 supported_engines=None, 
+                 #supported_engines=None, 
                  serp_api_base_url=None, 
                  site_restrictor=None):
         
@@ -81,7 +81,7 @@ class RFCExtractor:
         self.queries = []
         
         # Inizializzazione Parametri Opzionali
-        self.supported_engines = supported_engines or {"google", "duckduckgo", "bing"}
+        #self.supported_engines = supported_engines or {"google", "duckduckgo", "bing"}
         self.serp_api_base_url = serp_api_base_url or "https://serpapi.com/search"
         self.site_restrictor = site_restrictor or "site:www.rfc-editor.org"
         
@@ -117,9 +117,9 @@ class RFCExtractor:
             base_url = self.serp_api_base_url
             
             # Verifica se il motore di ricerca è supportato
-            if not name in self.supported_engines:
-                logging.warning(f"Motore di ricerca '{name}' non supportato.")
-                continue
+            # if not name in self.supported_engines:
+            #     logging.warning(f"Motore di ricerca '{name}' non supportato.")
+            #     continue
             
             # Aggiunta specifica dell'engine
             params.update({"engine": name})

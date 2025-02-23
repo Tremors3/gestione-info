@@ -134,6 +134,9 @@ SPELLING CORRECTION & SYNONIMS
 
 - [ ] Ottenere i ranking dei nostri tre sistemi di ricerca, formattarli in json come "local_extracted.json", effettuare il benchmark di quei sistemmi "our_benchmark.json"
 	Alla fine avremo "online_extracted.json" e "local_extracted.json" e poi i rispettivi benchmark "online_benchmark.json" e "local_benchmark.json"
+	- [ ] Scegliere due modelli di ranking per ciascun motore di ricerca e altrettante varianti per ciascun modello.
+    	- [x] Whoosh $\rightarrow$ ha BM25 (BM25F Okapi, BM25F Custom) e TF_IDF (TF_IDF Standard, TF_IDF_FF Custom).
+		- [ ] PyLuceme $\rightarrow$ ha BM25 (BM25 Standard, ...) e VSM (VSM Standard, ...).
 
 - [ ] Fare in modo che sia possibile selezionare i Modelli di Ranking per ciascun sistema.
 	- [x] L'interfaccia supporta la scelta della funzione di ranking.
@@ -142,9 +145,23 @@ SPELLING CORRECTION & SYNONIMS
 			- [x] Scelta dei modelli di ranking
 			- [x] Implementazione modello personalizzato (Custom)
 		- PyLucene
-			- [ ] Scelta dei modelli di ranking
+			- [x] Scelta dei modelli di ranking
 			- [ ] Implementazione modello personalizzato (Custom)
-			- [ ] Trovare il modo di creare un indice per ciascun modello
+				Link alla classe da estendere: https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/search/similarities/SimilarityBase.html
+			- [/] Trovare il modo di creare un indice per ciascun modello
 		- PostgreSQL
 			- [ ] Scelta dei modelli di ranking
 			- [ ] Implementazione modello personalizzato (Custom)
+
+**Cosa cambia rispetto a impostare la Similarity solo nel Searcher?**
+https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/index/IndexWriterConfig.html#setSimilarity(org.apache.lucene.search.similarities.Similarity)
+
+1. Impostando la **Similarity nel Writer** (`IndexWriterConfig.setSimilarity(Similarity)`)
+	- I valori di punteggio (ad es. TF, IDF, normalizzazioni) vengono memorizzati fisicamente nell'indice al momento della scrittura.
+	- Qualsiasi modifica alla funzione di similarità richiede una reindicizzazione dei documenti, perché i dati salvati dipendono direttamente dalla formula di scoring scelta.
+	- Può migliorare le prestazioni delle query, perché alcuni calcoli non devono essere fatti a runtime, ma vengono già memorizzati.
+
+2. Impostando la **Similarity solo nel Searcher** (`IndexSearcher.setSimilarity(Similarity)`)
+	- Il calcolo del punteggio avviene interamente a runtime durante le ricerche.
+	- È più flessibile, perché si può cambiare la funzione di similarità senza dover ricreare l'indice.
+	- Tuttavia, può essere più lento, perché i punteggi devono essere calcolati dinamicamente per ogni query.
