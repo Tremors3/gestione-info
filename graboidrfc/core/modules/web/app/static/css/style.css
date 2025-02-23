@@ -489,10 +489,19 @@ input[id^="search_engine-"]{
   margin-top: .5rem;
 }
 
-#whooshCheck{display: block;}
-#pyluceneCheck{display: none;}
-#postgresqlCheck{display: none;}
-
+#whooshCheck{
+  display: block;
+  margin-bottom: 1rem;
+}
+#pyluceneCheck{
+  display: none;
+  margin-bottom: 1rem;
+}
+#postgresqlCheck{
+  display: none;
+  margin-bottom: 1rem;
+}
+#t_whooshCheck, #t_pyluceneCheck, #t_postgresqlCheck{display: none;}
 
 
 /*********************************************************  PARTE DESTRA  *******************************************************************/
