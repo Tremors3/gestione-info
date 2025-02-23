@@ -63,12 +63,15 @@
                     <div class="control">
                     <div id="tuttiCheck" style="padding-bottom: .5em; padding-top: .5em;"> Modello di ranking </div>
                       <div class="radio">
+                        <div id="t_whooshCheck">Whoosh: </div>
                         <div id="whooshCheck" class="select">
                           {{ context["form"].whoosh_ranking}}
                         </div>
+                        <div id="t_pyluceneCheck">PyLucene: </div>
                         <div id="pyluceneCheck" class="select">
                           {{ context["form"].pylucene_ranking}}
                         </div>
+                        <div id="t_postgresqlCheck">PostgreSQL: </div>
                         <div id="postgresqlCheck" class="select">
                           {{ context["form"].postgresql_ranking}}
                         </div>
@@ -87,32 +90,44 @@
                   if (this.checked) {
                     document.getElementById('tuttiCheck').style.display = 'block';
                     document.getElementById('whooshCheck').style.display = 'block';
+                    document.getElementById('t_whooshCheck').style.display = 'none';
                     document.getElementById('pyluceneCheck').style.display = 'none';
+                    document.getElementById('t_pyluceneCheck').style.display = 'none';
                     document.getElementById('postgresqlCheck').style.display = 'none';
-                }});
+                    document.getElementById('t_postgresqlCheck').style.display = 'none';
+                  }});
                   
                 pylucene.addEventListener('change', function() {
                   if (this.checked) {
                     document.getElementById('tuttiCheck').style.display = 'block';
                     document.getElementById('whooshCheck').style.display = 'none';
+                    document.getElementById('t_whooshCheck').style.display = 'none';
                     document.getElementById('pyluceneCheck').style.display = 'block';
+                    document.getElementById('t_pyluceneCheck').style.display = 'none';
                     document.getElementById('postgresqlCheck').style.display = 'none';
-                }});
+                    document.getElementById('t_postgresqlCheck').style.display = 'none';
+                  }});
                     
                 postgresql.addEventListener('change', function() {
                   if (this.checked) {
                     document.getElementById('tuttiCheck').style.display = 'block';
                     document.getElementById('whooshCheck').style.display = 'none';
+                    document.getElementById('t_whooshCheck').style.display = 'none';
                     document.getElementById('pyluceneCheck').style.display = 'none';
+                    document.getElementById('t_pyluceneCheck').style.display = 'none';
                     document.getElementById('postgresqlCheck').style.display = 'block';
-                }});
-                    
+                    document.getElementById('t_postgresqlCheck').style.display = 'none';
+                  }});
+                      
                 tutti.addEventListener('change', function() {
                   if (this.checked) {
-                    document.getElementById('tuttiCheck').style.display = 'none';
-                    document.getElementById('whooshCheck').style.display = 'none';
-                    document.getElementById('pyluceneCheck').style.display = 'none';
-                    document.getElementById('postgresqlCheck').style.display = 'none';
+                    document.getElementById('tuttiCheck').style.display = 'block';
+                    document.getElementById('whooshCheck').style.display = 'block';
+                    document.getElementById('t_whooshCheck').style.display = 'block';
+                    document.getElementById('pyluceneCheck').style.display = 'block';
+                    document.getElementById('t_pyluceneCheck').style.display = 'block';
+                    document.getElementById('postgresqlCheck').style.display = 'block';
+                    document.getElementById('t_postgresqlCheck').style.display = 'block';
                 }});
               </script>
                 
