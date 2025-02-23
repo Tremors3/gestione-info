@@ -329,6 +329,29 @@ class MyPostgres(metaclass=Singleton):
         self._construct_indexes()
     
     @staticmethod
+    def __get_ranking_str(primary_term: bool, model: str):
+        """Restituisce la stringa per il calcolo del ranking in base se è un termine primario o secondario"""
+        
+        # Il termine è primario
+        if primary_term:
+
+            # Alternativamente si possono utilizzare pesi personalizzati per entrambi: 
+            # "ts_rank[_cd]('{1.0, 1.0, 0.5, 0.5}', setweight(title_tsv, 'D') ||  setweight(content_tsv, 'A'), main, 32)"
+            models = {
+                "BM25":   "ts_rank_cd(content_tsv, main)",
+                "TF_IDF": "ts_rank(content_tsv, main)",
+            }
+
+        # Il termine è secondario
+        else:
+            models = {
+                "BM25":   "ts_rank_cd({field}_tsv, term{idx})",
+                "TF_IDF": "ts_rank({field}_tsv, term{idx})",
+            }
+
+        return models.get(model, models["BM25"])
+
+    @staticmethod
     def _build_query(data: dict):
         """Costruzione della query da presentare a PostgreSQL."""
         
@@ -343,7 +366,7 @@ class MyPostgres(metaclass=Singleton):
         
         # Crea la definizione, il rank, e la condizione per la query principale
         definitions.append(f"LATERAL plainto_tsquery('english', '{ricerca_principale}') AS main")
-        ranks.append(f"ts_rank_cd(content_tsv, main)")
+        ranks.append(__class__.__get_ranking_str(primary_term=True, model=data.get("postgresql_ranking", "BM25")))
         conditions.append(f"main @@ content_tsv")
         
         #######################################################################
@@ -369,7 +392,7 @@ class MyPostgres(metaclass=Singleton):
             }; field = field_mapping[field]
             
             # Aggiungi il calcolo del ranking
-            ranks.append(f"ts_rank_cd({field}_tsv, term{idx})")
+            ranks.append(__class__.__get_ranking_str(primary_term=False, model=data.get("postgresql_ranking", "BM25")))
 
             # Aggiungi la condizione appropriata
             if operator in ("AND", "NOT"):
