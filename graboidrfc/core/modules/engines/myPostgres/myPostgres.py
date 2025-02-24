@@ -392,7 +392,7 @@ class MyPostgres(metaclass=Singleton):
             }; field = field_mapping[field]
             
             # Aggiungi il calcolo del ranking
-            ranks.append(__class__.__get_ranking_str(primary_term=False, model=data.get("postgresql_ranking", "BM25")))
+            ranks.append(__class__.__get_ranking_str(primary_term=False, model=data.get("postgresql_ranking", "BM25")).format(field=field, idx=idx))
 
             # Aggiungi la condizione appropriata
             if operator in ("AND", "NOT"):
