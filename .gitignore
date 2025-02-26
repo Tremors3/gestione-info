@@ -187,3 +187,6 @@ init.sql/
 Secrets/
 secrets
 secrets.env
+Dockerfile
+compose.yml
+Anaconda*.sh
