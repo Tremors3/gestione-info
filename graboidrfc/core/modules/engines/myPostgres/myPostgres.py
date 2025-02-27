@@ -365,6 +365,13 @@ class MyPostgres(metaclass=Singleton):
         ## RICERCA SU PIU' CAMPI - CREAZIONE DI UNA QUERY BOOLEANA COMBINATA ##
         #######################################################################
 
+        # Mappatura nome del campo
+        field_mapping = {
+            "TITLE": "title",
+            "DESCRIPTION": "abstract",
+            "KEYWORDS": "keywords"
+        }
+
         # Per ciascun termine secondario
         for idx, term in enumerate(data["terms"], start=1):
 
@@ -377,11 +384,7 @@ class MyPostgres(metaclass=Singleton):
             definitions.append(f"LATERAL plainto_tsquery('english', '{term_value}') AS term{idx}")
 
             # Mappatura nome del campo
-            field_mapping = {
-                "TITLE": "title",
-                "DESCRIPTION": "abstract",
-                "KEYWORDS": "keywords"
-            }; field = field_mapping[field]
+            field = field_mapping[field]
 
             # Aggiungi il calcolo del ranking
             ranks.append(
