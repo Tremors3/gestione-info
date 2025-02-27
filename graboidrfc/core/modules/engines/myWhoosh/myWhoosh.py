@@ -174,6 +174,21 @@ class MyWhoosh:
         # Inizializzazione delle liste per gli operatori logici
         and_terms, not_terms, or_terms = [], [], []
 
+        # Mappatura dei campi del documento
+        field_mapping = {
+            "TITLE": "title",
+            "DESCRIPTION": "abstract",
+            "KEYWORDS": "keywords",
+            "AUTHORS": "authors"
+        }
+        
+        # Mappatura tra operatori e liste dei termini
+        operator_mapping = {
+            "AND": and_terms,
+            "NOT": not_terms,
+            "OR": or_terms
+        }
+
         # Elenco dei termini da cercare
         for term_data in data["terms"]:
             
@@ -181,24 +196,9 @@ class MyWhoosh:
             term = term_data["term"].lower()
             operator = term_data["operator"].strip().upper()
             field = term_data["field"].strip().upper()
-
-            # Mappatura dei campi del documento
-            field_mapping = {
-                "TITLE": "title",
-                "DESCRIPTION": "abstract",
-                "KEYWORDS": "keywords",
-                "AUTHORS": "authors"
-            }
             
             # Recupero del campo ("abstract" di default)
             field = field_mapping.get(field, "abstract")
-
-            # Mappatura tra operatori e liste dei termini
-            operator_mapping = {
-                "AND": and_terms,
-                "NOT": not_terms,
-                "OR": or_terms
-            }
             
             # Termine aggiunto alla lista in base all'operatore
             #operator_mapping.get(operator, "AND").append(Term(field, term))

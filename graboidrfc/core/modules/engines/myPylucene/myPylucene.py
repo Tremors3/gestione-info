@@ -295,6 +295,20 @@ class MyPyLucene:
             terms_query_builder = BooleanQuery.Builder()
             must_present = False
 
+            # Mappatura tra operatori e clausole di Lucene
+            operator_mapping = {
+                "AND": BooleanClause.Occur.MUST,
+                "NOT": BooleanClause.Occur.MUST_NOT,
+                "OR": BooleanClause.Occur.SHOULD
+            }
+
+            # Mappatura tra chiavi e nomi dei campi
+            field_mapping = {
+                "TITLE": "title",           # Titolo
+                "DESCRIPTION": "abstract",  # Estratto
+                "KEYWORDS": "keywords"      # Parole chiave
+            }
+
             # Itera attraverso ogni termine di ricerca
             for term_data in data["terms"]:
                 
@@ -303,26 +317,12 @@ class MyPyLucene:
                 operator = term_data["operator"].strip().upper()
                 field = term_data["field"].strip().upper()
 
-                # Mappatura tra operatori e clausole di Lucene
-                operator_mapping = {
-                    "AND": BooleanClause.Occur.MUST,
-                    "NOT": BooleanClause.Occur.MUST_NOT,
-                    "OR": BooleanClause.Occur.SHOULD
-                }
-
                 # Imposta l'operatore di ricerca
                 op = operator_mapping.get(operator, BooleanClause.Occur.MUST)
                 
                 # Controlla se c'è almeno una query NUST/SHOULD
                 if op in (BooleanClause.Occur.MUST, BooleanClause.Occur.SHOULD):
                     must_present = True
-
-                # Mappatura tra chiavi e nomi dei campi
-                field_mapping = {
-                    "TITLE": "title",           # Titolo
-                    "DESCRIPTION": "abstract",  # Estratto
-                    "KEYWORDS": "keywords"      # Parole chiave
-                }
 
                 # Imposta il campo di ricerca
                 field = field_mapping.get(field, "abstract")
