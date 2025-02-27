@@ -29,6 +29,9 @@ class MyPostgres(metaclass=Singleton):
     # SETTINGS FILE PATHS
     SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "postgres.json")
 
+    # SQL SCRIPTS FOLDER
+    SQL_SCRIPTS_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "sql")
+    
     # ################################################## #
 
     def __init__(self, use_docker: bool = False):
@@ -125,10 +128,9 @@ class MyPostgres(metaclass=Singleton):
 
     def _get_cursor(self) -> Optional[pg8000.Cursor]:
         """Restituisce un cursore legato alla connessione."""
-        if self.conn:
-            return self.conn.cursor()
-        logging.info("Connessione non disponibile.")
-        return None
+        if not self.conn:
+            raise Exception("Connessione al database non disponibile.")
+        return self.conn.cursor()
 
     def __del__(self):
         """La connessione viene chiusa quando l'oggetto viene distrutto."""
@@ -318,10 +320,51 @@ class MyPostgres(metaclass=Singleton):
             self.conn.rollback()
             raise Exception(f"Errore durante la creazione degli indici: {e}")
 
+    def _load_scripts(self):
+        """Carica gli script su PostgreSQL."""
+        
+        scripts_folder = __class__.SQL_SCRIPTS_PATH
+        
+        # Controllo se il file dello script esiste
+        if not os.path.isdir(scripts_folder):
+            raise FileNotFoundError(f"La directory contenente gli script sql non è stata trovata al seguente percorso: \'{scripts_folder}\'.")
+
+        # Otteniamo tutti i Full-Path-FileS all'interno della directory degli scripts sql
+        scripts_paths = [ script_path for f in os.listdir(scripts_folder) if os.path.isfile(script_path := os.path.join(scripts_folder, f)) ]
+        
+        # Se non ci sono scripts sql, usciamo
+        if not scripts_paths: return
+        
+        # Ottenimento del cursore
+        cursor = self._get_cursor()
+        
+        try:
+            
+            # Carichiamo ciascuno script
+            for script_path in scripts_paths:
+                with open(script_path, "r") as fd:
+                    try:
+                        
+                        # Caricamento dello script
+                        script = fd.read()
+                        cursor.execute(script)
+                        
+                    except Exception as e:
+                        self.conn.rollback() # Rollback
+                        raise Exception(f"Errore durante il caricamento dello script \'{script_path}\': {e}")
+            
+            # Commit
+            self.conn.commit()
+            
+        except Exception as e:
+            raise Exception(f"Errore durante il caricamento degli scripts: {e}")
+
     # #################################################################################################### #
 
     def create_indexes(self):
         """Pipeline di creazione degli indici."""
+        logging.debug("PostgreSQL: Caricamento degli script per funzioni di ranking custom...")
+        self._load_scripts()
         logging.debug("PostgreSQL: Inizializzazione della tabella e popolamento del database...")
         self._initialize_table()
         self._populate_table()
