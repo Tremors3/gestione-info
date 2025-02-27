@@ -25,12 +25,14 @@ from org.apache.lucene.store import NIOFSDirectory
 # Classi per lettura dell'indice e ricerca
 from org.apache.lucene.index import DirectoryReader, Term
 from org.apache.lucene.queryparser.classic import QueryParser
+from org.apache.lucene.search.similarities import BM25Similarity, ClassicSimilarity, SimilarityBase
 from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause, TermQuery, TermRangeQuery, MatchAllDocsQuery
 
 # Import moduli di progetto
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.miscellaneous import safecast
+#from graboidrfc.core.modules.engines.myPylucene.custom_scorer import VSM_CUSTOM
 
 # #################################################################################################### #
 
@@ -240,22 +242,19 @@ class MyPyLucene:
         ## INIZIALIZZAZIONE PARAMETRI                               ##
         ##############################################################
 
+        # Inizializzazione di Lucene
+        MyPyLucene.init_lucene_vm()
+        
         # Controllare se è necessario indicizzare i documenti
         if not os.path.exists(MyPyLucene.INDEX_DIRECTORY_PATH):
             MyPyLucene.create_indexes()
-        
-        # Inizializzazione di Lucene
-        MyPyLucene.init_lucene_vm()
         
         # Apertura directory
         fsDir = NIOFSDirectory(Paths.get(MyPyLucene.INDEX_DIRECTORY_PATH))
         
         # Apertura del reader
         reader = DirectoryReader.open(fsDir)
-        
-        # Apertura del searcher
-        searcher = IndexSearcher(reader)
-        
+
         # Creazione dell'analizzatore
         analyzer = StandardAnalyzer()
 
@@ -429,6 +428,18 @@ class MyPyLucene:
         ## ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI ##
         #######################################################################################
 
+        similarity_function_mapping = {
+            "BM25": BM25Similarity(),
+            "VSM": ClassicSimilarity(),
+            #"CUSTOM_SCORER": VSM_CUSTOM(),
+        }; similarity_function = similarity_function_mapping.get(data.get("pylucene_ranking"), BM25Similarity())
+
+        # Apertura del searcher
+        searcher = IndexSearcher(reader)
+        
+        # Impostazione funzione di ranking
+        searcher.setSimilarity(similarity_function)
+        
         # Esegue la ricerca con la query finale costruita e limita il numero di risultati
         scoreDocs = searcher.search(final_query_builder.build(), data.get("size", 25)).scoreDocs
 
