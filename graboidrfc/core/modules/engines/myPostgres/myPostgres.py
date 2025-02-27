@@ -363,8 +363,8 @@ class MyPostgres(metaclass=Singleton):
 
     def create_indexes(self):
         """Pipeline di creazione degli indici."""
-        logging.debug("PostgreSQL: Caricamento degli script per funzioni di ranking custom...")
-        self._load_scripts()
+        #logging.debug("PostgreSQL: Caricamento degli script per funzioni di ranking custom...")
+        #self._load_scripts()
         logging.debug("PostgreSQL: Inizializzazione della tabella e popolamento del database...")
         self._initialize_table()
         self._populate_table()
