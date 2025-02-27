@@ -257,7 +257,7 @@ class MyPostgres(metaclass=Singleton):
                     title_tsv = title
                     abstract_tsv = abstract
                     content_tsv = __class__.__sanitize(doc["Content"])
-                    keywords_tsv = __class__.__sanitize(' '.join(doc["Keywords"]))
+                    keywords_tsv = __class__.__sanitize(" ".join(doc["Keywords"]))
 
                     insert_values.append("""('{id}', {files}, E'{title}', {authors}, to_date('{date}', 'YYYY-MM'), E'{more_info}', '{status}', E'{abstract}', {keywords}, to_tsvector('english', E'{title_tsv}'), to_tsvector('english', E'{abstract_tsv}'), to_tsvector('english', E'{keywords_tsv}'), to_tsvector('english', E'{content_tsv}'))""".format(
 

@@ -103,7 +103,7 @@ class MyWhoosh:
                     date      = date,                          # Data di pubblicazione
                     status    = doc["Status"],                 # Stato
                     abstract  = doc["Abstract"],               # Abstract
-                    keywords  = doc["Keywords"],               # Parole chiave
+                    keywords  = " ".join(doc["Keywords"]),     # Parole chiave
                     more_info = doc["More Info"],              # Altre informazioni
                     files     = doc["Files"],                  # Files
                     
@@ -321,11 +321,11 @@ class MyWhoosh:
 
         # Selezione della funzione di ranking
         weight_function_mapping = {
-            "BM25F": BM25F,
+            #"BM25F": BM25F,
             "BM25F_CUSTOM": BM25F(B=0.75, content_B=1.0, K1=1.2),
             "CUSTOM_SCORER": TF_IDF_FF(lambda_freshness=0.1),
             "TF_IDF": TF_IDF,
-            "PL2": PL2,
+            #"PL2": PL2,
             #"DFREE": DFree
         }; weight_function = weight_function_mapping.get(data.get("whoosh_ranking"), BM25F)
 

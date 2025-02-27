@@ -25,14 +25,14 @@ from org.apache.lucene.store import NIOFSDirectory
 # Classi per lettura dell'indice e ricerca
 from org.apache.lucene.index import DirectoryReader, Term
 from org.apache.lucene.queryparser.classic import QueryParser
-from org.apache.lucene.search.similarities import BM25Similarity, ClassicSimilarity, SimilarityBase
+from org.apache.lucene.search.similarities import BM25Similarity, ClassicSimilarity, SimilarityBase, DFRSimilarity, BasicModelIF, NormalizationH2
 from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause, TermQuery, TermRangeQuery, MatchAllDocsQuery
 
 # Import moduli di progetto
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.miscellaneous import safecast
-#from graboidrfc.core.modules.engines.myPylucene.custom_scorer import VSM_CUSTOM
+from graboidrfc.core.modules.engines.myPylucene.custom_scorer import VSM_CUSTOM
 
 # #################################################################################################### #
 
@@ -431,7 +431,7 @@ class MyPyLucene:
         similarity_function_mapping = {
             "BM25": BM25Similarity(),
             "VSM": ClassicSimilarity(),
-            #"CUSTOM_SCORER": VSM_CUSTOM(),
+            "CUSTOM_SCORER": VSM_CUSTOM(),
         }; similarity_function = similarity_function_mapping.get(data.get("pylucene_ranking"), BM25Similarity())
 
         # Apertura del searcher
