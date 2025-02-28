@@ -177,9 +177,8 @@ class MyWhoosh:
         # Mappatura dei campi del documento
         field_mapping = {
             "TITLE": "title",
-            "DESCRIPTION": "abstract",
-            "KEYWORDS": "keywords",
-            "AUTHORS": "authors"
+            "ABSTRACT": "abstract",
+            "KEYWORDS": "keywords"
         }
         
         # Mappatura tra operatori e liste dei termini

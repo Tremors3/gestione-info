@@ -171,7 +171,7 @@ class RFCExtractor:
 
 # ################################################## #
 
-class ExtractorManager():
+class ExtractorOnline():
 
     # CURRENT & EXPECTED WORKING DIRECTORY PATHS
     DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
@@ -182,7 +182,7 @@ class ExtractorManager():
     EXTRACTOR_ENV_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", ".env")
     EXTRACTOR_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "extractor.json")
     QUERIES_CONFIG_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "queries.json")
-    OUTPUT_RESULTS_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "extracted.json")
+    OUTPUT_RESULTS_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "extracted_online.json")
 
     @staticmethod
     def write_results(file_name, results):
@@ -213,7 +213,7 @@ class ExtractorManager():
     def start():
         """Funzione principale per eseguire il programma."""
         
-        env_file = ExtractorManager.EXTRACTOR_ENV_FILE
+        env_file = ExtractorOnline.EXTRACTOR_ENV_FILE
         
         # Caricamento delle Variabili d'Ambiente
         load_dotenv(dotenv_path=env_file)
@@ -224,9 +224,9 @@ class ExtractorManager():
             raise RuntimeError(f"Chiave API non trovata. Assicurati che sia configurata in '{env_file}'.")
 
         # Definizione dei File di Configurazione
-        config_file = ExtractorManager.EXTRACTOR_CONFIG_FILE
-        queries_file = ExtractorManager.QUERIES_CONFIG_FILE
-        results_file = ExtractorManager.OUTPUT_RESULTS_FILE
+        config_file = ExtractorOnline.EXTRACTOR_CONFIG_FILE
+        queries_file = ExtractorOnline.QUERIES_CONFIG_FILE
+        results_file = ExtractorOnline.OUTPUT_RESULTS_FILE
 
         # Inizializza l'estrattore
         extractor = RFCExtractor(api_key, config_file, queries_file)
@@ -237,10 +237,10 @@ class ExtractorManager():
 
         # Salva i risultati su file
         logging.info(f"Scrittura dei Risultati su File: \'{results_file}\'")
-        ExtractorManager.write_results(results_file, results)
+        ExtractorOnline.write_results(results_file, results)
 
         # Stampa i risultati
         #ExtractorManager.print_results(results)
 
 if __name__ == "__main__":
-    ExtractorManager.start()
+    ExtractorOnline.start()
