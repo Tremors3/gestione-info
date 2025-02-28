@@ -319,15 +319,20 @@ class MyWhoosh:
         ## FUNZIONI DI RANKING - SELEZIONE DELLA FUNZIONE DI RANKING DA UTILIZZARE ##
         #############################################################################
 
+        # BM25F Custom Parameters
+        k1 = 1.2
+        b = 0.75
+        cb = 1.0
+
         # Selezione della funzione di ranking
         weight_function_mapping = {
-            #"BM25F": BM25F,
-            "BM25F_CUSTOM": BM25F(B=0.75, content_B=1.0, K1=1.2),
-            "CUSTOM_SCORER": TF_IDF_FF(lambda_freshness=0.1),
-            "TF_IDF": TF_IDF,
-            #"PL2": PL2,
-            #"DFREE": DFree
-        }; weight_function = weight_function_mapping.get(data.get("whoosh_ranking"), BM25F)
+            # BM25
+            "BM25": BM25F(),
+            "BM25_CUSTOM": BM25F(B=b, content_B=cb, K1=k1),
+            # TFIDF
+            "TFIDF": TF_IDF(),
+            "TFIDF_CUSTOM": TF_IDF_FF(lambda_freshness=0.1),
+        }; weight_function = weight_function_mapping.get(data.get("whoosh_ranking"), BM25F())
 
         #######################################################################################
         ## ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI ##
