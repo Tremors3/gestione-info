@@ -11,22 +11,26 @@ _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|
 from graboidrfc.core.modules.engines.myWhoosh.myWhoosh import MyWhoosh
 from graboidrfc.core.modules.engines.myPostgres.myPostgres import MyPostgres
 from graboidrfc.core.modules.engines.myPylucene.myPylucene import MyPyLucene
+
+# Importazioni altri moduli del progetto
 from graboidrfc.core.modules.utils.logger import logging
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
 # ############################################################################ #
 
-class ResultExtractor():
+class ExtractorLocal():
     
     # CURRENT WORKING DIRECTORY & FILE PATHS
     DYNAMIC_PACKAGE_PATH = get_dynamic_package_path()
+    
     QUERIES_CONFIG_FILE = os.path.join(
         DYNAMIC_PACKAGE_PATH, 
         "core", "data", "benchmark", "queries_definitive.json"
     )
+    
     JSON_PATH = os.path.join(
         DYNAMIC_PACKAGE_PATH,  
-        "core", "data", "results", "results.json"
+        "core", "data", "benchmark", "extracted_local.json"
     )
 
     # Dizionario per i modelli di ranking dei search engine
@@ -49,7 +53,7 @@ class ResultExtractor():
             #"CUSTOM_SCORER": "Custom Scorer"
         ]
     }
-
+    
     @classmethod
     def __load_queries(cls) -> list[str]:
         """Carica le query dal file"""
@@ -57,8 +61,8 @@ class ResultExtractor():
             with open(cls.QUERIES_CONFIG_FILE) as f:
                 query_doc = json.load(f)
         except Exception as e:
-            file = cls.QUERIES_CONFIG_FILE
-            logging.error(f"Errore durante l'apertura del file {file}: {e}")
+            file_ = cls.QUERIES_CONFIG_FILE
+            logging.error(f"Errore durante l'apertura del file {file_}: {e}")
 
         queries = []
         for query in query_doc:
@@ -224,13 +228,15 @@ class ResultExtractor():
 
     def start():
         
+        # Apertura connessione PostgreSQL
         postgres = MyPostgres()
         
-        results = ResultExtractor.__get_results()
+        results = ExtractorLocal.__get_results()
         
+        # Chiusura connessione PostgreSQL
         postgres._close_connection()
         
-        ResultExtractor.save_results_to_file(
+        ExtractorLocal.save_results_to_file(
             results  = results, 
             filepath = __class__.JSON_PATH
         )

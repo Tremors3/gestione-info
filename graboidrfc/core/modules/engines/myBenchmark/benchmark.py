@@ -129,7 +129,7 @@ class BenchmarkConstructor:
 
     # SETTINGS & DIRECTORY PATHS
     SETTINGS_FILE_PATH = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "config", "benchmark.json")
-    EXTRACTED_RESULTS_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "extracted.json")
+    EXTRACTED_RESULTS_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "extracted_online_revisited.json")
     BENCHMARK_OUTPUT_FILE = os.path.join(DYNAMIC_PACKAGE_PATH, "core", "data", "benchmark", "benchmark.json")
 
     @staticmethod
