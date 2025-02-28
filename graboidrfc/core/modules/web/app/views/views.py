@@ -74,7 +74,7 @@ class RankingOption:
 class TermForm(FlaskForm):
     operator = SelectField('Operator', default='AND', choices=[('AND', 'AND'), ('OR', 'OR'), ('NOT', 'NOT')], render_kw={"id":"terms-operator"})
     term     = StringField('Term', validators=[], render_kw={"class":"input", "placeholder":"Search terms"})
-    field    = SelectField(default='KEYWORDS', choices=[('TITLE', 'Title'), ('DESCRIPTION', 'Description'), ('KEYWORDS', 'Keywords')], render_kw={"id":"terms-field","class":"select"})
+    field    = SelectField(default='KEYWORDS', choices=[('TITLE', 'Title'), ('ABSTRACT', 'Description'), ('KEYWORDS', 'Keywords')], render_kw={"id":"terms-field","class":"select"})
 
 class SearchForm(FlaskForm):
     ############################################################ Ricerca Principale ############################################################

@@ -304,7 +304,7 @@ class MyPyLucene:
             # Mappatura tra chiavi e nomi dei campi
             field_mapping = {
                 "TITLE": "title",           # Titolo
-                "DESCRIPTION": "abstract",  # Estratto
+                "ABSTRACT": "abstract",  # Estratto
                 "KEYWORDS": "keywords"      # Parole chiave
             }
 
@@ -496,7 +496,7 @@ if __name__ == "__main__":
                 {
                     "operator":"AND",
                     "term":"document",
-                    "field":"DESCRIPTION"
+                    "field":"ABSTRACT"
                 },
                 {
                     "operator":"NOT",

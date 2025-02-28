@@ -109,7 +109,7 @@ class ResultExtractor():
             terms.append({
                 'operator': 'AND', 
                 'term'    : term,
-                'field'   : field
+                'field'   : field.upper()
             })
 
         return terms
@@ -126,9 +126,11 @@ class ResultExtractor():
     @staticmethod
     def __build_query(query: str, ranking: str) -> list[dict]:
         """Costruzione della query"""
+        
         fields = ["title", "abstract", "keywords"]
         
         ricerca_principale = __class__.__get_query(query, fields)
+        
         terms = __class__.__terms_builder(
             __class__.__get_fields(query, fields)
         )
@@ -166,10 +168,10 @@ class ResultExtractor():
             results = MyWhoosh.process(__class__.__build_query(query, ranking))
 
         if search_engine == "pylucene":
-            results = MyWhoosh.process(__class__.__build_query(query, ranking))
+            results = MyPyLucene.process(__class__.__build_query(query, ranking))
 
         if search_engine == "postgresql":
-            results = MyWhoosh.process(__class__.__build_query(query, ranking))
+            results = MyPostgres().process(__class__.__build_query(query, ranking))
 
         for result in results:
             numbers.append(result.get("number"))
@@ -186,6 +188,7 @@ class ResultExtractor():
         x = (len(queries)*len(__class__.SEARCH_ENGINES["postgresql"])) + \
             (len(queries)*len(__class__.SEARCH_ENGINES["pylucene"])) + \
             (len(queries)*len(__class__.SEARCH_ENGINES["whoosh"]))
+        
         results = {}
 
         # Barra di caricamento
@@ -220,7 +223,13 @@ class ResultExtractor():
             raise IOError(f"Errore nel salvataggio del file {filepath}: {e}")
 
     def start():
+        
+        postgres = MyPostgres()
+        
         results = ResultExtractor.__get_results()
+        
+        postgres._close_connection()
+        
         ResultExtractor.save_results_to_file(
             results  = results, 
             filepath = __class__.JSON_PATH

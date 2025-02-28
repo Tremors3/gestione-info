@@ -411,7 +411,7 @@ class MyPostgres(metaclass=Singleton):
         # Mappatura nome del campo
         field_mapping = {
             "TITLE": "title",
-            "DESCRIPTION": "abstract",
+            "ABSTRACT": "abstract",
             "KEYWORDS": "keywords"
         }
 
@@ -427,7 +427,7 @@ class MyPostgres(metaclass=Singleton):
             definitions.append(f"LATERAL plainto_tsquery('english', '{term_value}') AS term{idx}")
 
             # Mappatura nome del campo
-            field = field_mapping[field]
+            field = field_mapping.get(field, "abstract")
 
             # Aggiungi il calcolo del ranking
             ranks.append(
@@ -536,7 +536,7 @@ class MyPostgres(metaclass=Singleton):
         ###########################################################################
 
         # Stringa contenente i campi da ritirare
-        select_clause = "id AS number, abstract, authors, to_char(date, 'YYYY-MM') AS date, files, keywords, more_info, status, title"
+        select_clause = "id::varchar(255) AS number, abstract, authors, to_char(date, 'YYYY-MM') AS date, files, keywords, more_info, status, title"
 
         # Crea la query che sarà presentata a postgres
         base_query = "SELECT json_agg(d) documents FROM ( SELECT {select_clause}, {rank_clause} AS rank FROM dataset, {from_clause} WHERE {where_clause}{statuses_clause}{date_clause} ORDER BY rank DESC LIMIT {size} ) d;"
@@ -612,7 +612,7 @@ if __name__ == "__main__":
             {
                 "operator":"AND",
                 "term":"document",
-                "field":"DESCRIPTION"
+                "field":"ABSTRACT"
             },
             {
                 "operator":"NOT",
