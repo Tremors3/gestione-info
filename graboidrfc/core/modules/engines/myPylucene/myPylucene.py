@@ -32,7 +32,7 @@ from org.apache.lucene.search import IndexSearcher, BooleanQuery, BooleanClause,
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.miscellaneous import safecast
-from graboidrfc.core.modules.engines.myPylucene.custom_scorer import VSM_CUSTOM
+from graboidrfc.core.modules.engines.myPylucene.custom_scorer import TFLN_PIDF
 
 # #################################################################################################### #
 
@@ -428,10 +428,17 @@ class MyPyLucene:
         ## ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI ##
         #######################################################################################
 
+        # BM25 Custom Parameters
+        k1 = 1.2
+        b = 0.75
+        
         similarity_function_mapping = {
+            # BM25
             "BM25": BM25Similarity(),
+            "BM25_CUSTOM": BM25Similarity(k1, b),
+            # VSM
             "VSM": ClassicSimilarity(),
-            "CUSTOM_SCORER": VSM_CUSTOM(),
+            "VSM_CUSTOM": TFLN_PIDF(),
         }; similarity_function = similarity_function_mapping.get(data.get("pylucene_ranking"), BM25Similarity())
 
         # Apertura del searcher

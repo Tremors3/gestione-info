@@ -47,23 +47,30 @@ class RankingOption:
     FUNCTIONS = {
         
         "whoosh": {
-            #"BM25F": "BM25F Okapi",
-            "BM25F_CUSTOM": "BM25F Okapi",
-            "TF_IDF": "VSM (TF-IDF)",
-            "CUSTOM_SCORER": "Custom Scorer",
-            #"PL2": "PL2",
+            # BM25
+            "BM25": "BM25",
+            "BM25_CUSTOM": "BM25 Custom",
+            # TFIDF
+            "TFIDF": "TF-IDF",
+            "TFIDF_CUSTOM": "TF-IDF Custom (TF-IDF-FF)",
         },
         
         "pylucene": {
-            "BM25": "BM25F Okapi",
+            # BM25
+            "BM25": "BM25",
+            "BM25_CUSTOM": "BM25 Custom",
+            # VSM
             "VSM": "VSM (TF-IDF)",
-            "CUSTOM_SCORER": "Custom Scorer"
+            "VSM_CUSTOM": "VSM Custom (TFLN-PIDF)"
         },
         
         "postgresql": {
-            "BM25": "BM25F Okapi",
-            "TF_IDF": "VSM (TF-IDF)",
-            #"CUSTOM_SCORER": "Custom Scorer"
+            # BM25
+            "BM25": "BM25",
+            "BM25_CUSTOM": "BM25 Custom (DLN)",
+            # TFIDF
+            "TFIDF": "TF-IDF",
+            "TFIDF_CUSTOM": "TF-IDF Custom (DLN)",
         },
     }
     
