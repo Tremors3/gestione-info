@@ -12,6 +12,7 @@ from graboidrfc.core.modules.web.run import start as start_web_server
 from graboidrfc.core.modules.engines.myParser.myParser import start as start_parser
 from graboidrfc.core.modules.engines.myBenchmark.benchmark import BenchmarkConstructor
 from graboidrfc.core.modules.engines.myBenchmark.extractor import ExtractorManager
+from graboidrfc.core.modules.engines.myBenchmark.result_extractor import ResultExtractor
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
@@ -66,6 +67,7 @@ class Application:
         # Argomenti per la costruzione del Benchmark
         exclusive_group.add_argument('-e', '--extractor', action='store_true', help='Ottiene i risultati necessari alla costruzione del benchmark.')
         exclusive_group.add_argument('-b', '--benchmark', action='store_true', help='Costruisce e salva il benchmark.')
+        exclusive_group.add_argument('-r', '--result-extr', action='store_true', help='Ottiene i risultati con i nostri search engine.')
 
     # #################################################################################################### #
 
@@ -162,6 +164,10 @@ class Application:
         """Avvia lo script calcola e mostra il benchmark."""
         print(f"{bcolors.GREEN}Costruzione e restituzione del Benchmark ...{bcolors.RESET}")
         BenchmarkConstructor.start()
+
+    def result_extr(self) -> None:
+        """Avvia lo script per scaricare i risultati dei nostri search engine e li scrive su file"""
+        ResultExtractor.start()
 
     # ################################################## #
 
