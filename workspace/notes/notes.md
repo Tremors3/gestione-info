@@ -81,24 +81,24 @@ Postgress
 - [SI] Invece di utilizzare uno script alternativo con l'unico scopo di permettere l'utilizzazione di PyLucene, possiamo invece pacchettizzare e permettere l'installazione del programma come mostratoci dal prof in Complementi di Programmazione. Sarà compito della prof gestire il venv in cui è installata l'applicazione. Questo non vuol dire che dovremo cancellare gli script "graboid.py" e "starter.py"; restano ottimi per il testare parti di programma.
 
 - [x] Trovare il modo di installare l'applicazione:
-  	1. RIORGANIZZAZIONE GERARCHICA COMPLETA DEL PROGETTO:
-  		- [x] Riorganizza la gerachia in cartelle e correggi gli import
-  		- [x] Sposta il dataset e le configurazioni nelle relative nuove cartelle e correggi i percorsi
-  		- [x] Aggiornare il modo con cui tutti gli script costruiscono i percorsi (soprattutto gli script vecchi).
-  	2. Script simile a start che consente di utilizzare l'applicazione;
-  		- [x] Scrivi lo script e testa l'installazione.
-  		- [x] Correggi prefisso a tutti i percorsi.
-  		- [x] Correggi percorsi dinamici ai file.
-  		- [x] Avvia la macchina virtuale e far funzionare pylucene con il resto del sistema.
-  	3. Definisci la procedura di installazione del progetto e delle rispettive dipendenze.
-  		- [x] Descrivi prima tutta la procedura su un file md.
-  		- [x] Scrivi il file README.md del progetto con la procedura di installazione.
-  		- [x] Testa l'intera procedura di installazione su una nuova macchina virtuale Ubuntu. E aggiungi eventuali passi mancanti alla procedura di installazione.
-  		   - [x] Test su WSL2/Ubuntu (Windows 11)
-  			- [x] Test su VirtualBox/Ubuntu
-         - [x] Test su VirtualBox/Debian
-  		- [x] Correggi e completa il README (errore "i" mancante) e fai in modo che si segua in maniera più lineare.
-  		- [x] Correggi l'errore del link nel README: [Clona](#-installazione-pacchetto)
+    1. RIORGANIZZAZIONE GERARCHICA COMPLETA DEL PROGETTO:
+        - [x] Riorganizza la gerachia in cartelle e correggi gli import
+        - [x] Sposta il dataset e le configurazioni nelle relative nuove cartelle e correggi i percorsi
+        - [x] Aggiornare il modo con cui tutti gli script costruiscono i percorsi (soprattutto gli script vecchi).
+    2. Script simile a start che consente di utilizzare l'applicazione;
+        - [x] Scrivi lo script e testa l'installazione.
+        - [x] Correggi prefisso a tutti i percorsi.
+        - [x] Correggi percorsi dinamici ai file.
+        - [x] Avvia la macchina virtuale e far funzionare pylucene con il resto del sistema.
+    3. Definisci la procedura di installazione del progetto e delle rispettive dipendenze.
+        - [x] Descrivi prima tutta la procedura su un file md.
+        - [x] Scrivi il file README.md del progetto con la procedura di installazione.
+        - [x] Testa l'intera procedura di installazione su una nuova macchina virtuale Ubuntu. E aggiungi eventuali passi mancanti alla procedura di installazione.
+            - [x] Test su WSL2/Ubuntu (Windows 11)
+            - [x] Test su VirtualBox/Ubuntu
+            - [x] Test su VirtualBox/Debian
+        - [x] Correggi e completa il README (errore "i" mancante) e fai in modo che si segua in maniera più lineare.
+        - [x] Correggi l'errore del link nel README: [Clona](#-installazione-pacchetto)
 
 - [x] Rendere docker opzionale:
    - [x] Normalmente l'applicazione deve leggere potersi collegare al servizio PostgreSQL senza docker
@@ -107,13 +107,13 @@ Postgress
 - [x] Utilizza il Logger e migliora le stampe di tutti i moduli. Poi prova ad inizializzare in modo da vedere se sono abbastanza belle.
 
 - [x] Pare che alcune funzionalità di ricerca non eseguono correttamente su PyLucene (mentre eseguono correttamente sugli altri due motori)
-	- [x] Clausola "NOT IN" in PyLucene non sembra funziona correttamente.
-	- [x] Clausole "SPECIFIC YEAR" in Pylucene non sembra funzionare correttamente.
+    - [x] Clausola "NOT IN" in PyLucene non sembra funziona correttamente.
+    - [x] Clausole "SPECIFIC YEAR" in Pylucene non sembra funzionare correttamente.
 
 ### [fatto] RISTRUTTURARE GLI SCRIPT DI CREAZIONE DEL BANCHMARK:
-	- [x] Invece di salvare l'intero link solamente il numero identificativo del documento;
-	- [x] Aggiungere e formattare commenti in modo che le stampe siano belle;
-   - [x] Risistemazione generale degli scripts.
+    - [x] Invece di salvare l'intero link solamente il numero identificativo del documento;
+    - [x] Aggiungere e formattare commenti in modo che le stampe siano belle;
+    - [x] Risistemazione generale degli scripts.
 
 # OBIETTIVO
 ### VOGLIO ARRIVARE A FINE FEBBRAIO COL DOVER FARE SOLAMENTE (1. MODELLI DI RANKING, 2.a FUNZIONI PER VALUTARE I MODELLI DI RANKING, 2.b GRAFICI, 3. DOCUMENTAZIONE, 4. PRESENTAZIONE)
@@ -130,38 +130,41 @@ SPELLING CORRECTION & SYNONIMS
 
 ### [da_fare] RIVISITA DEL BENCHMARK E SELEZIONE DEI MODELLI DI RANKING
 
-- [ ] Rivisita del Benchmark. Migliorare l'ordinamento ideale dei documenti rispetto alle query (soprattutto quelle multi-valore).
+- [x] Rivisita del Benchmark. Migliorare l'ordinamento ideale dei documenti rispetto alle query (soprattutto quelle multi-valore).
+    Gabri ha svolto un buon lavoro nel riordinare idealmente i risultati che compongono il benchmark.
 
-- [ ] Ottenere i ranking dei nostri tre sistemi di ricerca, formattarli in json come "local_extracted.json", effettuare il benchmark di quei sistemmi "our_benchmark.json"
-	Alla fine avremo "online_extracted.json" e "local_extracted.json" e poi i rispettivi benchmark "online_benchmark.json" e "local_benchmark.json"
-	- [ ] Scegliere due modelli di ranking per ciascun motore di ricerca e altrettante varianti per ciascun modello.
-    	- [x] Whoosh $\rightarrow$ ha BM25 (BM25F Okapi, BM25F Custom) e TF_IDF (TF_IDF Standard, TF_IDF_FF Custom).
-		- [ ] PyLuceme $\rightarrow$ ha BM25 (BM25 Standard, ...) e VSM (VSM Standard, ...).
+- [ ] Ottenere i ranking dei nostri tre sistemi di ricerca, formattarli in json come "local_extracted.json", effettuare il benchmark di quei sistemmi "our_benchmark.json".
+    Alla fine avremo "online_extracted.json" e "local_extracted.json" e poi i rispettivi benchmark "online_benchmark.json" e "local_benchmark.json".
 
-- [ ] Fare in modo che sia possibile selezionare i Modelli di Ranking per ciascun sistema.
-	- [x] L'interfaccia supporta la scelta della funzione di ranking.
-	- [ ] Per ciascun sistema utilizzare almeno tre modelli di ranking.
-		- Whoosh
-			- [x] Scelta dei modelli di ranking
-			- [x] Implementazione modello personalizzato (Custom)
-		- PyLucene
-			- [x] Scelta dei modelli di ranking
-			- [ ] Implementazione modello personalizzato (Custom)
-				Link alla classe da estendere: https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/search/similarities/SimilarityBase.html
-			- [/] Trovare il modo di creare un indice per ciascun modello
-		- PostgreSQL
-			- [ ] Scelta dei modelli di ranking
-			- [ ] Implementazione modello personalizzato (Custom)
+- [x] Scegliere due modelli di ranking per ciascun motore di ricerca e altrettante varianti per ciascun modello.
+    - [x] Whoosh     $\rightarrow$ ha **BM25** e **BM25 Custom**,       **TF_IDF**       e **TF_IDF_FF**.
+    - [x] PyLuceme   $\rightarrow$ ha **BM25** e **BM25 Custom**,       **VSM (TF_IDF)** e **VSM (TFLN_PIDF)**.
+    - [x] PostgreSQL $\rightarrow$ ha **BM25** e **BM25 Custom (DLN)**, **TF_IDF**       e **TF_IDF (DLN)**.
+
+- [x] Fare in modo che sia possibile selezionare i Modelli di Ranking per ciascun sistema.
+    - [x] L'interfaccia supporta la scelta della funzione di ranking.
+    - [x] Per ciascun sistema utilizzare almeno tre modelli di ranking.
+        - Whoosh
+            - [x] Scelta dei modelli di ranking
+            - [x] Implementazione modello personalizzato (Custom)
+        - PyLucene
+            - [x] Scelta dei modelli di ranking
+            - [x] Implementazione modello personalizzato (Custom)
+                Link alla classe da estendere: https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/search/similarities/SimilarityBase.html
+            - [/] Trovare il modo di creare un indice per ciascun modello (--> Trovato come fare, ma non lo facciamo <--)
+        - PostgreSQL
+            - [x] Scelta dei modelli di ranking
+            - [x] Implementazione modello personalizzato (Custom)
 
 **Cosa cambia rispetto a impostare la Similarity solo nel Searcher?**
 https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/index/IndexWriterConfig.html#setSimilarity(org.apache.lucene.search.similarities.Similarity)
 
 1. Impostando la **Similarity nel Writer** (`IndexWriterConfig.setSimilarity(Similarity)`)
-	- I valori di punteggio (ad es. TF, IDF, normalizzazioni) vengono memorizzati fisicamente nell'indice al momento della scrittura.
-	- Qualsiasi modifica alla funzione di similarità richiede una reindicizzazione dei documenti, perché i dati salvati dipendono direttamente dalla formula di scoring scelta.
-	- Può migliorare le prestazioni delle query, perché alcuni calcoli non devono essere fatti a runtime, ma vengono già memorizzati.
+    - I valori di punteggio (ad es. TF, IDF, normalizzazioni) vengono memorizzati fisicamente nell'indice al momento della scrittura.
+    - Qualsiasi modifica alla funzione di similarità richiede una reindicizzazione dei documenti, perché i dati salvati dipendono direttamente dalla formula di scoring scelta.
+    - Può migliorare le prestazioni delle query, perché alcuni calcoli non devono essere fatti a runtime, ma vengono già memorizzati.
 
 2. Impostando la **Similarity solo nel Searcher** (`IndexSearcher.setSimilarity(Similarity)`)
-	- Il calcolo del punteggio avviene interamente a runtime durante le ricerche.
-	- È più flessibile, perché si può cambiare la funzione di similarità senza dover ricreare l'indice.
-	- Tuttavia, può essere più lento, perché i punteggi devono essere calcolati dinamicamente per ogni query.
+    - Il calcolo del punteggio avviene interamente a runtime durante le ricerche.
+    - È più flessibile, perché si può cambiare la funzione di similarità senza dover ricreare l'indice.
+    - Tuttavia, può essere più lento, perché i punteggi devono essere calcolati dinamicamente per ogni query.
