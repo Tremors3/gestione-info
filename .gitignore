@@ -190,4 +190,3 @@ secrets.env
 Dockerfile
 compose.yml
 Anaconda*.sh
-results.json
