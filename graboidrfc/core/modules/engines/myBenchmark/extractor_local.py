@@ -35,23 +35,33 @@ class ExtractorLocal():
 
     # Dizionario per i modelli di ranking dei search engine
     SEARCH_ENGINES = {
+        
         "whoosh": [
-            #"BM25F",
-            "BM25F_CUSTOM",
-            "TF_IDF",
-            "CUSTOM_SCORER",
-            #"PL2"
+            # BM25
+            "BM25",
+            "BM25_CUSTOM",
+            # TFIDF
+            "TFIDF",
+            "TFIDF_CUSTOM",
         ],
+        
         "pylucene": [
+            # BM25
             "BM25",
+            "BM25_CUSTOM",
+            # VSM
             "VSM",
-            "CUSTOM_SCORER"
+            "VSM_CUSTOM"
         ],
+        
         "postgresql": [
+            # BM25
             "BM25",
-            "TF_IDF",
-            #"CUSTOM_SCORER": "Custom Scorer"
-        ]
+            "BM25_CUSTOM",
+            # TFIDF
+            "TFIDF",
+            "TFIDF_CUSTOM",
+        ],
     }
     
     @classmethod
