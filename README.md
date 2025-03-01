@@ -295,6 +295,5 @@ Una volta soddisfatte le dipendenze, sarà possibile procedere con l'installazio
         <li>Matteo Menozzi <a href="https://github.com/Tremors3" style="vertical-align: middle;"><img src="https://badgen.net/badge/github/Tremors3/?icon=github"></a></li>
         <li>Enrico Turci Sologni <a href="https://github.com/HerryTS" style="vertical-align: middle;"><img src="https://badgen.net/badge/github/HerryTS/?icon=github"></a></li>
         <li>Gabriele Turci <a href="https://github.com/Gabeee88" style="vertical-align: middle;"><img src="https://badgen.net/badge/github/Gabeee88/?icon=github"></a></li>
-        <li>Andrei Dobrovolski <a href="https://github.com/ADobrovolski" style="vertical-align: middle;"><img src="https://badgen.net/badge/github/ADobrovolski/?icon=github"></a></li>
     </ul>
 </h4>
