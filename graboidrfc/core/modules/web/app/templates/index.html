@@ -463,18 +463,19 @@
             <li>Single term query: <code>"[term]"</code></li>
             <li>Phrase query: <code>"[phrase]"</code></li>
             <li>Logic operators: <code>AND, OR, NOT</code></li>
-            <li>Find documents containing x but not either y or z: <code>x NOT (y OR z)</code></li>
+            <li>Trova documenti contenenti x ma non y o z: <code>x NOT (y OR z)</code></li>
             <li>Fields: <code>[field]:[term]</code> </li>
-            <li>Wildcards: <code>?, *</code> </li>
-            <li>Fuzzy term: <code>[term]~[edits]</code></li>
-            <li>Range: 
-              <ul>
-                <li>Inclusive: <code>[udp TO tcp]</code></li>
-                <li>Exclusive: <code>{udp TO tcp}</code></li>
-              </ul>
-            </li>
-            <li>Term boosting: <code>udp^2 tcp^0.5</code></li>
-            <li>Confronto: <code>>, <, >=, <=</code></li>
+            <!-- <li>Find documents containing x but not either y or z: <code>x NOT (y OR z)</code></li> -->
+            <!-- <li>Wildcards: <code>?, *</code> </li> -->
+            <!-- <li>Fuzzy term: <code>[term]~[edits]</code></li> -->
+            <!-- <li>Range:  -->
+              <!-- <ul> -->
+                <!-- <li>Inclusive: <code>[udp TO tcp]</code></li> -->
+                <!-- <li>Exclusive: <code>{udp TO tcp}</code></li> -->
+              <!-- </ul> -->
+            <!-- </li> -->
+            <!-- <li>Term boosting: <code>udp^2 tcp^0.5</code></li> -->
+            <!-- <li>Confronto: <code>>, <, >=, <=</code></li> -->
           </ul>
         </div>
       </article>
@@ -486,20 +487,20 @@
           <ul>
             <li>Single term query: <code>"[term]"</code></li>
             <li>Phrase query: <code>"[phrase]"</code></li>
-            <li>Logic operators: <code>AND, OR, NOT, +, -</code></li>
+            <li>Logic operators: <code>AND, OR, NOT</code></li>
             <li>Fields: <code>[field]:[term]</code> </li>
-            <li>Wildcards: <code>?, *</code> </li>
-            <li>Fuzzy term (0.0 .. 1.0): <code>[term]~[edits]</code></li>
-            <li>Proximity search: <code>[term/phrase]~[distance]</code></li>
-            <li>Range: 
-              <ul>
-                <li>Inclusive: <code>[udp TO tcp]</code></li>
-                <li>Exclusive: <code>{udp TO tcp}</code></li>
-              </ul>
-            </li>
-            <li>Term boosting: <code>udp^2 tcp^0.5</code></li>
-            <li>Confronto: <code>>, <, >=, <=</code></li>
-            <li>Escape special characters with <code>\</code></li>
+            <!-- <li>Wildcards: <code>?, *</code> </li> -->
+            <!-- <li>Fuzzy term (0.0 .. 1.0): <code>[term]~[edits]</code></li> -->
+            <!-- <li>Proximity search: <code>[term/phrase]~[distance]</code></li> -->
+            <!-- <li>Range:  -->
+              <!-- <ul> -->
+                <!-- <li>Inclusive: <code>[udp TO tcp]</code></li> -->
+                <!-- <li>Exclusive: <code>{udp TO tcp}</code></li> -->
+              <!-- </ul> -->
+            <!-- </li> -->
+            <!-- <li>Term boosting: <code>udp^2 tcp^0.5</code></li> -->
+            <!-- <li>Confronto: <code>>, <, >=, <=</code></li> -->
+            <!-- <li>Escape special characters with <code>\</code></li> -->
           </ul>
         </div>
       </article>
@@ -509,8 +510,16 @@
         <div class="message_content message-body" id="postgresql">
           <p id="p"><b>Sintassi supportata</b></p>
           <ul>
-            <li>Operatori logici: <code>AND, OR, NOT</code></li>
-            <li>Proximity search: [sintassi]</li>
+            <li>A differenza degli altri due sistemi, PostgreSQL, non supporta
+              la ricerca per termini secondari nel campo della query principale.
+            </li>
+            <li>Nel caso si vogliano eseguire ricerce con termini secondari 
+              bisogna per forza usare <code>Add term</code> e scegliere tra 
+              le varie opzioni per il termine inserito: <br>
+              <code>[Operatore][termine secondario][Campo]
+
+              </code></li>
+            <!-- <li>Proximity search: [sintassi]</li> -->
           </ul>
         </div>
       </article>
