@@ -172,6 +172,8 @@ SPELLING CORRECTION & SYNONIMS
 
 - [ ] Aggiustare i parametri `k1` e `b` dei ranking **BM25** sia di **WHOOSH** sia di **PYLUCENE** tramite sperimentazione.
 
+- [ ] Una volta completata l'interfaccia grafica incorporare su github immagini che mostrino la stessa; e che siano visibili dal README.md.
+
 # OBIETTIVI
 ### 1. FUNZIONI PER VALUTARE I MODELLI DI RANKING
 ### 2. REALIZZARE GRAFICI
