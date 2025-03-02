@@ -145,7 +145,7 @@ class RFCExtractor:
             
             results[query["num"]] = {} # Init Risultati per Query
             results[query["num"]]["engines"] = {}
-            results[query["num"]]["text"] = ""
+            results[query["num"]]["text"] = query["text"]
         
             # Per ciascun motore di ricerca
             for engine in self.engines:
@@ -154,7 +154,6 @@ class RFCExtractor:
                 # Eseuzione della ricerca e salvataggio risultati
                 links = engine.search(query, self.api_key)
                 results[query["num"]]["engines"][engine.name] = links
-                results[query["num"]]["text"] = query["text"]
                 
         return results
 

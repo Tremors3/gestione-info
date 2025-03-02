@@ -74,11 +74,13 @@ class ExtractorLocal():
             file_ = cls.QUERIES_CONFIG_FILE
             logging.error(f"Errore durante l'apertura del file {file_}: {e}")
 
-        queries = []
-        for query in query_doc:
-            queries.append(query.get("query"))
+        return query_doc
 
-        return queries
+        # queries = []
+        # for query in query_doc:
+        #     queries.append(query.get("query"))
+
+        # return queries
 
     @staticmethod
     def __get_fields(text, fields: list) -> dict:
@@ -203,28 +205,34 @@ class ExtractorLocal():
             (len(queries)*len(__class__.SEARCH_ENGINES["pylucene"])) + \
             (len(queries)*len(__class__.SEARCH_ENGINES["whoosh"]))
         
-        results = {}
+        results = []
 
         # Barra di caricamento
         with alive_bar(x, title="Risultati", spinner="waves", bar=_bar) as bar:
 
             for query in queries:
-                results[query] = {}
+                
+                result = {}
+                result["num"] = query.get("num")
+                result["query"] = query.get("query")
+                result["engines"] = {}
 
                 for search_engine, functions in __class__.SEARCH_ENGINES.items():
-                    results[query][search_engine] = {}
+                    result["engines"][search_engine] = {}
                     
                     for function in functions:
 
                         # Prendo tutti i risultati per una query eseguita con
                         # uno specifico search engine e funzione di ranking
-                        results[query][search_engine][function] = __class__.__execute_query(
-                            query, search_engine, function
+                        result["engines"][search_engine][function] = __class__.__execute_query(
+                            result["query"], search_engine, function
                         )
 
                         # Avanzamento della barra
                         bar()
-        
+
+                results.append(result)
+            
         return results
 
     @staticmethod
