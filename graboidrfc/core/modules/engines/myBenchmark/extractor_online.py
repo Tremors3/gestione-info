@@ -129,7 +129,12 @@ class RFCExtractor:
 
     def _load_queries(self, queries_config):
         """Carica le query dalla configurazione."""
-        self.queries = ["{query} {site}".format(query=query.get("query"), site=self.site_restrictor) for query in queries_config]
+        self.queries = [
+            {
+                "num": query.get("num"),
+                "text": "{query} {site}".format(query=query.get("query"), site=self.site_restrictor)
+            } for query in queries_config
+        ]
 
     def execute_requests(self):
         """Esegue le richieste per tutte le query su tutti i motori di ricerca."""
@@ -138,15 +143,18 @@ class RFCExtractor:
         # Per ciascuna query
         for query in self.queries:
             
-            results[query] = {} # Init Risultati per Query
+            results[query["num"]] = {} # Init Risultati per Query
+            results[query["num"]]["engines"] = {}
+            results[query["num"]]["text"] = ""
         
             # Per ciascun motore di ricerca
             for engine in self.engines:
-                logging.info(f"Eseguendo la query '{query}' su '{engine.name}'.")
+                logging.info(f"Eseguendo la query '{query["text"]}' su '{engine.name}'.")
                 
                 # Eseuzione della ricerca e salvataggio risultati
                 links = engine.search(query, self.api_key)
-                results[query][engine.name] = links
+                results[query["num"]]["engines"][engine.name] = links
+                results[query["num"]]["text"] = query["text"]
                 
         return results
 
@@ -189,8 +197,8 @@ class ExtractorOnline():
         """Scrive i risultati su file JSON."""
         
         data = [
-            {"query": query, "results": engines}
-            for query, engines in results.items()
+            {"num": num, "query": fields["text"], "results": fields["engines"]}
+            for num, fields in results.items()
         ]
 
         try:
@@ -203,9 +211,9 @@ class ExtractorOnline():
     def print_results(results):
         """Stampa i risultati in un formato leggibile."""
         print("Risultati:")
-        for query, engines in results.items():
-            print(f"\nQuery: {query}")
-            for engine, links in engines.items():
+        for num, fields in results.items():
+            print(f"\nQuery: {num} {fields["text"]}")
+            for engine, links in fields["engines"].items():
                 print(f"  Motore: {engine}")
                 for link in links:
                     print(f" - {link}", end=None)
