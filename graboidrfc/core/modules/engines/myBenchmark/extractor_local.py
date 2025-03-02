@@ -205,15 +205,14 @@ class ExtractorLocal():
             (len(queries)*len(__class__.SEARCH_ENGINES["pylucene"])) + \
             (len(queries)*len(__class__.SEARCH_ENGINES["whoosh"]))
         
-        results = []
+        results = {}
 
         # Barra di caricamento
         with alive_bar(x, title="Risultati", spinner="waves", bar=_bar) as bar:
 
             for query in queries:
-                
+                num = query.get("num")
                 result = {}
-                result["num"] = query.get("num")
                 result["query"] = query.get("query")
                 result["engines"] = {}
 
@@ -231,7 +230,7 @@ class ExtractorLocal():
                         # Avanzamento della barra
                         bar()
 
-                results.append(result)
+                results[num] = result
             
         return results
 
