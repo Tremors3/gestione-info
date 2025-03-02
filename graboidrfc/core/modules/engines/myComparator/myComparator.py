@@ -86,7 +86,8 @@ class MyComparator():
         return float(rel_res / res_tot)
     
     @staticmethod
-    def calc_recall_precision(rel_docs: list[str], res_docs: list[str]):
+    def calc_recall_precision(
+        rel_docs: list[str], res_docs: list[str]) -> dict[float]:
         
         results = {}
         
@@ -105,7 +106,8 @@ class MyComparator():
                 # Nuovo documento restituito rilevante
                 rel_res_count += 1
                 
-                # Calcoliamo la recall e relativa precision, solamente se il documento è rilevante
+                # Calcoliamo la recall e relativa precision, 
+                # solamente se il documento è rilevante
                 recall = __class__.calc_recall(rel_res_count, rel_docs_len)
                 precision = __class__.calc_precision(rel_res_count, tot_res_count)
                 
@@ -114,77 +116,69 @@ class MyComparator():
         return results
 
     @staticmethod
-    def calc_interpolated_recall_precision(docs: dict):
-        
-        # Lista degli step per il recall
-        stepped_rec = [i/10 for i in range(0,11)][::-1]
-        
-        # Recall e precisione in ordine non crescente
-        docs_rec =  [k for k in docs.keys()][::-1]
-        docs_pre =  [v for v in docs.values()][::-1]
-        
-        # Lista di supporto per la precisione interpolata
-        intrp_pre = [0 for i in range(0,11)]
+    def calc_interpolated_recall_precision(
+        docs: dict, levels: int = 11, step: float = 0.1) -> dict:
 
-        # Dizionario per recall e precision interpolata {recall:precision}
-        intrp_rec_pre = {}
-
-        for i in range(len(stepped_rec)):
+        std_rec_lvls = {round(r * step, ndigits=1): 0 for r in range(0, levels)}
+        
+        for level in list(std_rec_lvls.keys())[::-1]:
             
-            # Controllo che siano rimaste delle recall da confrontare
-            if docs_rec:
-
-                # Controllo quando incontro una recall
-                if docs_rec[0] >= stepped_rec[i]:
-
-                    # Prendo la precisione massima tra la recall attuale e 
-                    # quella precedente
-                    intrp_rec_pre[stepped_rec[i]] = max(
-                        docs_pre[0], intrp_pre[i-1]
-                    )
-                    intrp_pre[i] = intrp_rec_pre[stepped_rec[i]]
-
-                    # Rimozione della recall e della precisione
-                    docs_rec.pop(0)
-                    docs_pre.pop(0)
-                else:
-                    # Nel caso non incontro una recall la precisione è uguale 
-                    # alla precedente
-                    intrp_rec_pre[stepped_rec[i]] = intrp_pre[i-1]
-                    intrp_pre[i] = intrp_rec_pre[stepped_rec[i]]
-            else:
-                # Quando finisco le recall riempio il resto con l'ultima 
-                # precisione ottenuta
-                intrp_rec_pre[stepped_rec[i]] = intrp_pre[i-1]
-                intrp_pre[i] = intrp_rec_pre[stepped_rec[i]]
-
-        print(intrp_rec_pre)
+            # Otteniamo i livelli di recall
+            current_recall_level = level
+            middle_recall_levels = (
+                r for r in docs.keys()
+                if current_recall_level < r < next_recall_level
+            )
+            next_recall_level = round(level + step, ndigits=1)
+            
+            # Otteniamo le precision associate
+            current_precision = docs.get(current_recall_level, 0) # DOCS
+            middle_precisions = [
+                docs.get(r, 0)
+                for r in middle_recall_levels
+            ] # DOCS
+            next_precision = std_rec_lvls.get(next_recall_level,0) # STD_REC_LVL
+            
+            # Uniamo le precisioni ottenute
+            precisions = [current_precision] + middle_precisions + [next_precision]
+            
+            # Decretiamo quale sia la precision maggiore
+            std_rec_lvls[level] = max(precisions)
         
-        return intrp_rec_pre
+        return std_rec_lvls
 
-
-    def all_recall(self):
-        benchmark = self.benchmark # R
-        local_results = self.local_results # A
+    def all_recall(self) -> dict:
+        
+        benchmark = self.benchmark # Insieme degli R
+        local_results = self.local_results # Insieme degli A
+        
         RA = {}
         
         # Benchmark è una lista di dizionari        
         for element in benchmark:
-
+            
             # Il numero della query
             query = safecast(element.get("num"), str)
             
-            # Prendo i risultati locali per la query (A)
+            # Prendo i risultati per la query (Insieme A)
             result = local_results.get(query)
             
-            # Prendo i risultati del benchmark (R)
-            benchmark_numbers = [i.get("number") for i in element.get("relevance_values")]
+            # Prendo i risultati del benchmark (Insieme R)
+            benchmark_numbers = [
+                i.get("number") 
+                for i in element.get("relevance_values")
+            ]
             
             RA[query] = {}
+            
             for se in result["engines"]:
+                
                 RA[query][se] = {}
-                ranking_models = result["engines"].get(se)
+                
+                ranking_models = result["engines"].get(se, [])
+                
                 for rm in ranking_models:
+                    
                     local_numbers = ranking_models.get(rm)
 
                     # Ottengo recall e precision 
@@ -194,19 +188,32 @@ class MyComparator():
                     )
                     
                     # Ottengo recall e precision interpolata
-                    RA[query][se][rm] = __class__.calc_interpolated_recall_precision(RA[query][se][rm])
+                    RA[query][se][rm] = __class__.calc_interpolated_recall_precision(
+                        docs=RA[query][se][rm]
+                    )
 
-        pprint(RA)
+        return RA
 
     # ################################################## #
     
     def process(self):
-        # self.all_recall()
-        print(
-            self.calc_recall_precision(rel_docs=["1","2","3","4"], res_docs=["1", "7", "3", "4", "5", "2"])
-        )
-
-        self.all_recall()
+        
+        #natural_recall = self.calc_recall_precision(rel_docs=["1","2","3","4"], res_docs=["1", "7", "3", "4", "5", "2"])
+        
+        pprint(self.all_recall())
+        
+        # pprint(
+        #     self.calc_interpolated_recall_precision_v2(
+        #         {
+        #             0.05: 1.0,
+        #             0.1: 0.6666666666666666,
+        #             0.15: 0.75,
+        #             0.2: 0.5714285714285714,
+        #             0.25: 0.625,
+        #             0.3: 0.6666666666666666
+        #         }
+        #     )
+        # )
 
     # ################################################## #
 
