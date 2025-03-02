@@ -8,6 +8,7 @@ from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
 # Importazione di moduli del progetto
+from graboidrfc.core.modules.utils.miscellaneous import safecast
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
@@ -113,20 +114,65 @@ class MyComparator():
         return results
 
     @staticmethod
-    def calc_interpolated_recall_precision(rel_docs: list[str], res_docs: list[str]):
-        pass
+    def calc_interpolated_recall_precision(docs: dict):
         
+        # Lista degli step per il recall
+        stepped_rec = [i/10 for i in range(0,11)][::-1]
+        
+        # Recall e precisione in ordine non crescente
+        docs_rec =  [k for k in docs.keys()][::-1]
+        docs_pre =  [v for v in docs.values()][::-1]
+        
+        # Lista di supporto per la precisione interpolata
+        intrp_pre = [0 for i in range(0,11)]
+
+        # Dizionario per recall e precision interpolata {recall:precision}
+        intrp_rec_pre = {}
+
+        for i in range(len(stepped_rec)):
+            
+            # Controllo che siano rimaste delle recall da confrontare
+            if docs_rec:
+
+                # Controllo quando incontro una recall
+                if docs_rec[0] >= stepped_rec[i]:
+
+                    # Prendo la precisione massima tra la recall attuale e 
+                    # quella precedente
+                    intrp_rec_pre[stepped_rec[i]] = max(
+                        docs_pre[0], intrp_pre[i-1]
+                    )
+                    intrp_pre[i] = intrp_rec_pre[stepped_rec[i]]
+
+                    # Rimozione della recall e della precisione
+                    docs_rec.pop(0)
+                    docs_pre.pop(0)
+                else:
+                    # Nel caso non incontro una recall la precisione è uguale 
+                    # alla precedente
+                    intrp_rec_pre[stepped_rec[i]] = intrp_pre[i-1]
+                    intrp_pre[i] = intrp_rec_pre[stepped_rec[i]]
+            else:
+                # Quando finisco le recall riempio il resto con l'ultima 
+                # precisione ottenuta
+                intrp_rec_pre[stepped_rec[i]] = intrp_pre[i-1]
+                intrp_pre[i] = intrp_rec_pre[stepped_rec[i]]
+
+        print(intrp_rec_pre)
+        
+        return intrp_rec_pre
+
 
     def all_recall(self):
         benchmark = self.benchmark # R
         local_results = self.local_results # A
         RA = {}
-
+        
         # Benchmark è una lista di dizionari        
         for element in benchmark:
 
-            # Prendo la query
-            query = element.get("query").strip("site:www.rfc-editor.org").strip()
+            # Il numero della query
+            query = safecast(element.get("num"), str)
             
             # Prendo i risultati locali per la query (A)
             result = local_results.get(query)
@@ -135,17 +181,20 @@ class MyComparator():
             benchmark_numbers = [i.get("number") for i in element.get("relevance_values")]
             
             RA[query] = {}
-
-            for se in result:
+            for se in result["engines"]:
                 RA[query][se] = {}
-                ranking_models = result.get(se)
-
+                ranking_models = result["engines"].get(se)
                 for rm in ranking_models:
                     local_numbers = ranking_models.get(rm)
+
+                    # Ottengo recall e precision 
                     RA[query][se][rm] = __class__.calc_recall_precision(
                         benchmark_numbers,
                         local_numbers
                     )
+                    
+                    # Ottengo recall e precision interpolata
+                    RA[query][se][rm] = __class__.calc_interpolated_recall_precision(RA[query][se][rm])
 
         pprint(RA)
 
