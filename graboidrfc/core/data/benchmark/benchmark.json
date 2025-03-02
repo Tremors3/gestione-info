@@ -1,5 +1,6 @@
 [
     {
+        "num": 1,
         "query": "TCP Fast Open site:www.rfc-editor.org",
         "relevance_values": [
             {
@@ -9,164 +10,177 @@
                 "rounded": 3
             },
             {
-                "number": "7414",
-                "relevance": 6.594849257509827,
-                "normalized": 2.0515565552410866,
+                "number": "7766",
+                "relevance": 6.52371901428583,
+                "normalized": 2.04108857495867,
                 "rounded": 2
             },
             {
-                "number": "7858",
-                "relevance": 4.603450794565072,
-                "normalized": 1.7021252612652253,
+                "number": "8803",
+                "relevance": 5.679978319557382,
+                "normalized": 1.8933473260968923,
+                "rounded": 2
+            },
+            {
+                "number": "9040",
+                "relevance": 4.992823693525311,
+                "normalized": 1.7730247160279307,
+                "rounded": 2
+            },
+            {
+                "number": "7414",
+                "relevance": 4.23409948451317,
+                "normalized": 1.6401700808521376,
+                "rounded": 2
+            },
+            {
+                "number": "7974",
+                "relevance": 4.020021588908337,
+                "normalized": 1.6026844696353661,
                 "rounded": 2
             },
             {
                 "number": "9210",
-                "relevance": 3.0,
-                "normalized": 1.4207672626540555,
-                "rounded": 1
+                "relevance": 3.9622820644213466,
+                "normalized": 1.5925741247039311,
+                "rounded": 2
             },
             {
-                "number": "8484",
-                "relevance": 2.292029674220179,
-                "normalized": 1.2965394942606148,
+                "number": "9293",
+                "relevance": 2.795879247706316,
+                "normalized": 1.388333876611079,
                 "rounded": 1
             },
             {
                 "number": "8684",
-                "relevance": 2.2291799830276915,
-                "normalized": 1.2855112398313637,
-                "rounded": 1
-            },
-            {
-                "number": "9293",
-                "relevance": 1.261859507142915,
-                "normalized": 1.1157752217177752,
-                "rounded": 1
-            },
-            {
-                "number": "7766",
-                "relevance": 1.0,
-                "normalized": 1.0698266543549568,
-                "rounded": 1
-            },
-            {
-                "number": "9040",
-                "relevance": 0.8613531161467861,
-                "normalized": 1.045498243475846,
-                "rounded": 1
-            },
-            {
-                "number": "7974",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0193639171296076,
-                "rounded": 1
-            },
-            {
-                "number": "8803",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0193639171296076,
+                "relevance": 2.4525880959238044,
+                "normalized": 1.3282226791727836,
                 "rounded": 1
             },
             {
                 "number": "793",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0050657859615912,
-                "rounded": 1
-            },
-            {
-                "number": "9114",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0050657859615912,
+                "relevance": 0.6666666666666666,
+                "normalized": 1.0155030675954613,
                 "rounded": 1
             },
             {
                 "number": "7805",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0092454386768392,
+                "rounded": 1
+            },
+            {
+                "number": "9006",
                 "relevance": 0.6020599913279624,
+                "normalized": 1.0041902662111217,
+                "rounded": 1
+            },
+            {
+                "number": "1323",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            },
+            {
+                "number": "8484",
+                "relevance": 0.5781296526357758,
                 "normalized": 1.0,
                 "rounded": 1
             }
         ]
     },
     {
+        "num": 2,
         "query": "EAP RADIUS Wi-Fi security site:www.rfc-editor.org",
         "relevance_values": [
             {
                 "number": "7593",
-                "relevance": 7.57115704285749,
+                "relevance": 8.523719014285831,
                 "normalized": 3.0,
                 "rounded": 3
             },
             {
-                "number": "3748",
-                "relevance": 6.7515312115940915,
-                "normalized": 2.7655876959928762,
+                "number": "3579",
+                "relevance": 7.857052347619163,
+                "normalized": 2.832192015891387,
                 "rounded": 3
             },
             {
-                "number": "6614",
-                "relevance": 4.29202967422018,
-                "normalized": 2.06217230802714,
-                "rounded": 2
-            },
-            {
-                "number": "5281",
-                "relevance": 2.7920296742201796,
-                "normalized": 1.6331735593314218,
-                "rounded": 2
-            },
-            {
-                "number": "3580",
-                "relevance": 2.660558421703625,
-                "normalized": 1.5955728907853814,
-                "rounded": 2
-            },
-            {
-                "number": "5247",
-                "relevance": 2.5686215613240666,
-                "normalized": 1.569279025410819,
-                "rounded": 2
-            },
-            {
                 "number": "7268",
-                "relevance": 2.3606512355442457,
-                "normalized": 1.5097996857272298,
+                "relevance": 6.8807445622714996,
+                "normalized": 2.586443653898284,
+                "rounded": 3
+            },
+            {
+                "number": "4017",
+                "relevance": 2.7599837396680362,
+                "normalized": 1.5491988039460312,
                 "rounded": 2
             },
             {
-                "number": "3579",
-                "relevance": 2.0,
-                "normalized": 1.4066537332178657,
+                "number": "7458",
+                "relevance": 2.660558421703625,
+                "normalized": 1.5241722606805828,
+                "rounded": 2
+            },
+            {
+                "number": "2865",
+                "relevance": 2.3606512355442457,
+                "normalized": 1.4486820301869452,
                 "rounded": 1
             },
             {
-                "number": "5216",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.0559345619343004,
+                "number": "3748",
+                "relevance": 2.292029674220179,
+                "normalized": 1.4314091613786792,
+                "rounded": 1
+            },
+            {
+                "number": "4764",
+                "relevance": 1.9717115483160101,
+                "normalized": 1.3507812529065384,
+                "rounded": 1
+            },
+            {
+                "number": "2869",
+                "relevance": 1.9717115483160101,
+                "normalized": 1.3507812529065384,
+                "rounded": 1
+            },
+            {
+                "number": "3580",
+                "relevance": 1.8927892607143726,
+                "normalized": 1.330915567931032,
                 "rounded": 1
             },
             {
                 "number": "4372",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0384053183512587,
+                "relevance": 1.0,
+                "normalized": 1.106189818819586,
+                "rounded": 1
+            },
+            {
+                "number": "5216",
+                "relevance": 0.8613531161467861,
+                "normalized": 1.0712907376960628,
                 "rounded": 1
             },
             {
                 "number": "5836",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.025321512155005,
+                "relevance": 0.7737056144690833,
+                "normalized": 1.0492288118430255,
                 "rounded": 1
             },
             {
-                "number": "9048",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.025321512155005,
+                "number": "4746",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0132904177481221,
                 "rounded": 1
             },
             {
                 "number": "9190",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.01510078482161,
+                "relevance": 0.6020599913279624,
+                "normalized": 1.0060235528424581,
                 "rounded": 1
             },
             {
@@ -174,396 +188,461 @@
                 "relevance": 0.5781296526357758,
                 "normalized": 1.0,
                 "rounded": 1
+            },
+            {
+                "number": "5416",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
             }
         ]
     },
     {
+        "num": 3,
         "query": "TLS 1.3 security differences from TLS 1.2 site:www.rfc-editor.org",
         "relevance_values": [
             {
                 "number": "8446",
-                "relevance": 9.04743802857166,
-                "normalized": 3.0,
-                "rounded": 3
-            },
-            {
-                "number": "9325",
-                "relevance": 7.7227062322935724,
-                "normalized": 2.687168836585974,
-                "rounded": 3
-            },
-            {
-                "number": "5246",
-                "relevance": 7.147534980725661,
-                "normalized": 2.5513439909109334,
-                "rounded": 3
-            },
-            {
-                "number": "9151",
-                "relevance": 4.8175286901699055,
-                "normalized": 2.0011204810016525,
-                "rounded": 2
-            },
-            {
-                "number": "8422",
-                "relevance": 4.2340994845131705,
-                "normalized": 1.8633455459634032,
-                "rounded": 2
-            },
-            {
-                "number": "9001",
-                "relevance": 2.5686215613240666,
-                "normalized": 1.4700482779311563,
-                "rounded": 1
-            },
-            {
-                "number": "9190",
-                "relevance": 1.806179973983887,
-                "normalized": 1.2900001433027068,
-                "rounded": 1
-            },
-            {
-                "number": "9147",
-                "relevance": 1.261859507142915,
-                "normalized": 1.1614606114590993,
-                "rounded": 1
-            },
-            {
-                "number": "7525",
-                "relevance": 1.0,
-                "normalized": 1.0996233289988349,
-                "rounded": 1
-            },
-            {
-                "number": "8740",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0209077318007345,
-                "rounded": 1
-            },
-            {
-                "number": "9258",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0209077318007345,
-                "rounded": 1
-            },
-            {
-                "number": "9427",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0124685744318165,
-                "rounded": 1
-            },
-            {
-                "number": "7918",
-                "relevance": 0.5781296526357758,
-                "normalized": 1.0,
-                "rounded": 1
-            },
-            {
-                "number": "8998",
-                "relevance": 0.5781296526357758,
-                "normalized": 1.0,
-                "rounded": 1
-            }
-        ]
-    },
-    {
-        "query": "SMTP POP3 IMAP authentication encryption site:www.rfc-editor.org",
-        "relevance_values": [
-            {
-                "number": "2595",
-                "relevance": 9.04743802857166,
-                "normalized": 3.0,
-                "rounded": 3
-            },
-            {
-                "number": "4954",
-                "relevance": 7.5474112289381665,
-                "normalized": 2.644769768027328,
-                "rounded": 3
-            },
-            {
-                "number": "8314",
-                "relevance": 7.4248287484320885,
-                "normalized": 2.6157402846896973,
-                "rounded": 3
-            },
-            {
-                "number": "2554",
-                "relevance": 4.474237443887664,
-                "normalized": 1.9169932797522127,
-                "rounded": 2
-            },
-            {
-                "number": "5321",
-                "relevance": 4.305573310703588,
-                "normalized": 1.8770509272748517,
-                "rounded": 2
-            },
-            {
-                "number": "2821",
-                "relevance": 2.5840593484403582,
-                "normalized": 1.4693690083195512,
-                "rounded": 1
-            },
-            {
-                "number": "3501",
-                "relevance": 2.5,
-                "normalized": 1.449462416081842,
-                "rounded": 1
-            },
-            {
-                "number": "8551",
-                "relevance": 1.9717115483160101,
-                "normalized": 1.3243552984716498,
-                "rounded": 1
-            },
-            {
-                "number": "8689",
-                "relevance": 1.261859507142915,
-                "normalized": 1.156251031725346,
-                "rounded": 1
-            },
-            {
-                "number": "3207",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0152998894907468,
-                "rounded": 1
-            },
-            {
-                "number": "4642",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0068368194096655,
-                "rounded": 1
-            },
-            {
-                "number": "4643",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0068368194096655,
-                "rounded": 1
-            },
-            {
-                "number": "1939",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0068368194096655,
-                "rounded": 1
-            },
-            {
-                "number": "7525",
-                "relevance": 0.6020599913279624,
-                "normalized": 1.0,
-                "rounded": 1
-            }
-        ]
-    },
-    {
-        "query": "BGP security routing site:www.rfc-editor.org",
-        "relevance_values": [
-            {
-                "number": "4272",
-                "relevance": 7.204119982655925,
-                "normalized": 3.0,
-                "rounded": 3
-            },
-            {
-                "number": "7132",
-                "relevance": 6.071130243223997,
-                "normalized": 2.6567769026879033,
-                "rounded": 3
-            },
-            {
-                "number": "7454",
-                "relevance": 5.579758579912736,
-                "normalized": 2.507922858963158,
-                "rounded": 3
-            },
-            {
-                "number": "8212",
-                "relevance": 4.5,
-                "normalized": 2.1808253829235476,
-                "rounded": 2
-            },
-            {
-                "number": "7353",
-                "relevance": 4.4263767665032905,
-                "normalized": 2.158522273411239,
-                "rounded": 2
-            },
-            {
-                "number": "6480",
-                "relevance": 4.068621561324067,
-                "normalized": 2.0501454317438963,
-                "rounded": 2
-            },
-            {
-                "number": "4271",
-                "relevance": 2.7599837396680362,
-                "normalized": 1.6537122507746318,
-                "rounded": 2
-            },
-            {
-                "number": "5575",
-                "relevance": 0.8613531161467861,
-                "normalized": 1.0785491574325028,
-                "rounded": 1
-            },
-            {
-                "number": "4593",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.0519975957100007,
-                "rounded": 1
-            },
-            {
-                "number": "4381",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0334302878292643,
-                "rounded": 1
-            },
-            {
-                "number": "5082",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0334302878292643,
-                "rounded": 1
-            },
-            {
-                "number": "7938",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0195716716974905,
-                "rounded": 1
-            },
-            {
-                "number": "9085",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0195716716974905,
-                "rounded": 1
-            },
-            {
-                "number": "1266",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0087456830993407,
-                "rounded": 1
-            },
-            {
-                "number": "9099",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0087456830993407,
-                "rounded": 1
-            },
-            {
-                "number": "9716",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0087456830993407,
-                "rounded": 1
-            },
-            {
-                "number": "4277",
-                "relevance": 0.6020599913279624,
-                "normalized": 1.0,
-                "rounded": 1
-            },
-            {
-                "number": "7854",
-                "relevance": 0.6020599913279624,
-                "normalized": 1.0,
-                "rounded": 1
-            }
-        ]
-    },
-    {
-        "query": "IPv4 IPv6 fragmentation site:www.rfc-editor.org",
-        "relevance_values": [
-            {
-                "number": "8900",
                 "relevance": 12.0,
                 "normalized": 3.0,
                 "rounded": 3
             },
             {
-                "number": "2460",
-                "relevance": 5.857052347619163,
-                "normalized": 1.922095107061974,
+                "number": "8740",
+                "relevance": 6.071130243223997,
+                "normalized": 1.9618390725045862,
                 "rounded": 2
             },
             {
-                "number": "8200",
-                "relevance": 4.409394487868576,
-                "normalized": 1.6680741421070528,
+                "number": "5246",
+                "relevance": 5.061172330275088,
+                "normalized": 1.7849927448482805,
                 "rounded": 2
             },
             {
-                "number": "2473",
-                "relevance": 3.3927892607143724,
-                "normalized": 1.4896901136982832,
+                "number": "8996",
+                "relevance": 3.785578521428745,
+                "normalized": 1.561632862438005,
+                "rounded": 2
+            },
+            {
+                "number": "7525",
+                "relevance": 3.184818934934552,
+                "normalized": 1.4564382545106214,
                 "rounded": 1
             },
             {
-                "number": "6946",
-                "relevance": 2.446394630357186,
-                "normalized": 1.3236259600640072,
+                "number": "9190",
+                "relevance": 2.7920296742201796,
+                "normalized": 1.3876598060133463,
                 "rounded": 1
             },
             {
-                "number": "6864",
-                "relevance": 2.3211168434072498,
-                "normalized": 1.3016434286847196,
+                "number": "9325",
+                "relevance": 2.5,
+                "normalized": 1.336524630190313,
                 "rounded": 1
             },
             {
-                "number": "7600",
-                "relevance": 2.0686215613240666,
-                "normalized": 1.257338004741257,
+                "number": "9456",
+                "relevance": 2.2291799830276915,
+                "normalized": 1.289103321991905,
                 "rounded": 1
             },
             {
-                "number": "9347",
-                "relevance": 2.0277529006572887,
-                "normalized": 1.2501667684238729,
+                "number": "9427",
+                "relevance": 2.2291799830276915,
+                "normalized": 1.289103321991905,
                 "rounded": 1
             },
             {
-                "number": "8021",
-                "relevance": 1.261859507142915,
-                "normalized": 1.1157752217177752,
+                "number": "9151",
+                "relevance": 1.9030899869919435,
+                "normalized": 1.2320040928606624,
                 "rounded": 1
             },
             {
-                "number": "7739",
+                "number": "9147",
                 "relevance": 0.8613531161467861,
-                "normalized": 1.045498243475846,
+                "normalized": 1.0495931848108166,
                 "rounded": 1
             },
             {
-                "number": "4302",
-                "relevance": 0.8613531161467861,
-                "normalized": 1.045498243475846,
-                "rounded": 1
-            },
-            {
-                "number": "9715",
+                "number": "7918",
                 "relevance": 0.7124143742160444,
-                "normalized": 1.0193639171296076,
+                "normalized": 1.0235136133568976,
                 "rounded": 1
             },
             {
-                "number": "9098",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0113365529717737,
-                "rounded": 1
-            },
-            {
-                "number": "6219",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0050657859615912,
-                "rounded": 1
-            },
-            {
-                "number": "6145",
+                "number": "8773",
                 "relevance": 0.6020599913279624,
+                "normalized": 1.0041902662111217,
+                "rounded": 1
+            },
+            {
+                "number": "8447",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            },
+            {
+                "number": "8734",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            },
+            {
+                "number": "7905",
+                "relevance": 0.5781296526357758,
                 "normalized": 1.0,
                 "rounded": 1
             }
         ]
     },
     {
+        "num": 4,
+        "query": "SMTP POP3 IMAP authentication encryption site:www.rfc-editor.org",
+        "relevance_values": [
+            {
+                "number": "2595",
+                "relevance": 10.523719014285831,
+                "normalized": 3.0,
+                "rounded": 3
+            },
+            {
+                "number": "4954",
+                "relevance": 4.29202967422018,
+                "normalized": 1.7468436281725264,
+                "rounded": 2
+            },
+            {
+                "number": "5321",
+                "relevance": 4.182990830197511,
+                "normalized": 1.724916552750909,
+                "rounded": 2
+            },
+            {
+                "number": "3207",
+                "relevance": 2.8927892607143724,
+                "normalized": 1.4654645439120715,
+                "rounded": 1
+            },
+            {
+                "number": "8314",
+                "relevance": 2.7920296742201796,
+                "normalized": 1.4452023788798574,
+                "rounded": 1
+            },
+            {
+                "number": "2821",
+                "relevance": 2.2384243045773653,
+                "normalized": 1.3338755686703987,
+                "rounded": 1
+            },
+            {
+                "number": "8689",
+                "relevance": 2.106953052060811,
+                "normalized": 1.307437466766955,
+                "rounded": 1
+            },
+            {
+                "number": "2554",
+                "relevance": 2.0277529006572887,
+                "normalized": 1.291510778357937,
+                "rounded": 1
+            },
+            {
+                "number": "7525",
+                "relevance": 1.7702844659456074,
+                "normalized": 1.2397353781580307,
+                "rounded": 1
+            },
+            {
+                "number": "5034",
+                "relevance": 1.261859507142915,
+                "normalized": 1.1374940849948187,
+                "rounded": 1
+            },
+            {
+                "number": "4642",
+                "relevance": 1.0,
+                "normalized": 1.0848356657456513,
+                "rounded": 1
+            },
+            {
+                "number": "2195",
+                "relevance": 1.0,
+                "normalized": 1.0848356657456513,
+                "rounded": 1
+            },
+            {
+                "number": "9325",
+                "relevance": 0.7737056144690833,
+                "normalized": 1.0393291849726762,
+                "rounded": 1
+            },
+            {
+                "number": "1939",
+                "relevance": 0.7124143742160444,
+                "normalized": 1.027003874118927,
+                "rounded": 1
+            },
+            {
+                "number": "6409",
+                "relevance": 0.6666666666666666,
+                "normalized": 1.017804277013947,
+                "rounded": 1
+            },
+            {
+                "number": "4643",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0106177922726787,
+                "rounded": 1
+            },
+            {
+                "number": "7817",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.004812251506072,
+                "rounded": 1
+            },
+            {
+                "number": "8551",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.004812251506072,
+                "rounded": 1
+            },
+            {
+                "number": "3501",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            }
+        ]
+    },
+    {
+        "num": 5,
+        "query": "BGP security routing site:www.rfc-editor.org",
+        "relevance_values": [
+            {
+                "number": "7454",
+                "relevance": 10.523719014285831,
+                "normalized": 3.0,
+                "rounded": 3
+            },
+            {
+                "number": "4272",
+                "relevance": 8.523719014285831,
+                "normalized": 2.5978116676097747,
+                "rounded": 3
+            },
+            {
+                "number": "7353",
+                "relevance": 6.246425246579403,
+                "normalized": 2.1398611762115243,
+                "rounded": 2
+            },
+            {
+                "number": "7132",
+                "relevance": 4.8807445622714996,
+                "normalized": 1.8652307577118554,
+                "rounded": 2
+            },
+            {
+                "number": "8209",
+                "relevance": 2.5840593484403582,
+                "normalized": 1.4033807596238383,
+                "rounded": 1
+            },
+            {
+                "number": "8205",
+                "relevance": 2.160558421703625,
+                "normalized": 1.3182171938788576,
+                "rounded": 1
+            },
+            {
+                "number": "6480",
+                "relevance": 2.0150161916812532,
+                "normalized": 1.2889495004863314,
+                "rounded": 1
+            },
+            {
+                "number": "4271",
+                "relevance": 2.0150161916812532,
+                "normalized": 1.2889495004863314,
+                "rounded": 1
+            },
+            {
+                "number": "8212",
+                "relevance": 1.9030899869919435,
+                "normalized": 1.2664417936789512,
+                "rounded": 1
+            },
+            {
+                "number": "9234",
+                "relevance": 1.7702844659456074,
+                "normalized": 1.2397353781580307,
+                "rounded": 1
+            },
+            {
+                "number": "4381",
+                "relevance": 0.7737056144690833,
+                "normalized": 1.0393291849726762,
+                "rounded": 1
+            },
+            {
+                "number": "7938",
+                "relevance": 0.7124143742160444,
+                "normalized": 1.027003874118927,
+                "rounded": 1
+            },
+            {
+                "number": "4593",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0106177922726787,
+                "rounded": 1
+            },
+            {
+                "number": "7789",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.004812251506072,
+                "rounded": 1
+            },
+            {
+                "number": "6952",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            },
+            {
+                "number": "6811",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            }
+        ]
+    },
+    {
+        "num": 6,
+        "query": "IPv4 IPv6 fragmentation site:www.rfc-editor.org",
+        "relevance_values": [
+            {
+                "number": "8900",
+                "relevance": 10.523719014285831,
+                "normalized": 3.0,
+                "rounded": 3
+            },
+            {
+                "number": "8200",
+                "relevance": 4.926826214949497,
+                "normalized": 1.8744975092340304,
+                "rounded": 2
+            },
+            {
+                "number": "2460",
+                "relevance": 3.785578521428745,
+                "normalized": 1.6449992558833793,
+                "rounded": 2
+            },
+            {
+                "number": "9347",
+                "relevance": 3.727838996941755,
+                "normalized": 1.6333881743501657,
+                "rounded": 2
+            },
+            {
+                "number": "9715",
+                "relevance": 2.7920296742201796,
+                "normalized": 1.4452023788798574,
+                "rounded": 1
+            },
+            {
+                "number": "6946",
+                "relevance": 2.446394630357186,
+                "normalized": 1.3756971879264177,
+                "rounded": 1
+            },
+            {
+                "number": "2473",
+                "relevance": 2.2291799830276915,
+                "normalized": 1.3320165895363274,
+                "rounded": 1
+            },
+            {
+                "number": "5722",
+                "relevance": 2.2291799830276915,
+                "normalized": 1.3320165895363274,
+                "rounded": 1
+            },
+            {
+                "number": "8021",
+                "relevance": 2.0,
+                "normalized": 1.2859298319407637,
+                "rounded": 1
+            },
+            {
+                "number": "7739",
+                "relevance": 0.8613531161467861,
+                "normalized": 1.0569545862416385,
+                "rounded": 1
+            },
+            {
+                "number": "6864",
+                "relevance": 0.7737056144690833,
+                "normalized": 1.0393291849726762,
+                "rounded": 1
+            },
+            {
+                "number": "7600",
+                "relevance": 0.7124143742160444,
+                "normalized": 1.027003874118927,
+                "rounded": 1
+            },
+            {
+                "number": "6145",
+                "relevance": 0.6666666666666666,
+                "normalized": 1.017804277013947,
+                "rounded": 1
+            },
+            {
+                "number": "7588",
+                "relevance": 0.6666666666666666,
+                "normalized": 1.017804277013947,
+                "rounded": 1
+            },
+            {
+                "number": "9098",
+                "relevance": 0.6666666666666666,
+                "normalized": 1.017804277013947,
+                "rounded": 1
+            },
+            {
+                "number": "4821",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.004812251506072,
+                "rounded": 1
+            },
+            {
+                "number": "8930",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            },
+            {
+                "number": "4303",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            },
+            {
+                "number": "7599",
+                "relevance": 0.5781296526357758,
+                "normalized": 1.0,
+                "rounded": 1
+            }
+        ]
+    },
+    {
+        "num": 7,
         "query": "QUIC congestion control impact site:www.rfc-editor.org",
         "relevance_values": [
             {
@@ -574,167 +653,180 @@
             },
             {
                 "number": "9000",
-                "relevance": 7.57115704285749,
-                "normalized": 2.2244977709514036,
+                "relevance": 6.594849257509827,
+                "normalized": 2.0515565552410866,
+                "rounded": 2
+            },
+            {
+                "number": "9308",
+                "relevance": 5.7227062322935724,
+                "normalized": 1.8985213533444822,
                 "rounded": 2
             },
             {
                 "number": "9265",
-                "relevance": 5.2618595071429155,
-                "normalized": 1.8201336054542039,
+                "relevance": 4.17635996002618,
+                "normalized": 1.627183502629201,
                 "rounded": 2
             },
             {
-                "number": "9221",
-                "relevance": 2.5840593484403582,
-                "normalized": 1.3512436465832378,
+                "number": "9330",
+                "relevance": 3.822925971938218,
+                "normalized": 1.5651663332426182,
+                "rounded": 2
+            },
+            {
+                "number": "9438",
+                "relevance": 3.645851943876436,
+                "normalized": 1.5340950996816316,
+                "rounded": 2
+            },
+            {
+                "number": "9114",
+                "relevance": 2.839183891071559,
+                "normalized": 1.392548811108235,
                 "rounded": 1
             },
             {
-                "number": "9308",
-                "relevance": 1.0,
-                "normalized": 1.0738706244308889,
+                "number": "9221",
+                "relevance": 2.660558421703625,
+                "normalized": 1.3612053456693876,
                 "rounded": 1
             },
             {
                 "number": "9312",
-                "relevance": 0.8613531161467861,
-                "normalized": 1.0495931848108166,
-                "rounded": 1
-            },
-            {
-                "number": "9114",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.034245873203847,
-                "rounded": 1
-            },
-            {
-                "number": "9681",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.034245873203847,
+                "relevance": 2.3606512355442457,
+                "normalized": 1.3085805404973656,
                 "rounded": 1
             },
             {
                 "number": "9369",
+                "relevance": 0.8613531161467861,
+                "normalized": 1.045498243475846,
+                "rounded": 1
+            },
+            {
+                "number": "9331",
                 "relevance": 0.7124143742160444,
-                "normalized": 1.0235136133568976,
+                "normalized": 1.0193639171296076,
                 "rounded": 1
             },
             {
-                "number": "9330",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0155030675954613,
+                "number": "9250",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0050657859615912,
                 "rounded": 1
             },
             {
-                "number": "8868",
+                "number": "9681",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0050657859615912,
+                "rounded": 1
+            },
+            {
+                "number": "8802",
                 "relevance": 0.6020599913279624,
-                "normalized": 1.0041902662111217,
+                "normalized": 1.0,
                 "rounded": 1
             },
             {
-                "number": "9001",
-                "relevance": 0.5781296526357758,
+                "number": "6356",
+                "relevance": 0.6020599913279624,
                 "normalized": 1.0,
                 "rounded": 1
             }
         ]
     },
     {
+        "num": 8,
         "query": "TCP protocol and congestion control TCP Congestion Control site:www.rfc-editor.org",
         "relevance_values": [
             {
                 "number": "2581",
-                "relevance": 9.722706232293572,
+                "relevance": 12.0,
                 "normalized": 3.0,
                 "rounded": 3
             },
             {
                 "number": "5681",
-                "relevance": 6.246425246579403,
-                "normalized": 2.2397065177523494,
+                "relevance": 7.57115704285749,
+                "normalized": 2.2244977709514036,
                 "rounded": 2
-            },
-            {
-                "number": "2914",
-                "relevance": 5.793836475517569,
-                "normalized": 2.1407213395717384,
-                "rounded": 2
-            },
-            {
-                "number": "6356",
-                "relevance": 3.9030899869919438,
-                "normalized": 1.7271983137530011,
-                "rounded": 2
-            },
-            {
-                "number": "9293",
-                "relevance": 3.3927892607143724,
-                "normalized": 1.6155910191270824,
-                "rounded": 2
-            },
-            {
-                "number": "9331",
-                "relevance": 2.0686215613240666,
-                "normalized": 1.3259837994038794,
-                "rounded": 1
-            },
-            {
-                "number": "9040",
-                "relevance": 2.0686215613240666,
-                "normalized": 1.3259837994038794,
-                "rounded": 1
-            },
-            {
-                "number": "9002",
-                "relevance": 2.0636484086955686,
-                "normalized": 1.3248961268178003,
-                "rounded": 1
-            },
-            {
-                "number": "8095",
-                "relevance": 1.8927892607143726,
-                "normalized": 1.2875277158273397,
-                "rounded": 1
             },
             {
                 "number": "896",
-                "relevance": 1.0,
-                "normalized": 1.0922667864803448,
-                "rounded": 1
+                "relevance": 6.0,
+                "normalized": 1.9493839769623031,
+                "rounded": 2
             },
             {
                 "number": "8257",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.0427741973900395,
-                "rounded": 1
-            },
-            {
-                "number": "8836",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0293692595628727,
-                "rounded": 1
+                "relevance": 4.778745797920478,
+                "normalized": 1.735539104811159,
+                "rounded": 2
             },
             {
                 "number": "3465",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.019363830191513,
+                "relevance": 3.907790516865643,
+                "normalized": 1.5830325092069075,
+                "rounded": 2
+            },
+            {
+                "number": "3448",
+                "relevance": 2.3606512355442457,
+                "normalized": 1.3121242894023595,
+                "rounded": 1
+            },
+            {
+                "number": "5348",
+                "relevance": 2.2291799830276915,
+                "normalized": 1.289103321991905,
+                "rounded": 1
+            },
+            {
+                "number": "4341",
+                "relevance": 2.160558421703625,
+                "normalized": 1.2770875033497502,
+                "rounded": 1
+            },
+            {
+                "number": "2001",
+                "relevance": 1.8927892607143726,
+                "normalized": 1.2302004081813054,
+                "rounded": 1
+            },
+            {
+                "number": "6582",
+                "relevance": 1.7702844659456074,
+                "normalized": 1.2087494914674706,
                 "rounded": 1
             },
             {
                 "number": "5690",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.0115478503516797,
+                "relevance": 0.7124143742160444,
+                "normalized": 1.0235136133568976,
                 "rounded": 1
             },
             {
                 "number": "3124",
-                "relevance": 0.6020599913279624,
-                "normalized": 1.0052337773069602,
+                "relevance": 0.6666666666666666,
+                "normalized": 1.0155030675954613,
                 "rounded": 1
             },
             {
                 "number": "2861",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0092454386768392,
+                "rounded": 1
+            },
+            {
+                "number": "7661",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.0041902662111217,
+                "rounded": 1
+            },
+            {
+                "number": "4654",
                 "relevance": 0.5781296526357758,
                 "normalized": 1.0,
                 "rounded": 1
@@ -742,130 +834,125 @@
         ]
     },
     {
+        "num": 9,
         "query": "IPv6 address management and evolution IPv6 network site:www.rfc-editor.org",
         "relevance_values": [
             {
                 "number": "7368",
-                "relevance": 7.445412464587145,
+                "relevance": 12.0,
                 "normalized": 3.0,
                 "rounded": 3
             },
             {
                 "number": "9433",
-                "relevance": 6.0,
-                "normalized": 2.5790438506270212,
-                "rounded": 3
+                "relevance": 4.0352248428366755,
+                "normalized": 1.6053465999986032,
+                "rounded": 2
+            },
+            {
+                "number": "5375",
+                "relevance": 3.3927892607143724,
+                "normalized": 1.4928544139407296,
+                "rounded": 1
+            },
+            {
+                "number": "2465",
+                "relevance": 3.0533476824179973,
+                "normalized": 1.433417287100167,
+                "rounded": 1
             },
             {
                 "number": "7707",
-                "relevance": 3.785578521428745,
-                "normalized": 1.9341245894841945,
-                "rounded": 2
+                "relevance": 2.5686215613240666,
+                "normalized": 1.348540448832468,
+                "rounded": 1
+            },
+            {
+                "number": "4864",
+                "relevance": 2.3211168434072498,
+                "normalized": 1.305201711762329,
+                "rounded": 1
             },
             {
                 "number": "6459",
-                "relevance": 2.367194478953664,
-                "normalized": 1.5210400897438845,
-                "rounded": 2
-            },
-            {
-                "number": "9131",
-                "relevance": 2.106953052060811,
-                "normalized": 1.4452484166705268,
+                "relevance": 2.0686215613240666,
+                "normalized": 1.2609891135793263,
                 "rounded": 1
             },
             {
-                "number": "8885",
-                "relevance": 1.9717115483160101,
-                "normalized": 1.4058612216333761,
-                "rounded": 1
-            },
-            {
-                "number": "9365",
-                "relevance": 1.8494846173491297,
-                "normalized": 1.3702643387573237,
+                "number": "9099",
+                "relevance": 1.8927892607143726,
+                "normalized": 1.2302004081813054,
                 "rounded": 1
             },
             {
                 "number": "4029",
                 "relevance": 1.261859507142915,
-                "normalized": 1.1991267501950613,
-                "rounded": 1
-            },
-            {
-                "number": "6653",
-                "relevance": 1.0,
-                "normalized": 1.1228638338965824,
-                "rounded": 1
-            },
-            {
-                "number": "7404",
-                "relevance": 1.0,
-                "normalized": 1.1228638338965824,
+                "normalized": 1.1197229234290722,
                 "rounded": 1
             },
             {
                 "number": "6342",
-                "relevance": 0.8613531161467861,
-                "normalized": 1.0824848695667832,
-                "rounded": 1
-            },
-            {
-                "number": "3314",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.0569587614748994,
-                "rounded": 1
-            },
-            {
-                "number": "5952",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.0569587614748994,
+                "relevance": 1.0,
+                "normalized": 1.0738706244308889,
                 "rounded": 1
             },
             {
                 "number": "6866",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0391085456234797,
+                "relevance": 0.8613531161467861,
+                "normalized": 1.0495931848108166,
                 "rounded": 1
             },
             {
-                "number": "6146",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0391085456234797,
-                "rounded": 1
-            },
-            {
-                "number": "2465",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0257851661145532,
-                "rounded": 1
-            },
-            {
-                "number": "1881",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0257851661145532,
-                "rounded": 1
-            },
-            {
-                "number": "9099",
-                "relevance": 0.6666666666666666,
-                "normalized": 1.0257851661145532,
-                "rounded": 1
-            },
-            {
-                "number": "2073",
-                "relevance": 0.6309297535714575,
-                "normalized": 1.015377290372778,
-                "rounded": 1
-            },
-            {
-                "number": "6036",
-                "relevance": 0.6020599913279624,
-                "normalized": 1.0069693761994307,
+                "number": "8992",
+                "relevance": 0.8613531161467861,
+                "normalized": 1.0495931848108166,
                 "rounded": 1
             },
             {
                 "number": "6052",
+                "relevance": 0.7124143742160444,
+                "normalized": 1.0235136133568976,
+                "rounded": 1
+            },
+            {
+                "number": "4215",
+                "relevance": 0.6666666666666666,
+                "normalized": 1.0155030675954613,
+                "rounded": 1
+            },
+            {
+                "number": "7404",
+                "relevance": 0.6666666666666666,
+                "normalized": 1.0155030675954613,
+                "rounded": 1
+            },
+            {
+                "number": "6782",
+                "relevance": 0.6309297535714575,
+                "normalized": 1.0092454386768392,
+                "rounded": 1
+            },
+            {
+                "number": "9365",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.0041902662111217,
+                "rounded": 1
+            },
+            {
+                "number": "8885",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.0041902662111217,
+                "rounded": 1
+            },
+            {
+                "number": "8273",
+                "relevance": 0.6020599913279624,
+                "normalized": 1.0041902662111217,
+                "rounded": 1
+            },
+            {
+                "number": "1881",
                 "relevance": 0.5781296526357758,
                 "normalized": 1.0,
                 "rounded": 1
@@ -873,58 +960,77 @@
         ]
     },
     {
+        "num": 10,
         "query": "TLS protocol versions and security security site:www.rfc-editor.org",
         "relevance_values": [
             {
-                "number": "5246",
-                "relevance": 10.0,
+                "number": "7525",
+                "relevance": 12.0,
                 "normalized": 3.0,
                 "rounded": 3
             },
             {
-                "number": "4346",
-                "relevance": 8.246425246579403,
-                "normalized": 2.624233981409872,
-                "rounded": 3
-            },
-            {
-                "number": "2246",
-                "relevance": 5.969131478872975,
-                "normalized": 2.1362424597584946,
+                "number": "9456",
+                "relevance": 5.793836475517569,
+                "normalized": 1.9047946721501592,
                 "rounded": 2
             },
             {
-                "number": "9325",
-                "relevance": 5.948547762717919,
-                "normalized": 2.131831663439554,
+                "number": "3749",
+                "relevance": 5.10480706798947,
+                "normalized": 1.7832012472922594,
                 "rounded": 2
             },
             {
-                "number": "8446",
-                "relevance": 2.5,
-                "normalized": 1.3928571428571428,
-                "rounded": 1
+                "number": "7465",
+                "relevance": 4.98969850408467,
+                "normalized": 1.7628879713090593,
+                "rounded": 2
             },
             {
-                "number": "7525",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.0229369173862322,
-                "rounded": 1
+                "number": "8998",
+                "relevance": 4.878965537565124,
+                "normalized": 1.7433468595703159,
+                "rounded": 2
             },
             {
-                "number": "9151",
-                "relevance": 0.7737056144690833,
-                "normalized": 1.0229369173862322,
-                "rounded": 1
+                "number": "7457",
+                "relevance": 4.6949462096638275,
+                "normalized": 1.7108728605289105,
+                "rounded": 2
             },
             {
                 "number": "9147",
-                "relevance": 0.7124143742160444,
-                "normalized": 1.0098030801891524,
+                "relevance": 4.686688255575004,
+                "normalized": 1.709415574513236,
+                "rounded": 2
+            },
+            {
+                "number": "7590",
+                "relevance": 4.595192840476248,
+                "normalized": 1.693269324789926,
+                "rounded": 2
+            },
+            {
+                "number": "7633",
+                "relevance": 1.9030899869919435,
+                "normalized": 1.2181923506456371,
                 "rounded": 1
             },
             {
-                "number": "7918",
+                "number": "3546",
+                "relevance": 1.7702844659456074,
+                "normalized": 1.1947560822256955,
+                "rounded": 1
+            },
+            {
+                "number": "6614",
+                "relevance": 0.7737056144690833,
+                "normalized": 1.0188892260827793,
+                "rounded": 1
+            },
+            {
+                "number": "8915",
                 "relevance": 0.6666666666666666,
                 "normalized": 1.0,
                 "rounded": 1
