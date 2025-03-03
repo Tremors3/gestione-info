@@ -147,7 +147,54 @@ class MyComparator():
         
         return std_rec_lvls
 
-    def all_recall(self) -> dict:
+    def get_benchmark(benchmark: list) -> dict:
+        """Mette i benchark in un dizionario più comodo da utilizzare"""
+        res_benchmark = {}
+
+        for i in benchmark:
+            res_benchmark[i["num"]] = [
+                j.get("number") 
+                for j in i.get("relevance_values")
+            ]
+            
+        return res_benchmark
+
+    def calc_all_recall_precision_by_engine(self) -> dict:
+        """Calcola recall e precision per engine"""
+
+        benchmark = self.benchmark # Insieme degli R
+        local_results = self.local_results # Insieme degli A
+        RA = {}
+        benchmark = __class__.get_benchmark(benchmark=benchmark)
+        
+        # Dizionari per ogni query
+        for v in local_results.values():
+
+            # Ogni engine utilizzato
+            for engine in v["engines"].keys():
+                RA[engine] = {}
+
+                # Ogni funzione di ranking utilizzata
+                for ranking in v["engines"][engine]:
+                    RA[engine][ranking] = {}
+
+                    # Prende i risultati della query
+                    for i, j in local_results.items():
+                        RA[engine][ranking][i] = {}
+
+                        # Calcola la recall e precision interpolata
+                        RA[engine][ranking][i] = \
+                                __class__.calc_interpolated_recall_precision(
+                                    __class__.calc_recall_precision(
+                                        benchmark[int(i)],
+                                        j["engines"][engine][ranking],
+                                    )
+                                )
+
+        return RA
+
+    def calc_all_recall_precision_by_query(self) -> dict:
+        """Calcola recall e precision per query"""
         
         benchmark = self.benchmark # Insieme degli R
         local_results = self.local_results # Insieme degli A
@@ -200,7 +247,7 @@ class MyComparator():
         
         #natural_recall = self.calc_recall_precision(rel_docs=["1","2","3","4"], res_docs=["1", "7", "3", "4", "5", "2"])
         
-        pprint(self.all_recall())
+        pprint(self.calc_all_recall_precision_by_engine())
         
         # pprint(
         #     self.calc_interpolated_recall_precision_v2(
