@@ -2,7 +2,8 @@
 # Importazione standard
 import os, json
 from pprint import pprint
-from time import sleep
+from functools import reduce
+
 # Importazione barra di caricamento
 from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
@@ -300,6 +301,30 @@ class MyComparator():
         return MyComparator.calc_map(ap_per_query.values())
     
     # ################################################## #
+    
+    @staticmethod
+    def calc_harmonic_mean(sample: list[float]) -> float:
+        """https://search.r-project.org/CRAN/refmans/lmomco/html/harmonic.mean.html"""
+        
+        sample_size = len(sample)
+        non_zero_values = [ v for v in sample if v != 0.0 ]
+        non_zero_count = len(non_zero_values)
+        
+        if sample_size == 0 or non_zero_count == 0:
+            return 0.0
+        
+        zero_value_correction = non_zero_count / sample_size
+        non_zero_value_sum = sum(1 / v for v in non_zero_values)
+        
+        return (non_zero_count / non_zero_value_sum) * zero_value_correction
+    
+    # ################################################## #
+    
+    @staticmethod
+    def calc_discounted_cumulative_gain(relevance: list[float]) -> float:
+        pass
+    
+    # ################################################## #
 
     def get_benchmark(benchmark: list) -> dict:
         """Mette i benchark in un dizionario più comodo da utilizzare"""
@@ -342,10 +367,20 @@ class MyComparator():
                                 j["engines"][engine][ranking],
                             )
                         )
-
-                    # Calcola la precision media per l'engine
-                    RA[engine][ranking] = __class__.get_all_average_precision_at_recall(res.values())
-
+                    
+                    # pprint(res)
+                    
+                    # Calcola della precisione media (level) per engine
+                    RA[engine][ranking]["avg_prec_at_std_rec_lvls"] = __class__.get_all_average_precision_at_recall(res.values())
+                    
+                    # Calcolo della precisione media (query) per engine
+                    RA[engine][ranking]["avg_prec_of_queries"] = __class__.get_all_average_precision_of_query(res)
+                    
+                    # Calcolo del valore MAP (Mean Average Precision) per engine
+                    RA[engine][ranking]["map"] = __class__.get_map(RA[engine][ranking]["avg_prec_of_queries"])
+        
+        # pprint(RA)
+        
         return RA
 
     def calc_all_recall_precision_by_query(self) -> dict:
@@ -402,8 +437,8 @@ class MyComparator():
         
         #natural_recall = self.calc_recall_precision(rel_docs=["1","2","3","4"], res_docs=["1", "7", "3", "4", "5", "2"])
         
-        pprint(self.calc_all_recall_precision_by_engine())
-        
+        x = self.calc_all_recall_precision_by_engine()
+        pprint(x)
         # pprint(
         #     self.calc_interpolated_recall_precision_v2(
         #         {
