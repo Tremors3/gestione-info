@@ -2,7 +2,8 @@
 # Importazione standard
 import os, json
 from pprint import pprint
-from time import sleep
+from functools import reduce
+
 # Importazione barra di caricamento
 from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
@@ -148,6 +149,183 @@ class MyComparator():
         
         return std_rec_lvls
 
+    # ################################################## #
+
+    @staticmethod
+    def calc_average(factors: list[float]) -> float:
+        if not factors: return 0.0
+        return sum(factors) / len(factors)
+
+    # ################################################## #
+
+    @staticmethod
+    def calc_average_precision_at_recall(precision_per_query_at_r: list[float]) -> float:
+        return MyComparator.calc_average(precision_per_query_at_r)
+    
+    @staticmethod
+    def calc_all_average_precision_at_recall(precisions_per_query_per_r: dict[float, list[float]]) -> dict[float, float]:
+        """
+        INSTANCE INPUT:
+        {
+            0.0: [0.0 <= precision <= 1.0, ...],
+            0.1: [0.0 <= precision <= 1.0, ...],
+            ...
+            1.0: [0.0 <= precision <= 1.0, ...]
+        }
+        
+        INSTANCE OUTPUT:
+        {
+            0.0: 0.0 <= avg_precision <= 1.0,
+            0.1: 0.0 <= avg_precision <= 1.0,
+            ...
+            1.0: 0.0 <= avg_precision <= 1.0
+        }
+        """
+        
+        average_precision_per_recall_level = {}
+        
+        # Per ciascun livello di recall calcoliamo 
+        # la media delle precisioni delle query
+        for recall_level, precision_list in precisions_per_query_per_r.items():
+            average_precision_per_recall_level[recall_level] = \
+                MyComparator.calc_average_precision_at_recall(precision_list)
+        
+        return average_precision_per_recall_level
+
+    @staticmethod
+    def get_all_average_precision_at_recall(recalls_per_query: list[dict[float, float]]) -> dict[float, float]:
+        """
+        INSTANCE INPUT:
+        [
+            recall (0.0 ... 1.0): 0.0 <= precision <= 1.0,
+            recall (0.0 ... 1.0): 0.0 <= precision <= 1.0,
+            ...
+            recall (0.0 ... 1.0): 0.0 <= precision <= 1.0
+        ]
+
+        INSTANCE OUTPUT:
+        {
+            0.0: 0.0 <= avg_precision <= 1.0,
+            0.1: 0.0 <= avg_precision <= 1.0,
+            ...
+            1.0: 0.0 <= avg_precision <= 1.0
+        }
+        """
+
+        data = {}
+
+        # Per ciascun agglomerato di recall
+        for recalls in recalls_per_query:
+            
+            # Per ciascun livello di recall e relativa precisione
+            for recall_level, precision in recalls.items():
+                
+                # Se è la prima volta che incontriamo il livello di recall
+                # allora inizializziamo il suo valore ad una lista vuota
+                if not data.get(recall_level, None): data[recall_level] = []
+                
+                # Aggiunta della precision al livello
+                data[recall_level].append(precision)
+
+        return MyComparator.calc_all_average_precision_at_recall(data)
+
+    # ################################################## #
+
+    @staticmethod
+    def calc_average_precision_of_query(precision_per_recall_of_q: list[float]) -> float:
+        return MyComparator.calc_average(precision_per_recall_of_q)
+    
+    @staticmethod
+    def calc_all_average_precision_of_query(queries: dict[str, list[float]]) -> dict[str, float]:
+        """
+        INSTANCE INPUT:
+        {
+            '1':    [prec, prec, ..., prec]
+            '2':    [prec, prec, ..., prec]
+            ...
+            '10':   [prec, prec, ..., prec]
+        }
+
+        INSTANCE OUTPUT:
+        {
+            '1':    avg_precision
+            '2':    avg_precision
+            ...
+            '10':   avg_precision
+        }
+        """
+        
+        average_precision_per_query = {}
+        
+        for query, precisions in queries.items():
+            average_precision_per_query[query] = MyComparator.calc_average_precision_of_query(precisions)
+    
+        return average_precision_per_query
+    
+    @staticmethod
+    def get_all_average_precision_of_query(queries: dict[str, dict[float, float]]) -> dict[str, float]:
+        """
+        INSTANCE INPUT:
+        {
+            '1':    {rec: prec, ..., rec: prec}
+            '2':    {rec: prec, ..., rec: prec}
+            ...
+            '10':   {rec: prec, ..., rec: prec}
+        }
+
+        INSTANCE OUTPUT:
+        {
+            '1':    avg_precision
+            '2':    avg_precision
+            ...
+            '10':   avg_precision
+        }
+        """
+        
+        data = {}
+        
+        for query, recall_levels in queries.items():
+            precisions = recall_levels.values()
+            data[query] = precisions
+        
+        return MyComparator.calc_all_average_precision_of_query(data)
+
+    # ################################################## #
+    
+    @staticmethod
+    def calc_map(queries_average_precision: list[float]) -> float:
+        return MyComparator.calc_average(queries_average_precision)
+    
+    @staticmethod
+    def get_map(ap_per_query: dict[str, float]) -> float:
+        return MyComparator.calc_map(ap_per_query.values())
+    
+    # ################################################## #
+    
+    @staticmethod
+    def calc_harmonic_mean(sample: list[float]) -> float:
+        """https://search.r-project.org/CRAN/refmans/lmomco/html/harmonic.mean.html"""
+        
+        sample_size = len(sample)
+        non_zero_values = [ v for v in sample if v != 0.0 ]
+        non_zero_count = len(non_zero_values)
+        
+        if sample_size == 0 or non_zero_count == 0:
+            return 0.0
+        
+        zero_value_correction = non_zero_count / sample_size
+        non_zero_value_sum = sum(1 / v for v in non_zero_values)
+        
+        return (non_zero_count / non_zero_value_sum) * zero_value_correction
+    
+    # ################################################## #
+    
+    @staticmethod
+    def calc_discounted_cumulative_gain(relevance: list[float]) -> float:
+        pass
+    
+    # ################################################## #
+
     def get_benchmark(benchmark: list) -> dict:
         """Mette i benchark in un dizionario più comodo da utilizzare"""
         res_benchmark = {}
@@ -159,28 +337,7 @@ class MyComparator():
             ]
             
         return res_benchmark
-
-    @staticmethod
-    def __calc_avg_precision(query_dict: dict) -> dict:
-
-        # Step per la recall
-        rec_steps = [i/10 for i in range(11)]
-
-        # Numero di query
-        query_num = len(query_dict)
-
-        # Dizionario per la precisione media
-        avg_prec = {}
-
-        # Calcolo la precisione media
-        for i in rec_steps:
-            prec_sum = 0
-            for recalls in query_dict.values():
-                prec_sum+=recalls[i]
-            avg_prec[i] = prec_sum/query_num
-
-        return avg_prec
-
+    
     def calc_all_recall_precision_by_engine(self) -> dict:
         """Calcola recall e precision per engine"""
 
@@ -199,10 +356,10 @@ class MyComparator():
                 # Ogni funzione di ranking utilizzata
                 for ranking in v["engines"][engine]:
                     RA[engine][ranking] = {}
+                    res = {}
 
                     # Prende i risultati della query
                     for i, j in local_results.items():
-                        res = {}
                         # Calcola la recall e precision interpolata
                         res[i] = __class__.calc_interpolated_recall_precision(
                             __class__.calc_recall_precision(
@@ -210,10 +367,20 @@ class MyComparator():
                                 j["engines"][engine][ranking],
                             )
                         )
-                        
-                    # Calcola la precision media per l'engine
-                    RA[engine][ranking] = __class__.__calc_avg_precision(res)
-
+                    
+                    # pprint(res)
+                    
+                    # Calcola della precisione media (level) per engine
+                    RA[engine][ranking]["avg_prec_at_std_rec_lvls"] = __class__.get_all_average_precision_at_recall(res.values())
+                    
+                    # Calcolo della precisione media (query) per engine
+                    RA[engine][ranking]["avg_prec_of_queries"] = __class__.get_all_average_precision_of_query(res)
+                    
+                    # Calcolo del valore MAP (Mean Average Precision) per engine
+                    RA[engine][ranking]["map"] = __class__.get_map(RA[engine][ranking]["avg_prec_of_queries"])
+        
+        # pprint(RA)
+        
         return RA
 
     def calc_all_recall_precision_by_query(self) -> dict:
@@ -270,8 +437,8 @@ class MyComparator():
         
         #natural_recall = self.calc_recall_precision(rel_docs=["1","2","3","4"], res_docs=["1", "7", "3", "4", "5", "2"])
         
-        pprint(self.calc_all_recall_precision_by_engine())
-        
+        x = self.calc_all_recall_precision_by_engine()
+        pprint(x)
         # pprint(
         #     self.calc_interpolated_recall_precision_v2(
         #         {
