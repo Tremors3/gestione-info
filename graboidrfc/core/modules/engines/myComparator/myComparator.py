@@ -2,6 +2,7 @@
 # Importazione standard
 import os, json
 from pprint import pprint
+from time import sleep
 # Importazione barra di caricamento
 from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
@@ -159,6 +160,27 @@ class MyComparator():
             
         return res_benchmark
 
+    @staticmethod
+    def __calc_avg_precision(query_dict: dict) -> dict:
+
+        # Step per la recall
+        rec_steps = [i/10 for i in range(11)]
+
+        # Numero di query
+        query_num = len(query_dict)
+
+        # Dizionario per la precisione media
+        avg_prec = {}
+
+        # Calcolo la precisione media
+        for i in rec_steps:
+            prec_sum = 0
+            for recalls in query_dict.values():
+                prec_sum+=recalls[i]
+            avg_prec[i] = prec_sum/query_num
+
+        return avg_prec
+
     def calc_all_recall_precision_by_engine(self) -> dict:
         """Calcola recall e precision per engine"""
 
@@ -180,16 +202,17 @@ class MyComparator():
 
                     # Prende i risultati della query
                     for i, j in local_results.items():
-                        RA[engine][ranking][i] = {}
-
+                        res = {}
                         # Calcola la recall e precision interpolata
-                        RA[engine][ranking][i] = \
-                                __class__.calc_interpolated_recall_precision(
-                                    __class__.calc_recall_precision(
-                                        benchmark[int(i)],
-                                        j["engines"][engine][ranking],
-                                    )
-                                )
+                        res[i] = __class__.calc_interpolated_recall_precision(
+                            __class__.calc_recall_precision(
+                                benchmark[int(i)],
+                                j["engines"][engine][ranking],
+                            )
+                        )
+                        
+                    # Calcola la precision media per l'engine
+                    RA[engine][ranking] = __class__.__calc_avg_precision(res)
 
         return RA
 
