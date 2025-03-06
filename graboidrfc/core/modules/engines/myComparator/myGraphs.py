@@ -42,8 +42,8 @@ class MyGraphs:
         DYNAMIC_PACKAGE_PATH, "core", "config", "comparator.json"
     )
 
-    # RESULTS FILE PATHS
-    BENCHMARK_FOLDER = os.path.join(
+    # GRAPH FILE PATHS
+    OUTPUT_GRAPH_FOLDER = os.path.join(
         DYNAMIC_PACKAGE_PATH, "core", "data", "graphs"
     )
 
@@ -146,7 +146,7 @@ class MyGraphs:
         """Salva il grafico su file"""
 
         # Controllo presenza directory
-        dir_path = os.path.join(cls.BENCHMARK_FOLDER, subdir)
+        dir_path = os.path.join(cls.OUTPUT_GRAPH_FOLDER, subdir)
         if not os.path.exists(dir_path):
             os.mkdir(dir_path)
         
@@ -157,7 +157,7 @@ class MyGraphs:
         file_path = os.path.join(dir_path, filename)
         
         # Scrittura del grafico su file
-        figure.savefig(os.path.join(cls.BENCHMARK_FOLDER, file_path))
+        figure.savefig(file_path)
 
     @staticmethod
     def __get_values(res: dict, e: str, field: str) -> list[float]:
@@ -331,9 +331,13 @@ class MyGraphs:
         cls.__save_plot_to_file(fig, "map", "map.svg")
 
     # ######################################################################## #
+    
+    def start():
+        """ Graphs Entry Point """
+        MyGraphs.graph_by_query()
+        MyGraphs.graph_by_engine()
+        MyGraphs.graph_map()
+        logging.debug(f"Grafici salvati al seguente percorso: \'{__class__.OUTPUT_GRAPH_FOLDER}\'")
 
 if __name__ == "__main__":
-    graph = MyGraphs()
-    graph.graph_by_query()
-    graph.graph_by_engine()
-    graph.graph_map()
+    MyGraphs.start()
