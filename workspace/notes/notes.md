@@ -1,9 +1,9 @@
 
 # COSE DA FINIRE
 
-### [da_finire] NOTA SULL'UTILIZZO DELLA SEARCH BAR
+### [fatto] NOTA SULL'UTILIZZO DELLA SEARCH BAR
 
-- [ ] Da completare.
+- [x] Da completare.
    
    Nella sezione a destra dell'interfaccia grafica elenchiamo tre sezioni, una per Search Engine (Whoosh, Postgresql, Pylucene).
    All'interno di queste sezione specifichiamo le possibili grammatiche di funzionalità offerte dai vari search engine.
@@ -125,7 +125,7 @@ SPELLING CORRECTION & SYNONIMS
    - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
    - [ ] Spelling Correction & Synonims (Non Ancora Supportata)
 
-### [da_fare] RIVISITA DEL BENCHMARK E SELEZIONE DEI MODELLI DI RANKING E CONFRONTO TRA I MODELLI
+### [fatto] RIVISITA DEL BENCHMARK E SELEZIONE DEI MODELLI DI RANKING E CONFRONTO TRA I MODELLI
 
 - [x] Scegliere due modelli di ranking per ciascun motore di ricerca e altrettante varianti per ciascun modello.
     - [x] Whoosh     $\rightarrow$ ha **BM25** e **BM25 Custom**,       **TF_IDF**       e **TF_IDF_FF**.
@@ -154,28 +154,53 @@ SPELLING CORRECTION & SYNONIMS
 - [x] Ottenere i ranking dei nostri tre sistemi di ricerca, formattarli in json come "extracted_local.json".
     Alla fine avremo "extracted_online.json" e "extracted_local.json" e poi il benchmark "benchmark.json" relativo ai risultati online.
 
-- [ ] Confrontare le varianti dei nostri tre motori di ricerca:
-    - [ ] Progettare e Realizzare lo script che definisce le formule e attua i confronti tra le varianti dei sistemi tenendo conto dei risultati del benchmark.
-    - [ ] Ottenere i grafici che mostrano i confronti tra le varianti dei motori di ricerca.
-        - [ ] Salvare i grafici in modo che siano visualizzabili.
-    - [ ] Decidere le metriche da utilizzare per confrontare i sistemi:
+- [x] Confrontare le varianti dei nostri tre motori di ricerca:
+    - [x] Progettare e Realizzare lo script che definisce le formule e attua i confronti tra le varianti dei sistemi tenendo conto dei risultati del benchmark.
+    - [x] Ottenere i grafici che mostrano i confronti tra le varianti dei motori di ricerca.
+        - [x] Salvare i grafici in modo che siano visualizzabili.
+    - [x] Decidere le metriche da utilizzare per confrontare i sistemi:
         1. F-MESURE
         2. AVERAGE PRECISION (LEVEL)
         3. AVERAGE PRECISION (QUERY)
         4. MEAN AVERAGE PRECISION (MAP)
         5. DISCOUNTED CUMULATIVE GAIN (DCG & NDCG)
         6. PRECISION AT STANDARD RECALL LEVELS
-    - [ ] Automatizzare il processo che effettua i controlli:
+    - [x] Automatizzare il processo che effettua i controlli e che crea i grafici:
         1. creazione del benchmark, 
         2. scaricamento dei risultati delle query, 
         3. confronto dei risultati con formule e tecniche appropriate.
 
+### [da_fare] RITOCCHINI DA SISTEMARE
+
 - [ ] Aggiustare i parametri `k1` e `b` dei ranking **BM25** sia di **WHOOSH** sia di **PYLUCENE** tramite sperimentazione.
 
-- [ ] Una volta completata l'interfaccia grafica incorporare su github immagini che mostrino la stessa; e che siano visibili dal README.md.
+- [ ] Rigenerare le dipendenze del file requirements.txt levando quelle inutili ed inserendo quelle mancanti.
+
+### [da_fare] COMPLETARE README
+
+- [ ] Completare il Readme
+    - [ ] Specificare nel README.md come dipendenza "systemd"; richiesta durante l'installazione di postgresql tramite lo script.
+    - [ ] Una volta completata l'interfaccia grafica incorporare su github screenshots che mostrino la stessa; e che siano visibili dal README.md.
+    - [ ] Inserire nel tutorial di installazione del pacchetto tutti i comandi riferiti alle funzionalità che la prof vuole eseguire.
+
+### [da_fare] COMPLETARE LA PRESENTAZIONE
+
+- [ ] Documentazione e Suddivisione delle parti
+    - [ ] Completare la documentazione
+        - [ ] Motori di ricerca utilizzati (Whoosh, Pylucene, PostgreSQL)
+        - [ ] Funzioni di ranking scelte e rispettive particolarità
+            - [ ] Descrivere le funzioni di ranking custom
+                (Whoosh: TF_IDF_FF, PyLucene: TFLN_PIDF, PostgreSQL: Normalization Factor)
+        - [ ] Scelta delle tipologie di grafico utilizzate
+    - [ ] Suddivisione delle parti
+
+- [ ] Presentazione
+    - [ ] Descrivi le procedure principali
+    - [ ] Disegna e Incorpora schemi sulle procedure
+    - [ ] Incorpora foto dell'interfaccia nella presentazione
+    - [ ] Seleziona ed Incorpora grafici migliori
 
 # OBIETTIVI
-### 1. FUNZIONI PER VALUTARE I MODELLI DI RANKING
-### 2. REALIZZARE GRAFICI
-### 3. COMPLETARE DOCUMENTAZIONE
-### 4. REALIZZARE PRESENTAZIONE
+### 1. EFFETTUARE RITOCCHINI
+### 1. COMPLETARE DOCUMENTAZIONE
+### 2. REALIZZARE PRESENTAZIONE
