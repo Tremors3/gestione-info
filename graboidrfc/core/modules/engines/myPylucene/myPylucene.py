@@ -428,7 +428,7 @@ class MyPyLucene:
         ## ESTRAZIONE DEI RISULTATI - ESECUZIONE DELLA RICERCA E FORMATTAZIONE DEI RISULTATI ##
         #######################################################################################
 
-        # BM25 Custom Parameters
+        # BM25 Custom Parameters (default: k1=1.2, b=0.75)
         k1 = 1.2
         b = 0.75
         
