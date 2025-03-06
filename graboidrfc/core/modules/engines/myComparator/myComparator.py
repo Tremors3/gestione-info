@@ -1,8 +1,10 @@
 
 # Importazione standard
 import os, json
+from math import log2
 from pprint import pprint
 from functools import reduce
+from typing import Dict, Tuple, List
 
 # Importazione barra di caricamento
 from alive_progress import alive_bar
@@ -164,24 +166,6 @@ class MyComparator():
     
     @staticmethod
     def calc_all_average_precision_at_recall(precisions_per_query_per_r: dict[float, list[float]]) -> dict[float, float]:
-        """
-        INSTANCE INPUT:
-        {
-            0.0: [0.0 <= precision <= 1.0, ...],
-            0.1: [0.0 <= precision <= 1.0, ...],
-            ...
-            1.0: [0.0 <= precision <= 1.0, ...]
-        }
-        
-        INSTANCE OUTPUT:
-        {
-            0.0: 0.0 <= avg_precision <= 1.0,
-            0.1: 0.0 <= avg_precision <= 1.0,
-            ...
-            1.0: 0.0 <= avg_precision <= 1.0
-        }
-        """
-        
         average_precision_per_recall_level = {}
         
         # Per ciascun livello di recall calcoliamo 
@@ -194,24 +178,6 @@ class MyComparator():
 
     @staticmethod
     def get_all_average_precision_at_recall(recalls_per_query: list[dict[float, float]]) -> dict[float, float]:
-        """
-        INSTANCE INPUT:
-        [
-            recall (0.0 ... 1.0): 0.0 <= precision <= 1.0,
-            recall (0.0 ... 1.0): 0.0 <= precision <= 1.0,
-            ...
-            recall (0.0 ... 1.0): 0.0 <= precision <= 1.0
-        ]
-
-        INSTANCE OUTPUT:
-        {
-            0.0: 0.0 <= avg_precision <= 1.0,
-            0.1: 0.0 <= avg_precision <= 1.0,
-            ...
-            1.0: 0.0 <= avg_precision <= 1.0
-        }
-        """
-
         data = {}
 
         # Per ciascun agglomerato di recall
@@ -237,24 +203,7 @@ class MyComparator():
     
     @staticmethod
     def calc_all_average_precision_of_query(queries: dict[str, list[float]]) -> dict[str, float]:
-        """
-        INSTANCE INPUT:
-        {
-            '1':    [prec, prec, ..., prec]
-            '2':    [prec, prec, ..., prec]
-            ...
-            '10':   [prec, prec, ..., prec]
-        }
-
-        INSTANCE OUTPUT:
-        {
-            '1':    avg_precision
-            '2':    avg_precision
-            ...
-            '10':   avg_precision
-        }
-        """
-        
+                
         average_precision_per_query = {}
         
         for query, precisions in queries.items():
@@ -264,24 +213,7 @@ class MyComparator():
     
     @staticmethod
     def get_all_average_precision_of_query(queries: dict[str, dict[float, float]]) -> dict[str, float]:
-        """
-        INSTANCE INPUT:
-        {
-            '1':    {rec: prec, ..., rec: prec}
-            '2':    {rec: prec, ..., rec: prec}
-            ...
-            '10':   {rec: prec, ..., rec: prec}
-        }
-
-        INSTANCE OUTPUT:
-        {
-            '1':    avg_precision
-            '2':    avg_precision
-            ...
-            '10':   avg_precision
-        }
-        """
-        
+                
         data = {}
         
         for query, recall_levels in queries.items():
@@ -304,6 +236,14 @@ class MyComparator():
     
     @staticmethod
     def calc_harmonic_mean(sample: list[float]) -> float:
+        
+        if not sample or any((v == 0.0 for v in sample)):
+            return 0.0
+        
+        return (len(sample) / sum(1 / v for v in sample))
+    
+    @staticmethod
+    def calc_harmonic_mean_zero_adjusted(sample: list[float]) -> float:
         """https://search.r-project.org/CRAN/refmans/lmomco/html/harmonic.mean.html"""
         
         sample_size = len(sample)
@@ -318,11 +258,43 @@ class MyComparator():
         
         return (non_zero_count / non_zero_value_sum) * zero_value_correction
     
+    @staticmethod
+    def get_harmonic_mean(recall_precision: dict[float, float]) -> dict[float, float]:
+        
+        hm_fun = MyComparator.calc_harmonic_mean
+        #hm_fun = MyComparator.calc_harmonic_mean_zero_adjusted
+        
+        f_measure_per_r = { r: hm_fun([r, v]) for r, v in recall_precision.items() }
+        return f_measure_per_r
+
     # ################################################## #
     
     @staticmethod
+    def extract_relevance(results_relevance: dict[str, int], results: list[str]) -> list[float]:
+        return [ results_relevance.get(result, 0) for result in results ]
+    
+    @staticmethod
     def calc_discounted_cumulative_gain(relevance: list[float]) -> float:
-        pass
+        
+        if not relevance: return 0.0
+
+        dcg = relevance[0]
+        dcg += sum(relevance[i] / log2(i + 1) for i in range(1, len(relevance)))
+        
+        return dcg
+    
+    @staticmethod
+    def calc_normalized_discounted_cumulative_gain(ideal: list[float], relevance: list[float]) -> float:
+        idcg = MyComparator.calc_discounted_cumulative_gain(sorted(ideal, reverse=True))
+        dcg = MyComparator.calc_discounted_cumulative_gain(relevance)
+        return dcg / idcg
+    
+    @staticmethod
+    def get_normalized_discounted_cumulative_gain(results_relevance: dict[str, int], results: list[str]):
+        return MyComparator.calc_normalized_discounted_cumulative_gain(
+            ideal=results_relevance.values(),
+            relevance=MyComparator.extract_relevance(results_relevance, results)
+        )
     
     # ################################################## #
 
@@ -331,20 +303,18 @@ class MyComparator():
         res_benchmark = {}
 
         for i in benchmark:
-            res_benchmark[i["num"]] = [
-                j.get("number") 
-                for j in i.get("relevance_values")
-            ]
+            res_benchmark[i["num"]] = i
             
         return res_benchmark
     
     def calc_all_recall_precision_by_engine(self) -> dict:
         """Calcola recall e precision per engine"""
 
-        benchmark = self.benchmark # Insieme degli R
+        benchmark_original = self.benchmark # Insieme degli R
         local_results = self.local_results # Insieme degli A
+        benchmark = __class__.get_benchmark(benchmark=benchmark_original)
+        
         RA = {}
-        benchmark = __class__.get_benchmark(benchmark=benchmark)
         
         # Dizionari per ogni query
         for v in local_results.values():
@@ -352,7 +322,7 @@ class MyComparator():
             # Ogni engine utilizzato
             for engine in v["engines"].keys():
                 RA[engine] = {}
-
+                
                 # Ogni funzione di ranking utilizzata
                 for ranking in v["engines"][engine]:
                     RA[engine][ranking] = {}
@@ -363,24 +333,42 @@ class MyComparator():
                         # Calcola la recall e precision interpolata
                         res[i] = __class__.calc_interpolated_recall_precision(
                             __class__.calc_recall_precision(
-                                benchmark[int(i)],
+                                [t["number"] for t in benchmark[int(i)]["relevance_values"]],
                                 j["engines"][engine][ranking],
                             )
                         )
-                    
-                    # pprint(res)
+
+                        # Otteniamo la lista dei documenti rilevanti per la query
+                        ideal_ordering_for_query = benchmark.get(safecast(i, int))
+                        if ideal_ordering_for_query:
+                            
+                            # Otteniamo la lista delle rilevanze normalizzate per la query riferite ai documenti
+                            ideal = { x["number"]: x["rounded"] for x in ideal_ordering_for_query["relevance_values"] }
+
+                            if RA[engine][ranking].get("ndcg", None) is None:
+                                RA[engine][ranking]["ndcg"] = {}
+                            
+                            # Calcolo della NDCG (Normalized Discounted Cumulative Gain)
+                            RA[engine][ranking]["ndcg"][i] = \
+                                __class__.get_normalized_discounted_cumulative_gain(
+                                    results_relevance=ideal,
+                                    results=local_results.get(safecast(i, str))["engines"][engine][ranking]
+                                )
                     
                     # Calcola della precisione media (level) per engine
-                    RA[engine][ranking]["avg_prec_at_std_rec_lvls"] = __class__.get_all_average_precision_at_recall(res.values())
+                    RA[engine][ranking]["avg_prec_at_std_rec_lvls"] = \
+                        __class__.get_all_average_precision_at_recall(
+                            res.values())
                     
                     # Calcolo della precisione media (query) per engine
-                    RA[engine][ranking]["avg_prec_of_queries"] = __class__.get_all_average_precision_of_query(res)
+                    RA[engine][ranking]["avg_prec_of_queries"] = \
+                        __class__.get_all_average_precision_of_query(res)
                     
                     # Calcolo del valore MAP (Mean Average Precision) per engine
-                    RA[engine][ranking]["map"] = __class__.get_map(RA[engine][ranking]["avg_prec_of_queries"])
-        
-        # pprint(RA)
-        
+                    RA[engine][ranking]["map"] = __class__.get_map(
+                        RA[engine][ranking]["avg_prec_of_queries"]
+                    )
+
         return RA
 
     def calc_all_recall_precision_by_query(self) -> dict:
@@ -408,52 +396,45 @@ class MyComparator():
             
             RA[query] = {}
             
+            # Ogni engine utilizzato
             for se in result["engines"]:
                 
                 RA[query][se] = {}
                 
+                # Prende i modelli di ranking per il search engine
                 ranking_models = result["engines"].get(se, [])
                 
+                # Ogni funzione di ranking utilizzata
                 for rm in ranking_models:
                     
+                    # Prende i risultati per la funzione di ranking per il 
+                    # search engine
                     local_numbers = ranking_models.get(rm)
 
+                    RA[query][se][rm] = {}
+                    
                     # Ottengo recall e precision 
-                    RA[query][se][rm] = __class__.calc_recall_precision(
-                        benchmark_numbers,
-                        local_numbers
-                    )
+                    RA[query][se][rm]["recall_precision"] = \
+                        __class__.calc_recall_precision(
+                            benchmark_numbers,
+                            local_numbers
+                        )
                     
                     # Ottengo recall e precision interpolata
-                    RA[query][se][rm] = __class__.calc_interpolated_recall_precision(
-                        docs=RA[query][se][rm]
-                    )
+                    RA[query][se][rm]["recall_precision"] = \
+                        __class__.calc_interpolated_recall_precision(
+                            docs=RA[query][se][rm]["recall_precision"]
+                        )
+                    
+                    # Ottengo la f-measure a ciascun livello standard di recall
+                    RA[query][se][rm]["f_measure"] = \
+                        __class__.get_harmonic_mean(
+                            recall_precision=RA[query][se][rm]["recall_precision"]
+                        )
 
         return RA
 
     # ################################################## #
-    
-    def process(self):
-        
-        #natural_recall = self.calc_recall_precision(rel_docs=["1","2","3","4"], res_docs=["1", "7", "3", "4", "5", "2"])
-        
-        x = self.calc_all_recall_precision_by_engine()
-        pprint(x)
-        # pprint(
-        #     self.calc_interpolated_recall_precision_v2(
-        #         {
-        #             0.05: 1.0,
-        #             0.1: 0.6666666666666666,
-        #             0.15: 0.75,
-        #             0.2: 0.5714285714285714,
-        #             0.25: 0.625,
-        #             0.3: 0.6666666666666666
-        #         }
-        #     )
-        # )
-
-    # ################################################## #
 
 if __name__ == "__main__":
-    comparator = MyComparator()
-    comparator.process()
+    pass
