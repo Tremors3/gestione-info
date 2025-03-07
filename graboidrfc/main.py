@@ -59,19 +59,19 @@ class Application:
         # Argomenti Principali
         exclusive_group.add_argument('-i', '--init', action='store_true', help='Inizializza l\'applicazione.')
         exclusive_group.add_argument('-s', '--start', action='store_true', help='Avvia l\'applicazione.')
-        exclusive_group.add_argument('-c', '--cleanup', action='store_true', help='Rimuove tutti i file creati durante la fase di inizializzazione.')
+        # exclusive_group.add_argument('-c', '--cleanup', action='store_true', help='Rimuove tutti i file creati durante la fase di inizializzazione.')
         
         # Argomenti utili per Debugging
-        exclusive_group.add_argument('-p', '--parser', action='store_true', help='Esegue il parser.')
+        exclusive_group.add_argument('-p', '--parser', action='store_true', help='Scarica e parserizza il dataset.')
         exclusive_group.add_argument('-x', '--indexes', action='store_true', help='Costruisce gli Inverted Index.')
         
         # Argomenti per la costruzione del Benchmark
         exclusive_group.add_argument('-e', '--extractor', action='store_true', help='Ottiene i risultati necessari alla costruzione del benchmark.')
-        exclusive_group.add_argument('-l', '--extractor-local', action='store_true', help='Ottiene i risultati con i nostri tre search engine.')
+        exclusive_group.add_argument('-l', '--extractor-local', action='store_true', help='Ottiene i risultati dei nostri tre search engine.')
         exclusive_group.add_argument('-b', '--benchmark', action='store_true', help='Costruisce e salva il benchmark.')
 
         # Argomenti per la costruzione dei grafici
-        exclusive_group.add_argument('-g', '--graphs', action='store_true', help='Costruisce Costruisce i grafici.')        
+        exclusive_group.add_argument('-g', '--graphs', action='store_true', help='Costruisce e salva i grafici.')        
 
     # #################################################################################################### #
 
