@@ -272,13 +272,32 @@ Una volta soddisfatte le dipendenze, sarà possibile procedere con l'installazio
     L'inizializzazione effettua le seguenti seguenti operazioni:
 
     - Scarica e prepara il dataset
-    - Crea il container Docker per PostgreSQL
-    - Crea e popola il database
+    - Inizializza e popola il database
     - Crea gli indici per i tre motori di ricerca
 
-- **Avvio dell'Applicazione**
+    In caso di errori durante l'esecuzione del comando:
 
-    Per avviare l'applicazione, eseguire il comando:
+    > **Nota** Se si verifica un errore durante una delle fasi precedenti, è possibile rieseguire solo quella specifica fase senza ripetere le precedenti, risparmiando tempo. Per maggiori dettagli, consultare la sezione [Debugging Installazione](#debug-installazione-pacchetto).
+
+### Debug Installazione Pacchetto
+
+- Se si verifica un errore durante il download del dataset, e si intende riprovare, eseguire il comando:
+
+    ```
+    graboidrfc --init
+    ```
+
+- Se l'errore riguarda il collegamento al database, il popolamento dei dati o la creazione degli indici, è possibile ripetere la fase corrispondente senza dover scaricare nuovamente il dataset già acquisito:
+
+    ```
+    graboidrfc --indexes
+    ```
+
+    In generale, per problemi di indicizzazione, si **sconsiglia** di eseguire nuovamente l'inizializzazione completa con `--init` poiché comporta il download del dataset già acquisito.
+
+### Avvio dell'Applicazione
+
+- Per avviare l'applicazione, eseguire il comando:
 
     ```bash
     graboidrfc --start
@@ -286,37 +305,46 @@ Una volta soddisfatte le dipendenze, sarà possibile procedere con l'installazio
 
     Il comando avvia un servizio web locale all'indirizzo `127.0.0.1:5000`, attraverso il quale è possibile interagire con i tre motori di ricerca.
 
-### Comandi dell'applicazione
+### Costruzione dei Grafici
 
- <table style="width:100%; table-layout: fixed;">
-  <tr>
-    <td style="width:1%">Inizializza l'applicazione</td>
-    <td style="width:1%"><code>graboidrfc -i, --init</code></td>
-  </tr>
-  <tr>
-    <td style="width:1%">Avvia l'applicazione</td>
-    <td style="width:1%"><code>graboidrfc -s, --start</code></td>
-  </tr>
-  <tr>
-    <td style="width:1%">Esecuzione del parser</td>
-    <td style="width:1%"><code>graboidrfc -p, --parser</code></td>
-  </tr>
-  <tr>
-    <td style="width:1%">Costruzione degli indici</td>
-    <td style="width:1%"><code>graboidrfc -x, --indexes</code></td>
-  </tr>
-  <tr>
-    <td style="width:1%">Ottenimento risultati dei search engine implementati</td>
-    <td style="width:1%"><code>graboidrfc -l, --extractor-local</code></td>
-  </tr>
-  <tr>
-    <td style="width:1%">Costruzione dei grafici</td>
-    <td style="width:1%"><code>graboidrfc -g, --graphs</code></td>
-  </tr>
+- Per generare i grafici, eseguire il comando:
 
+    ```
+    graboidrfc --graphs
+    ```
+
+    Al termine dell'operazione, che potrebbe richiedere alcuni secondi, verrà visualizzato il percorso in cui i grafici sono stati salvati.
+
+### Elenco argomenti dell'applicazione
+
+<table style="width:100%; table-layout: fixed;">
+    <tr>
+        <td style="width:1%">Mostra tutte le opzioni</td>
+        <td style="width:1%"><code>graboidrfc -h, --help</code></td>
+    </tr>
+    <tr>
+        <td style="width:1%">Inizializza l'applicazione</td>
+        <td style="width:1%"><code>graboidrfc -i, --init</code></td>
+    </tr>
+    <tr>
+        <td style="width:1%">Debug: Esecuzione del parser</td>
+        <td style="width:1%"><code>graboidrfc -p, --parser</code></td>
+    </tr>
+    <tr>
+        <td style="width:1%">Debug: Costruzione degli indici</td>
+        <td style="width:1%"><code>graboidrfc -x, --indexes</code></td>
+    </tr>
+    <tr>
+        <td style="width:1%">Avvia l'applicazione</td>
+        <td style="width:1%"><code>graboidrfc -s, --start</code></td>
+    </tr>
+    <tr>
+        <td style="width:1%">Costruzione dei grafici</td>
+        <td style="width:1%"><code>graboidrfc -g, --graphs</code></td>
+    </tr>
 </table> 
 
-
+Nel caso si voglia visualizzare l'intera lista di argomenti utilizzare l'opzione `-h` o `--help`.
 
 ## Collaboratori
 
