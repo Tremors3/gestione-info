@@ -1,9 +1,9 @@
 
 # COSE DA FINIRE
 
-### [da_finire] NOTA SULL'UTILIZZO DELLA SEARCH BAR
+### [fatto] NOTA SULL'UTILIZZO DELLA SEARCH BAR
 
-- [ ] Da completare.
+- [x] Da completare.
    
    Nella sezione a destra dell'interfaccia grafica elenchiamo tre sezioni, una per Search Engine (Whoosh, Postgresql, Pylucene).
    All'interno di queste sezione specifichiamo le possibili grammatiche di funzionalità offerte dai vari search engine.
@@ -111,12 +111,9 @@ Postgress
     - [x] Clausole "SPECIFIC YEAR" in Pylucene non sembra funzionare correttamente.
 
 ### [fatto] RISTRUTTURARE GLI SCRIPT DI CREAZIONE DEL BANCHMARK:
-    - [x] Invece di salvare l'intero link solamente il numero identificativo del documento;
-    - [x] Aggiungere e formattare commenti in modo che le stampe siano belle;
-    - [x] Risistemazione generale degli scripts.
-
-# OBIETTIVO
-### VOGLIO ARRIVARE A FINE FEBBRAIO COL DOVER FARE SOLAMENTE (1. MODELLI DI RANKING, 2.a FUNZIONI PER VALUTARE I MODELLI DI RANKING, 2.b GRAFICI, 3. DOCUMENTAZIONE, 4. PRESENTAZIONE)
+- [x] Invece di salvare l'intero link solamente il numero identificativo del documento;
+- [x] Aggiungere e formattare commenti in modo che le stampe siano belle;
+- [x] Risistemazione generale degli scripts.
 
 ### [da_fare] STABILIRE UNA FASE COMUNE DI PREPROCESSING ED IMPLEMENTARLA
 
@@ -128,13 +125,7 @@ SPELLING CORRECTION & SYNONIMS
    - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
    - [ ] Spelling Correction & Synonims (Non Ancora Supportata)
 
-### [da_fare] RIVISITA DEL BENCHMARK E SELEZIONE DEI MODELLI DI RANKING
-
-- [x] Rivisita del Benchmark. Migliorare l'ordinamento ideale dei documenti rispetto alle query (soprattutto quelle multi-valore).
-    Gabri ha svolto un buon lavoro nel riordinare idealmente i risultati che compongono il benchmark.
-
-- [ ] Ottenere i ranking dei nostri tre sistemi di ricerca, formattarli in json come "local_extracted.json", effettuare il benchmark di quei sistemmi "our_benchmark.json".
-    Alla fine avremo "online_extracted.json" e "local_extracted.json" e poi i rispettivi benchmark "online_benchmark.json" e "local_benchmark.json".
+### [fatto] RIVISITA DEL BENCHMARK E SELEZIONE DEI MODELLI DI RANKING E CONFRONTO TRA I MODELLI
 
 - [x] Scegliere due modelli di ranking per ciascun motore di ricerca e altrettante varianti per ciascun modello.
     - [x] Whoosh     $\rightarrow$ ha **BM25** e **BM25 Custom**,       **TF_IDF**       e **TF_IDF_FF**.
@@ -152,19 +143,79 @@ SPELLING CORRECTION & SYNONIMS
             - [x] Implementazione modello personalizzato (Custom)
                 Link alla classe da estendere: https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/search/similarities/SimilarityBase.html
             - [/] Trovare il modo di creare un indice per ciascun modello (--> Trovato come fare, ma non lo facciamo <--)
+                Cosa cambia rispetto a impostare la Similarity solo nel Searcher?: https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/index/IndexWriterConfig.html#setSimilarity(org.apache.lucene.search.similarities.Similarity)
         - PostgreSQL
             - [x] Scelta dei modelli di ranking
             - [x] Implementazione modello personalizzato (Custom)
 
-**Cosa cambia rispetto a impostare la Similarity solo nel Searcher?**
-https://lucene.apache.org/core/9_4_1/core/org/apache/lucene/index/IndexWriterConfig.html#setSimilarity(org.apache.lucene.search.similarities.Similarity)
+- [x] Rivisita del Benchmark. Migliorare l'ordinamento ideale dei documenti rispetto alle query (soprattutto quelle multi-valore).
+    Gabri ha svolto un buon lavoro nel riordinare idealmente i risultati che compongono il benchmark.
 
-1. Impostando la **Similarity nel Writer** (`IndexWriterConfig.setSimilarity(Similarity)`)
-    - I valori di punteggio (ad es. TF, IDF, normalizzazioni) vengono memorizzati fisicamente nell'indice al momento della scrittura.
-    - Qualsiasi modifica alla funzione di similarità richiede una reindicizzazione dei documenti, perché i dati salvati dipendono direttamente dalla formula di scoring scelta.
-    - Può migliorare le prestazioni delle query, perché alcuni calcoli non devono essere fatti a runtime, ma vengono già memorizzati.
+- [x] Ottenere i ranking dei nostri tre sistemi di ricerca, formattarli in json come "extracted_local.json".
+    Alla fine avremo "extracted_online.json" e "extracted_local.json" e poi il benchmark "benchmark.json" relativo ai risultati online.
 
-2. Impostando la **Similarity solo nel Searcher** (`IndexSearcher.setSimilarity(Similarity)`)
-    - Il calcolo del punteggio avviene interamente a runtime durante le ricerche.
-    - È più flessibile, perché si può cambiare la funzione di similarità senza dover ricreare l'indice.
-    - Tuttavia, può essere più lento, perché i punteggi devono essere calcolati dinamicamente per ogni query.
+- [x] Confrontare le varianti dei nostri tre motori di ricerca:
+    - [x] Progettare e Realizzare lo script che definisce le formule e attua i confronti tra le varianti dei sistemi tenendo conto dei risultati del benchmark.
+    - [x] Ottenere i grafici che mostrano i confronti tra le varianti dei motori di ricerca.
+        - [x] Salvare i grafici in modo che siano visualizzabili.
+    - [x] Decidere le metriche da utilizzare per confrontare i sistemi:
+        1. F-MESURE
+        2. AVERAGE PRECISION (LEVEL)
+        3. AVERAGE PRECISION (QUERY)
+        4. MEAN AVERAGE PRECISION (MAP)
+        5. DISCOUNTED CUMULATIVE GAIN (DCG & NDCG)
+        6. PRECISION AT STANDARD RECALL LEVELS
+    - [x] Automatizzare il processo che effettua i controlli e che crea i grafici:
+        1. creazione del benchmark, 
+        2. scaricamento dei risultati delle query, 
+        3. confronto dei risultati con formule e tecniche appropriate.
+
+### [da_fare] RITOCCHINI DA SISTEMARE
+
+- [ ] Aggiustare i parametri `k1` e `b` dei ranking **BM25** sia di **WHOOSH** sia di **PYLUCENE** tramite sperimentazione.
+
+- [x] Rigenerare le dipendenze del file requirements.txt levando quelle inutili ed inserendo quelle mancanti.
+
+- [x] Nascondere Checkbox SPELLING CORRECTION e SYNONIMS.
+
+- [x] Riorganizzare e pulire il workspace da sporcizia.
+
+- [x] Testare il nuovo script di setup
+
+### [da_fare] COMPLETARE README
+
+- [x] Completare il Readme
+    - [/] Specificare nel README.md come dipendenza "systemd"; richiesta durante l'installazione di postgresql tramite lo script.
+        - [x] (Levato il controllo dipendente da systemd).
+    - [/] Una volta completata l'interfaccia grafica incorporare su github screenshots che mostrino la stessa; e che siano visibili dal README.md.
+    - [x] Inserire nel tutorial di installazione del pacchetto tutti i comandi riferiti alle funzionalità che la prof vuole eseguire.
+    - [x] Specificare nel README.md dove la documentazione di progetto si trova ./gestione-info/workspace/notes/
+
+### [da_fare] COMPLETARE LA PRESENTAZIONE
+
+- [ ] Documentazione e Suddivisione delle parti
+    - [ ] Completare la documentazione
+        --> [ ] Aggiornare lista componenti gruppo.
+        --> [ ] Aggiornare percorsi.
+        - [x] Descrizione del dataset
+        - [x] Processo di ottenimento del benchmark
+        - [ ] Elenco delle queries
+        - [ ] Interfaccia e funzionalità offerte
+        - [ ] Motori di ricerca utilizzati (Whoosh, Pylucene, PostgreSQL)
+        - [ ] Funzioni di ranking scelte e rispettive particolarità
+            - [ ] Descrivere le funzioni di ranking custom
+                (Whoosh: TF_IDF_FF, PyLucene: TFLN_PIDF, PostgreSQL: Normalization Factor)
+        - [ ] Descrizione delle metriche utilizzate
+        - [ ] Scelta delle tipologie di grafico utilizzate
+    - [ ] Suddivisione delle parti
+
+- [ ] Presentazione
+    - [ ] Descrivi le procedure principali
+    - [ ] Disegna e Incorpora schemi sulle procedure
+    - [ ] Incorpora foto dell'interfaccia nella presentazione
+    - [ ] Seleziona ed Incorpora grafici migliori
+
+# OBIETTIVI
+### 1. EFFETTUARE RITOCCHINI
+### 1. COMPLETARE DOCUMENTAZIONE
+### 2. REALIZZARE PRESENTAZIONE

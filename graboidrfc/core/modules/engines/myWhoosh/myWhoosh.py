@@ -318,7 +318,7 @@ class MyWhoosh:
         ## FUNZIONI DI RANKING - SELEZIONE DELLA FUNZIONE DI RANKING DA UTILIZZARE ##
         #############################################################################
 
-        # BM25F Custom Parameters
+        # BM25F Custom Parameters (default: k1=1.2, b=0.75, cb=1.0)
         k1 = 1.2
         b = 0.75
         cb = 1.0

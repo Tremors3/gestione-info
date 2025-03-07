@@ -174,6 +174,7 @@ class BenchmarkConstructor:
         benchmark = []
         
         for query in queries:
+            query_num = query.get("num")
             query_text = query.get("query")
             results = query.get("results", {})
             
@@ -189,7 +190,7 @@ class BenchmarkConstructor:
             processor.clear_search_engine_results()
             
             # Appende il risultato finale alla lista del benchmark 
-            benchmark.append({"query": query_text, "relevance_values": final_scores})
+            benchmark.append({"num": query_num, "query": query_text, "relevance_values": final_scores})
         
         return benchmark
 

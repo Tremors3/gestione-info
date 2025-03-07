@@ -6,10 +6,10 @@ DB_USER="graboid"
 DB_PASS="graboid"
 
 # Verifica se PostgreSQL è in esecuzione
-if ! systemctl is-active --quiet postgresql; then
-    echo "Avvia PostgreSQL prima di eseguire lo script."
-    exit 1
-fi
+# if ! systemctl is-active --quiet postgresql; then
+#     echo "Avvia PostgreSQL prima di eseguire lo script."
+#     exit 1
+# fi
 
 # Funzione per verificare se il database esiste
 check_db_exists() {

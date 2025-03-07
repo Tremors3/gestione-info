@@ -4,7 +4,6 @@ from alive_progress import alive_bar
 from alive_progress.animations import bar_factory
 _bar = bar_factory("▁▂▃▅▆▇", tip="", background=" ", borders=("|","|"))
 
-
 class MyPostgres:
      
     # CURRENT WORKING DIRECTORY & FILE PATHS
@@ -104,18 +103,3 @@ if __name__ == "__main__":
     my._populate_table()
     my.create_indexes()
     #my.test_index()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

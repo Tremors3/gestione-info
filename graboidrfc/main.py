@@ -13,6 +13,7 @@ from graboidrfc.core.modules.engines.myParser.myParser import start as start_par
 from graboidrfc.core.modules.engines.myBenchmark.benchmark import BenchmarkConstructor
 from graboidrfc.core.modules.engines.myBenchmark.extractor_online import ExtractorOnline
 from graboidrfc.core.modules.engines.myBenchmark.extractor_local import ExtractorLocal
+from graboidrfc.core.modules.engines.myComparator.myGraphs import MyGraphs
 from graboidrfc.core.modules.utils.logger import logger as logging, bcolors
 from graboidrfc.core.modules.utils.dynpath import get_dynamic_package_path
 
@@ -58,16 +59,19 @@ class Application:
         # Argomenti Principali
         exclusive_group.add_argument('-i', '--init', action='store_true', help='Inizializza l\'applicazione.')
         exclusive_group.add_argument('-s', '--start', action='store_true', help='Avvia l\'applicazione.')
-        exclusive_group.add_argument('-c', '--cleanup', action='store_true', help='Rimuove tutti i file creati durante la fase di inizializzazione.')
+        # exclusive_group.add_argument('-c', '--cleanup', action='store_true', help='Rimuove tutti i file creati durante la fase di inizializzazione.')
         
         # Argomenti utili per Debugging
-        exclusive_group.add_argument('-p', '--parser', action='store_true', help='Esegue il parser.')
+        exclusive_group.add_argument('-p', '--parser', action='store_true', help='Scarica e parserizza il dataset.')
         exclusive_group.add_argument('-x', '--indexes', action='store_true', help='Costruisce gli Inverted Index.')
         
         # Argomenti per la costruzione del Benchmark
         exclusive_group.add_argument('-e', '--extractor', action='store_true', help='Ottiene i risultati necessari alla costruzione del benchmark.')
-        exclusive_group.add_argument('-r', '--result-extr', action='store_true', help='Ottiene i risultati con i nostri search engine.')
+        exclusive_group.add_argument('-l', '--extractor-local', action='store_true', help='Ottiene i risultati dei nostri tre search engine.')
         exclusive_group.add_argument('-b', '--benchmark', action='store_true', help='Costruisce e salva il benchmark.')
+
+        # Argomenti per la costruzione dei grafici
+        exclusive_group.add_argument('-g', '--graphs', action='store_true', help='Costruisce e salva i grafici.')        
 
     # #################################################################################################### #
 
@@ -132,16 +136,17 @@ class Application:
     
     def web(self) -> None:
         """Avvia il web server del progetto."""
+        print(f"{bcolors.GREEN}Avvio del Server Web ...{bcolors.RESET}")
         start_web_server(use_docker=self.use_docker) # Avvio Web Server
     
     def parser(self) -> None:
         """Costruzione del dataset apportata dal parser."""
-        print(f"{bcolors.GREEN}Costruzione del dataset...{bcolors.RESET}")
+        print(f"{bcolors.GREEN}Costruzione del dataset ...{bcolors.RESET}")
         start_parser() # Avvio Parser
 
     def indexes(self) -> None:
         """Costruisce gli Indici Invertiti."""
-        print(f"{bcolors.GREEN}Costruzione degli Indici...{bcolors.RESET}")
+        print(f"{bcolors.GREEN}Costruzione degli Indici ...{bcolors.RESET}")
         
         self.docker_start()
         postgres = MyPostgres(use_docker=self.use_docker)
@@ -155,8 +160,9 @@ class Application:
         
         MyWhoosh.create_indexes() # Creazione indici Whoosh
 
-    def result_extr(self) -> None:
+    def extractor_local(self) -> None:
         """Avvia lo script per scaricare i risultati dei nostri search engine e li scrive su file"""
+        print(f"{bcolors.GREEN}Estrazione dei risultati di PostgreSQL, PyLucene e Whoosh ...{bcolors.RESET}")
         ExtractorLocal.start()
     
     def extractor(self) -> None:
@@ -168,6 +174,11 @@ class Application:
         """Avvia lo script calcola e mostra il benchmark."""
         print(f"{bcolors.GREEN}Costruzione e restituzione del Benchmark ...{bcolors.RESET}")
         BenchmarkConstructor.start()
+    
+    def graphs(self) -> None:
+        """Avvia lo script che costruisce i grafici"""
+        print(f"{bcolors.GREEN}Lettura risultati e costruzione grafici ...{bcolors.RESET}")
+        MyGraphs.start()
     
     # ################################################## #
 
