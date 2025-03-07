@@ -4,17 +4,9 @@
 
 L'obiettivo principale è sviluppare e **confrontare le prestazioni** di tre diversi motori di ricerca, basati sui seguenti sistemi: **PostgreSQL**, **PyLucene**, **Whoosh**; applicati alla collezione di documenti RFC.
 
+La documentazione e le slide del progetto si trovano nella cartella: `./gestione-info/workspace/docs/`.
+
 <!--
-### Tecnologie Utilizzate
-
-Le principali tecnologie utilizzate nello sviluppo del progetto sono:
-
-- **PostgreSQL** $\rightarrow$ Database relazionale con supporto per full-text search.
-
-- **PyLucene** $\rightarrow$ Implementazione Python di Apache Lucene, motore di ricerca ad alte prestazioni.
-
-- **Whoosh** $\rightarrow$ Libreria Python per la gestione di motori di ricerca testuali.
-
 ### Struttura del Progetto 
 
 Lo schema seguente mostra l'organizzazione generale di file e cartelle nella gerarchia del progetto, evidenziando le componenti che potrebbero interessarle maggiormente.
