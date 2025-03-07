@@ -8,7 +8,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 sns.set_theme("notebook")
 
-
 # Creazione di un dizionario
 data = {
     'document_id':["rfc1234","rfc2345","rfc4567"],
