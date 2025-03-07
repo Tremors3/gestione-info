@@ -174,20 +174,20 @@ SPELLING CORRECTION & SYNONIMS
 
 - [ ] Aggiustare i parametri `k1` e `b` dei ranking **BM25** sia di **WHOOSH** sia di **PYLUCENE** tramite sperimentazione.
 
-- [ ] Rigenerare le dipendenze del file requirements.txt levando quelle inutili ed inserendo quelle mancanti.
+- [x] Rigenerare le dipendenze del file requirements.txt levando quelle inutili ed inserendo quelle mancanti.
 
-- [ ] Nascondere Checkbox SPELLING CORRECTION e SYNONIMS.
+- [x] Nascondere Checkbox SPELLING CORRECTION e SYNONIMS.
 
 - [x] Riorganizzare e pulire il workspace da sporcizia.
 
-- [ ] Testare il nuovo script di setup
+- [x] Testare il nuovo script di setup
 
 ### [da_fare] COMPLETARE README
 
-- [ ] Completare il Readme
+- [x] Completare il Readme
     - [/] Specificare nel README.md come dipendenza "systemd"; richiesta durante l'installazione di postgresql tramite lo script.
         - [x] (Levato il controllo dipendente da systemd).
-    - [ ] Una volta completata l'interfaccia grafica incorporare su github screenshots che mostrino la stessa; e che siano visibili dal README.md.
+    - [/] Una volta completata l'interfaccia grafica incorporare su github screenshots che mostrino la stessa; e che siano visibili dal README.md.
     - [x] Inserire nel tutorial di installazione del pacchetto tutti i comandi riferiti alle funzionalità che la prof vuole eseguire.
     - [x] Specificare nel README.md dove la documentazione di progetto si trova ./gestione-info/workspace/notes/
 
