@@ -286,6 +286,36 @@ Una volta soddisfatte le dipendenze, sarà possibile procedere con l'installazio
 
     Il comando avvia un servizio web locale all'indirizzo `127.0.0.1:5000`, attraverso il quale è possibile interagire con i tre motori di ricerca.
 
+### Comandi dell'applicazione
+
+ <table style="width:100%; table-layout: fixed;">
+  <tr>
+    <td style="width:1%">Inizializza l'applicazione</td>
+    <td style="width:1%"><code>graboidrfc -i, --init</code></td>
+  </tr>
+  <tr>
+    <td style="width:1%">Avvia l'applicazione</td>
+    <td style="width:1%"><code>graboidrfc -s, --start</code></td>
+  </tr>
+  <tr>
+    <td style="width:1%">Esecuzione del parser</td>
+    <td style="width:1%"><code>graboidrfc -p, --parser</code></td>
+  </tr>
+  <tr>
+    <td style="width:1%">Costruzione degli indici</td>
+    <td style="width:1%"><code>graboidrfc -x, --indexes</code></td>
+  </tr>
+  <tr>
+    <td style="width:1%">Ottenimento risultati dei search engine implementati</td>
+    <td style="width:1%"><code>graboidrfc -l, --extractor-local</code></td>
+  </tr>
+  <tr>
+    <td style="width:1%">Costruzione dei grafici</td>
+    <td style="width:1%"><code>graboidrfc -g, --graphs</code></td>
+  </tr>
+
+</table> 
+
 
 
 ## Collaboratori
