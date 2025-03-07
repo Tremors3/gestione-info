@@ -176,6 +176,10 @@ SPELLING CORRECTION & SYNONIMS
 
 - [ ] Rigenerare le dipendenze del file requirements.txt levando quelle inutili ed inserendo quelle mancanti.
 
+- [ ] Nascondere Checkbox SPELLING CORRECTION e SYNONIMS
+
+- [ ] Riorganizzare e pulire il workspace da sporcizia.
+
 ### [da_fare] COMPLETARE README
 
 - [ ] Completare il Readme
