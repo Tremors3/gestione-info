@@ -1,0 +1,22 @@
+{
+    "metadata": {
+        "name": "GraboidRFC",
+        "version": "1.0",
+        "python_version": ">=3.10",
+        "package_folder": "graboidrfc",
+        "console_script": "graboidrfc",
+        "script": "main",
+        "function": "main",
+        "url": "https://github.com/Tremors3/tecnologie-web",
+        "license": "MIT",
+        "include_package_data": true,
+        "classifiers": [
+            "Programming Language :: Python :: 3.10",
+            "License :: OSI Approved :: MIT License",
+            "Operating System :: OS Independent"
+        ]
+    },
+    "dependencies": {
+        "requirements_file": "requirements.txt"
+    }
+}
