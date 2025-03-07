@@ -176,25 +176,36 @@ SPELLING CORRECTION & SYNONIMS
 
 - [ ] Rigenerare le dipendenze del file requirements.txt levando quelle inutili ed inserendo quelle mancanti.
 
-- [ ] Nascondere Checkbox SPELLING CORRECTION e SYNONIMS
+- [ ] Nascondere Checkbox SPELLING CORRECTION e SYNONIMS.
 
-- [ ] Riorganizzare e pulire il workspace da sporcizia.
+- [x] Riorganizzare e pulire il workspace da sporcizia.
+
+- [ ] Testare il nuovo script di setup
 
 ### [da_fare] COMPLETARE README
 
 - [ ] Completare il Readme
-    - [ ] Specificare nel README.md come dipendenza "systemd"; richiesta durante l'installazione di postgresql tramite lo script.
+    - [/] Specificare nel README.md come dipendenza "systemd"; richiesta durante l'installazione di postgresql tramite lo script.
+        - [x] (Levato il controllo dipendente da systemd).
     - [ ] Una volta completata l'interfaccia grafica incorporare su github screenshots che mostrino la stessa; e che siano visibili dal README.md.
     - [x] Inserire nel tutorial di installazione del pacchetto tutti i comandi riferiti alle funzionalità che la prof vuole eseguire.
+    - [x] Specificare nel README.md dove la documentazione di progetto si trova ./gestione-info/workspace/notes/
 
 ### [da_fare] COMPLETARE LA PRESENTAZIONE
 
 - [ ] Documentazione e Suddivisione delle parti
     - [ ] Completare la documentazione
+        --> [ ] Aggiornare lista componenti gruppo.
+        --> [ ] Aggiornare percorsi.
+        - [x] Descrizione del dataset
+        - [x] Processo di ottenimento del benchmark
+        - [ ] Elenco delle queries
+        - [ ] Interfaccia e funzionalità offerte
         - [ ] Motori di ricerca utilizzati (Whoosh, Pylucene, PostgreSQL)
         - [ ] Funzioni di ranking scelte e rispettive particolarità
             - [ ] Descrivere le funzioni di ranking custom
                 (Whoosh: TF_IDF_FF, PyLucene: TFLN_PIDF, PostgreSQL: Normalization Factor)
+        - [ ] Descrizione delle metriche utilizzate
         - [ ] Scelta delle tipologie di grafico utilizzate
     - [ ] Suddivisione delle parti
 
