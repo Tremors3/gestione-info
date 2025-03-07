@@ -185,7 +185,7 @@ SPELLING CORRECTION & SYNONIMS
 - [ ] Completare il Readme
     - [ ] Specificare nel README.md come dipendenza "systemd"; richiesta durante l'installazione di postgresql tramite lo script.
     - [ ] Una volta completata l'interfaccia grafica incorporare su github screenshots che mostrino la stessa; e che siano visibili dal README.md.
-    - [ ] Inserire nel tutorial di installazione del pacchetto tutti i comandi riferiti alle funzionalità che la prof vuole eseguire.
+    - [x] Inserire nel tutorial di installazione del pacchetto tutti i comandi riferiti alle funzionalità che la prof vuole eseguire.
 
 ### [da_fare] COMPLETARE LA PRESENTAZIONE
 
