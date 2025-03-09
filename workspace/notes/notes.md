@@ -199,7 +199,7 @@ SPELLING CORRECTION & SYNONIMS
         - [x] Processo di ottenimento del benchmark
         - [x] Elenco delle queries
         - [x] Tipolgia Utente, Query Language utilizzati, altre features dell'interfaccia
-        - [ ] Motori di ricerca utilizzati (Whoosh, Pylucene, PostgreSQL)
+        - [x] Motori di ricerca utilizzati (Whoosh, Pylucene, PostgreSQL)
         - [ ] Funzioni di ranking scelte e rispettive particolarità
             - [ ] Descrivere le funzioni di ranking custom
                 (Whoosh: TF_IDF_FF, PyLucene: TFLN_PIDF, PostgreSQL: Normalization Factor)
