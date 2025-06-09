@@ -107,7 +107,7 @@ L'obiettivo di questa fase è assicurarsi che il servizio PostgreSQL sia attivo 
 
 - **Creazione del database e dell'utente**
 
-    Lo script `setup_postgres.py` automatizza la creazione del database e dell'utente che il nostro pacchetto utilizza, e garantisce che l'utente abbia i permessi necessari.
+    Lo script `setup_postgres.sh` automatizza la creazione del database e dell'utente che il nostro pacchetto utilizza, e garantisce che l'utente abbia i permessi necessari.
 
     ```bash
     chmod +x setup_postgres.sh

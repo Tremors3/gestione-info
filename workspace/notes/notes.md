@@ -213,13 +213,9 @@ SPELLING CORRECTION & SYNONIMS
     - [ ] Incorpora foto dell'interfaccia nella presentazione
     - [ ] Seleziona ed Incorpora grafici migliori
 
-### [da_fare] RESETTARE PARAMETRI PER PRODUZIONE
+### [da_fare] AGGIUSTARE PARAMETRI PER PRODUZIONE
 
-- [ ] Impostare l'intervallo dei documenti da 2000 a 10000
-
-- [ ] Aggiustare i parametri `k1` e `b` dei ranking **BM25** sia di **WHOOSH** sia di **PYLUCENE** tramite sperimentazione.
-
-- [ ] Correggere `setup_postgres.py` in `setup_postgres.sh` nel README.
+- [x] Impostare l'intervallo dei documenti da 2000 a 10000
 
 # OBIETTIVI
 ### 1. COMPLETARE DOCUMENTAZIONE
