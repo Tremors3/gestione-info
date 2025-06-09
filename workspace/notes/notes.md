@@ -121,9 +121,9 @@ UNICA PIPELINE DI PREPROCESSING vs UTILIZZARE QUELLE FORNITE DAI SE.
 - [ ] Stabilire una fase di preprocessing comune per tutti i search engine e testare Stemmer, Lemmatizer, Parsers, Taggers, Rimozione Stopwords, ecc... Questa fase comune a tutti i search engine potrebbe essere implementata direttamente dal web server. Oppure utilizzando la pipeline di preprocessing fornita da ciascun search engine.
 
 SPELLING CORRECTION & SYNONIMS
-- [ ] E' meglio che togliamo la SPELLING CORRECTION e i SINONIMI (Espansione delle query con termini sinonimi)? Non mi sembra molto difficile da implementare e inoltre l'implementazione sarebbe comune a tutti e tre i search engine... per esempio utilizzando la libreria NLTK. Ma conviene farlo?
-   - [ ] Scaricare i dizionari necessari durante la fase di inizializzazione.
-   - [ ] Spelling Correction & Synonims (Non Ancora Supportata)
+- [NO] E' meglio che togliamo la SPELLING CORRECTION e i SINONIMI (Espansione delle query con termini sinonimi)? Non mi sembra molto difficile da implementare e inoltre l'implementazione sarebbe comune a tutti e tre i search engine... per esempio utilizzando la libreria NLTK. Ma conviene farlo?
+   - [-] Scaricare i dizionari necessari durante la fase di inizializzazione.
+   - [-] Spelling Correction & Synonims (Non Ancora Supportata)
 
 ### [fatto] RIVISITA DEL BENCHMARK E SELEZIONE DEI MODELLI DI RANKING E CONFRONTO TRA I MODELLI
 
@@ -170,9 +170,7 @@ SPELLING CORRECTION & SYNONIMS
         2. scaricamento dei risultati delle query, 
         3. confronto dei risultati con formule e tecniche appropriate.
 
-### [da_fare] RITOCCHINI DA SISTEMARE
-
-- [ ] Aggiustare i parametri `k1` e `b` dei ranking **BM25** sia di **WHOOSH** sia di **PYLUCENE** tramite sperimentazione.
+### [fatto] RITOCCHINI DA SISTEMARE
 
 - [x] Rigenerare le dipendenze del file requirements.txt levando quelle inutili ed inserendo quelle mancanti.
 
@@ -182,7 +180,7 @@ SPELLING CORRECTION & SYNONIMS
 
 - [x] Testare il nuovo script di setup
 
-### [da_fare] COMPLETARE README
+### [fatto] COMPLETARE README
 
 - [x] Completare il Readme
     - [/] Specificare nel README.md come dipendenza "systemd"; richiesta durante l'installazione di postgresql tramite lo script.
@@ -195,13 +193,13 @@ SPELLING CORRECTION & SYNONIMS
 
 - [ ] Documentazione e Suddivisione delle parti
     - [ ] Completare la documentazione
-        --> [ ] Aggiornare lista componenti gruppo.
-        --> [ ] Aggiornare percorsi.
+        --> [x] Aggiornare lista componenti gruppo.
+        --> [x] Aggiornare percorsi.
         - [x] Descrizione del dataset
         - [x] Processo di ottenimento del benchmark
-        - [ ] Elenco delle queries
-        - [ ] Interfaccia e funzionalità offerte
-        - [ ] Motori di ricerca utilizzati (Whoosh, Pylucene, PostgreSQL)
+        - [x] Elenco delle queries
+        - [x] Tipolgia Utente, Query Language utilizzati, altre features dell'interfaccia
+        - [x] Motori di ricerca utilizzati (Whoosh, Pylucene, PostgreSQL)
         - [ ] Funzioni di ranking scelte e rispettive particolarità
             - [ ] Descrivere le funzioni di ranking custom
                 (Whoosh: TF_IDF_FF, PyLucene: TFLN_PIDF, PostgreSQL: Normalization Factor)
@@ -215,7 +213,14 @@ SPELLING CORRECTION & SYNONIMS
     - [ ] Incorpora foto dell'interfaccia nella presentazione
     - [ ] Seleziona ed Incorpora grafici migliori
 
+### [da_fare] RESETTARE PARAMETRI PER PRODUZIONE
+
+- [ ] Impostare l'intervallo dei documenti da 2000 a 10000
+
+- [ ] Aggiustare i parametri `k1` e `b` dei ranking **BM25** sia di **WHOOSH** sia di **PYLUCENE** tramite sperimentazione.
+
+- [ ] Correggere `setup_postgres.py` in `setup_postgres.sh` nel README.
+
 # OBIETTIVI
-### 1. EFFETTUARE RITOCCHINI
 ### 1. COMPLETARE DOCUMENTAZIONE
 ### 2. REALIZZARE PRESENTAZIONE
