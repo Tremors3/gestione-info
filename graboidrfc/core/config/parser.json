@@ -1,7 +1,7 @@
 {
     "DOCUMENTS": {
-        "BEGIN_INDEX": 8500,
-        "END_INDEX": 9000
+        "BEGIN_INDEX": 2000,
+        "END_INDEX": 10000
     },
     "DOWNLOAD": {
         "WORKERS": 10,

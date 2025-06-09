@@ -429,8 +429,8 @@ class MyPyLucene:
         #######################################################################################
 
         # BM25 Custom Parameters (default: k1=1.2, b=0.75)
-        k1 = 1.2
-        b = 0.75
+        k1 = 1.5
+        b = 0.5
         
         similarity_function_mapping = {
             # BM25
