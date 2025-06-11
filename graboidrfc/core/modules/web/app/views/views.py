@@ -50,9 +50,9 @@ class RankingOption:
             # BM25
             "BM25": "BM25",
             "BM25_CUSTOM": "BM25 Custom",
-            # TFIDF
-            "TFIDF": "TF-IDF",
-            "TFIDF_CUSTOM": "TF-IDF Custom (TF-IDF-FF)",
+            # VSM
+            "VSM": "VSM (TF-IDF)",
+            "VSM_CUSTOM": "VSM Custom (TF-IDF-FF)",
         },
         
         "pylucene": {
@@ -65,12 +65,12 @@ class RankingOption:
         },
         
         "postgresql": {
-            # BM25
-            "BM25": "BM25",
-            "BM25_CUSTOM": "BM25 Custom (DLN)",
-            # TFIDF
-            "TFIDF": "TF-IDF",
-            "TFIDF_CUSTOM": "TF-IDF Custom (DLN)",
+            # Coverage Density
+            "CD": "Coverage Density",
+            "CD_CUSTOM": "Coverage Density Custom (DLN)",
+            # Statistical Weighting
+            "SW": "Statistical Weighting",
+            "SW_CUSTOM": "Statistical Weighting Custom (DLN)",
         },
     }
     

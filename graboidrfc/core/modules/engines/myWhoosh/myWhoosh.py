@@ -328,9 +328,9 @@ class MyWhoosh:
             # BM25
             "BM25": BM25F(),
             "BM25_CUSTOM": BM25F(B=b, content_B=cb, K1=k1),
-            # TFIDF
-            "TFIDF": TF_IDF(),
-            "TFIDF_CUSTOM": TF_IDF_FF(lambda_freshness=0.1),
+            # VSM
+            "VSM": TF_IDF(),
+            "VSM_CUSTOM": TF_IDF_FF(lambda_freshness=0.1),
         }; weight_function = weight_function_mapping.get(data.get("whoosh_ranking"), BM25F())
 
         #######################################################################################

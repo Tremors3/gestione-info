@@ -395,12 +395,12 @@ class MyPostgres(metaclass=Singleton):
         norm_bit_map = "2|8" # "1|16" "4|16"
         
         ranking_function_mapping = {
-            # BM25
-            "BM25": "ts_rank_cd",
-            "BM25_CUSTOM": "ts_rank_cd",
-            # TFIDF
-            "TFIDF": "ts_rank",
-            "TFIDF_CUSTOM": "ts_rank"
+            # Coverage Density
+            "CD": "ts_rank_cd",
+            "CD_CUSTOM": "ts_rank_cd",
+            # Statistical Weighting
+            "SW": "ts_rank",
+            "SW_CUSTOM": "ts_rank"
         }; rank_fun = ranking_function_mapping.get(model, "ts_rank_cd")
 
         is_custom: bool = model.endswith("CUSTOM")
@@ -424,7 +424,7 @@ class MyPostgres(metaclass=Singleton):
 
         # Crea la definizione, il rank, e la condizione per la query principale
         definitions.append(f"LATERAL plainto_tsquery('english', '{ricerca_principale}') AS main")
-        ranks.append(__class__.__get_ranking_str(model=data.get("postgresql_ranking"), field="content", term="main"))
+        ranks.append(__class__.__get_ranking_str(model=data.get("postgresql_ranking", "CD"), field="content", term="main"))
         conditions.append("main @@ content_tsv")
 
         #######################################################################
@@ -454,7 +454,7 @@ class MyPostgres(metaclass=Singleton):
 
             # Aggiungi il calcolo del ranking
             ranks.append(
-                __class__.__get_ranking_str(model=data.get("postgresql_ranking", "BM25"), field=field, term=f"term{idx}")
+                __class__.__get_ranking_str(model=data.get("postgresql_ranking", "CD"), field=field, term=f"term{idx}")
             )
 
             # Aggiungi la condizione appropriata
