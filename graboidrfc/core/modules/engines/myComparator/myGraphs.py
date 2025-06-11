@@ -19,10 +19,12 @@ class MyGraphs:
     MARKERS = {
         'BM25':'o',
         'BM25_CUSTOM':'s',
-        'TFIDF':'v',
-        'TFIDF_CUSTOM':'d',
         'VSM':'v',
         'VSM_CUSTOM':'d',
+        "CD": "o",
+        "CD_CUSTOM": "s",
+        "SW": "v",
+        "SW_CUSTOM": "d"
     }
 
     MOSAIC = [
@@ -289,11 +291,11 @@ class MyGraphs:
                     y_tick,
                     field="ndcg",
                     lab_x="Queries",
-                    lab_y="NDGC"
+                    lab_y="NDCG"
                 )
 
                 # Salva il grafico su file
-                cls.__save_plot_to_file(fig2, "ndgc", f"ndgc_{engine}.svg")
+                cls.__save_plot_to_file(fig2, "ndcg", f"ndcg_{engine}.svg")
 
     @classmethod
     def graph_map(cls):

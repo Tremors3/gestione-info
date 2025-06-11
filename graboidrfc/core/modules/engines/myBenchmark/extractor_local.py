@@ -40,9 +40,9 @@ class ExtractorLocal():
             # BM25
             "BM25",
             "BM25_CUSTOM",
-            # TFIDF
-            "TFIDF",
-            "TFIDF_CUSTOM",
+            # VSM
+            "VSM",
+            "VSM_CUSTOM",
         ],
         
         "pylucene": [
@@ -55,12 +55,12 @@ class ExtractorLocal():
         ],
         
         "postgresql": [
-            # BM25
-            "BM25",
-            "BM25_CUSTOM",
-            # TFIDF
-            "TFIDF",
-            "TFIDF_CUSTOM",
+            # CD
+            "CD",
+            "CD_CUSTOM",
+            # SW
+            "SW",
+            "SW_CUSTOM",
         ],
     }
     
