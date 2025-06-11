@@ -61,7 +61,7 @@
                 <div class="destra">
                   <div class="search_engine">
                     <div class="control">
-                    <div id="tuttiCheck" style="padding-bottom: .5em; padding-top: .5em;"> Modello di ranking </div>
+                    <div id="tuttiCheck" style="padding-bottom: .5em; padding-top: .5em;"> Ranking Models </div>
                       <div class="radio">
                         <div id="t_whooshCheck">Whoosh: </div>
                         <div id="whooshCheck" class="select">
@@ -458,7 +458,7 @@
       <article class="message is-link" id="woosh">
         <button class="collapsible message-header" id="woosh">Whoosh</button>
         <div class="message_content message-body" id="woosh">
-          <p id="p"><b>Sintassi supportata</b></p>
+          <p id="p"><b>Supported syntax</b></p>
           <ul>
             <li>Single term query: <code>"[term]"</code></li>
             <li>Phrase query: <code>"[phrase]"</code></li>
@@ -483,7 +483,7 @@
       <article class="message is-link" id="pylucene">
         <button class="collapsible message-header" id="pylucene">PyLucene</button>
         <div class="message_content message-body" id="pylucene">
-          <p id="p"><b>Sintassi supportata</b></p>
+          <p id="p"><b>Supported syntax</b></p>
           <ul>
             <li>Single term query: <code>"[term]"</code></li>
             <li>Phrase query: <code>"[phrase]"</code></li>
@@ -508,17 +508,16 @@
       <article class="message is-link" id="postgresql">
         <button class="collapsible message-header" id="postgresql">PostgreSQL</button>
         <div class="message_content message-body" id="postgresql">
-          <p id="p"><b>Sintassi supportata</b></p>
+          <p id="p"><b>Supported syntax</b></p>
           <ul>
-            <li>A differenza degli altri due sistemi, PostgreSQL, non supporta
-              la ricerca per termini secondari nel campo della query principale.
+            <li>Unlike the other two systems, PostgreSQL does not support 
+              searching for secondary terms directly in the main query field.
             </li>
-            <li>Nel caso si vogliano eseguire ricerce con termini secondari 
-              bisogna per forza usare <code>Add term</code> e scegliere tra 
-              le varie opzioni per il termine inserito: <br>
-              <code>[Operatore][termine secondario][Campo]
-
-              </code></li>
+            <li>If you want to include secondary terms in your search, you must 
+              use the <code>Add term</code> button and choose from the available
+               options for that term: <br>
+              <code>[Operator][secondary term][Field]</code>
+            </li>
             <!-- <li>Proximity search: [sintassi]</li> -->
           </ul>
         </div>

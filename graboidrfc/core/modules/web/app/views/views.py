@@ -90,7 +90,7 @@ class SearchForm(FlaskForm):
     spelling_correction   = BooleanField(label='Spelling Correction', validators=[], render_kw={"id":"spelling_correction",})
     synonims              = BooleanField(label='Sinonimi', validators=[], render_kw={"id":"synonims"})
     ######################################################## Selettore del searchengine ########################################################
-    search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL"),("TUTTI","Tutti")])
+    search_engine         = RadioField(default="WHOOSH", coerce=str, choices=[("WHOOSH", "Whoosh"),("PYLUCENE", "Pylucene"),("POSTGRESQL","PostgreSQL"),("TUTTI","All")])
     whoosh_ranking        = SelectField(default="BM25F", coerce=str, choices=RankingOption.get_choices("whoosh"))
     pylucene_ranking      = SelectField(default="RankingPyLucene_1", coerce=str, choices=RankingOption.get_choices("pylucene"))
     postgresql_ranking    = SelectField(default="RankingPostgreSQL_1", coerce=str, choices=RankingOption.get_choices("postgresql"))
